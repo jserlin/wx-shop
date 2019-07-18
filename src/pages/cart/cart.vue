@@ -1,7 +1,51 @@
 <template>
-  <div class="container">
-    <div class="user-motto">
-      <card :text="motto"></card>
+  <div class="cart">
+    <div class="top">
+      <div>30天无忧退货</div>
+      <div>48小时快速退款</div>
+      <div>满88元免邮费</div>
+    </div>
+    <div class="cartlist">
+      <div class="item" >
+        <div class="con">
+          <div class="left">
+            <div class="icon active"></div>
+            <div class="img">
+              <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
+            </div>
+            <div class="info">
+              <p>商品</p>
+              <p>￥10</p>
+            </div>
+          </div>
+          <div class="right">
+            <div class="num">
+              x10
+            </div>
+          </div>
+        </div>
+
+        <div class="delete">
+          <div>
+            删除
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div  class="nogoods">
+      <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
+    </div>
+    <div class="fixed">
+      <div class="left allcheck">
+        全选
+      </div>
+      <div class="right">
+        <div>
+          ￥11
+        </div>
+        <div>下单</div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,5 +66,142 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.cart {
+  overflow-x: hidden;
+  .top {
+    display: flex;
+    justify-content: space-between;
+    padding: 30rpx 20rpx;
+    div {
+      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/servicePolicyRed-518d32d74b.png) 0 center no-repeat;
+      background-size: 10rpx;
+      padding-left: 15rpx;
+      display: flex;
+      align-items: center;
+      font-size: 25rpx;
+      color: #666;
+    }
+  }
+  .cartlist {
+    background: #fff;
+    margin-bottom: 110rpx;
+    .item {
+      padding: 20rpx 0;
+      border-bottom: 1rpx solid #f4f4f4;
+      height: 166rpx;
+      position: relative;
+      .con {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 300ms ease;
+        .left {
+          display: flex;
+          align-items: center;
+          width: 80%;
+          .icon {
+            height: 125rpx;
+            width: 34rpx;
+            background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat center center;
+            background-size: 34rpx 34rpx;
+            margin: 0 20rpx;
+          }
+          .icon.active {
+            background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat center center;
+            background-size: 34rpx 34rpx;
+          }
+          .img {
+            height: 125rpx;
+            width: 125rpx;
+            display: block;
+            background: #f4f4f4;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .info {
+            width: 50%;
+            padding: 20rpx;
+            p {
+              line-height: 40rpx;
+            }
+          }
+        }
+        .right {
+          padding-right: 50rpx;
+        }
+      }
+      .delete {
+        position: absolute;
+        width: 100rpx;
+        top: 0;
+        right: -100rpx;
+        text-align: center;
+        height: 100%;
+        background: #b4282d;
+        color: #fff;
+        transition: all 200ms ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        div {
+          color: #fff;
+        }
+      }
+    }
+  }
+  .fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 100rpx;
+    line-height: 100rpx;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .left {
+      display: flex;
+      align-items: center;
+      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+      background-size: 34rpx 34rpx;
+      background-position: 20rpx;
+      padding-left: 70rpx;
+    }
+    .active {
+      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
+      background-size: 34rpx 34rpx;
+      background-position: 20rpx;
+    }
+    .right {
+      display: flex;
+      div:nth-child(1) {
+        color: #b4282d;
+        padding-right: 40rpx;
+      }
+      div:nth-child(2) {
+        width: 200rpx;
+        height: 100rpx;
+        text-align: center;
+        line-height: 100rpx;
+        font-size: 29rpx;
+        background: #b4282d;
+        color: #fff;
+      }
+    }
+  }
+  .nogoods {
+    margin-top: 200rpx;
+    img {
+      margin: 0 auto;
+      display: block;
+      width: 258rpx;
+      height: 258rpx;
+    }
+  }
+}
+
 </style>
