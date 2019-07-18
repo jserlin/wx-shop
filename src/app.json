@@ -1,0 +1,59 @@
+{
+  "pages": [
+    {
+      "path": "pages/recommend/recommend",
+      "config": {
+        "navigationBarTitleText": "推荐",
+        "usingComponents": {
+          "van-search": "/vant-weapp/dist/search/index"
+        }
+      }
+    },
+    "pages/category/category",
+    "pages/coupon/coupon",
+    "pages/cart/cart",
+    "pages/my/my",
+    {
+      "path": "packageA/logs",
+      "subPackage": true
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "backgroundColor": "#fafafa",
+    "borderStyle": "white",
+    "selectedColor": "#b4282d",
+    "color": "#666",
+    "list": [
+      {
+        "pagePath": "pages/recommend/recommend",
+        "iconPath": "static/images/recommend_default.png",
+        "selectedIconPath": "static/images/recommend_selected.png",
+        "text": "推荐"
+      },
+      {
+        "pagePath": "pages/coupon/coupon",
+        "iconPath": "static/images/coupon_default.png",
+        "selectedIconPath": "static/images/coupon_selected.png",
+        "text": "福利券"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "iconPath": "static/images/shopping_default.png",
+        "selectedIconPath": "static/images/shopping_selected.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "iconPath": "static/images/my_default.png",
+        "selectedIconPath": "static/images/my_selected.png",
+        "text": "我的"
+      }
+    ]
+  }
+}
