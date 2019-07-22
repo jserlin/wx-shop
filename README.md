@@ -21,7 +21,7 @@ npm run build --report
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 #### 备注
-[框架 mpvue]()
-[页面集中式配置 mpvue-entry](https://github.com/F-loat/mpvue-entry)
-[UI vant-weapp](https://github.com/youzan/vant-weapp)
-[路由 mpvue-router-patch](https://github.com/F-loat/mpvue-router-patch)
+- [框架 mpvue]()
+- [页面集中式配置 mpvue-entry](https://github.com/F-loat/mpvue-entry)
+- [UI vant-weapp](https://github.com/youzan/vant-weapp)
+- [路由 mpvue-router-patch](https://github.com/F-loat/mpvue-router-patch)

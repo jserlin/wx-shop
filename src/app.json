@@ -9,7 +9,13 @@
         }
       }
     },
-    "pages/category/category",
+    {
+      "path": "pages/category/category",
+      "navigationBarTitleText": "分类",
+      "config": {
+        "navigationBarTitleText": "分类"
+      }
+    },
     "pages/coupon/coupon",
     "pages/cart/cart",
     "pages/my/my",
