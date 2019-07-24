@@ -10,15 +10,18 @@
         <span class="span">分类</span>
       </div>
     </div>
-    <div class="goods-wrap">
+    <scroll-view scroll-y class="goods-wrap">
         <div class="goods-con">
           <div class="card" @click="" v-for="(subitem, subindex) in goodsList" :key="subindex">
-            <img class="img" src="http://yanxuan.nosdn.127.net/149dfa87a7324e184c5526ead81de9ad.png" alt="">
-            <p class="p">日式和风懒人沙发</p>
+            <div class="img-wrap">
+              <img class="img" src="http://yanxuan.nosdn.127.net/149dfa87a7324e184c5526ead81de9ad.png" alt="">
+              <div class="desc">三峡水牛头层皮，高端夏凉必备</div>
+            </div>
             <p class="p price">￥599</p>
+            <p class="info">三峡水牛头层皮，高端夏凉必备</p>
           </div>
         </div>
-    </div>
+    </scroll-view >
   </div>
 </template>
 
@@ -71,12 +74,13 @@ export default {
       position: relative;
       flex: 1;
       .input {
+        padding-left: 50rpx;
         width: 100%;
         height: 56rpx;
         border-radius: 8rpx;
         background: #fff;
         box-sizing: border-box;
-        padding-left: 40rpx;
+        font-size: 24rpx;
       }
 
       .icon {
@@ -102,19 +106,20 @@ export default {
       .span{
         line-height: 1;
         display: block;
-        font-size: 16rpx;
+        font-size: 20rpx;
       }
     }
   }
   .goods-wrap{
     position: relative;
+    height: 100%;
     .goods-con{
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       .card {
         width: 370rpx;
-        border-radius: 4rpx;
+        border-radius: 8rpx;
         box-sizing: border-box;
         background: #fff;
         margin-bottom: 10rpx;
@@ -132,6 +137,38 @@ export default {
           text-overflow: ellipsis;
           white-space: nowrap;
           width: 98%
+        }
+        .price {
+          margin-bottom: 10rpx;
+          font-size: 32rpx;
+          line-height: 48rpx;
+          color: #b4282d;
+          border-bottom: 1rpx solid #d9d9d9;
+        }
+        .img-wrap{
+          position: relative;
+          background-color: #f4f4f4;
+          overflow: hidden;
+          .desc{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #F1ECE2;
+            border-radius: 0 0 4rpx 4rpx;
+            font-size: 24rpx;
+            color: #9F8A60;
+            letter-spacing: 0;
+            line-height: 36rpx;
+            padding: 10rpx 10rpx;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+        .info{
+          font-size: 24rpx;
+          line-height: 1;
+          color: #999;
         }
       }
     }
