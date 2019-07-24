@@ -11,7 +11,6 @@
     },
     {
       "path": "pages/category/category",
-      "navigationBarTitleText": "分类",
       "config": {
         "navigationBarTitleText": "分类"
       }
@@ -19,6 +18,22 @@
     "pages/coupon/coupon",
     "pages/cart/cart",
     "pages/my/my",
+    {
+      "path": "pages/product/detail",
+      "config": {
+        "navigationBarTitleText": "详情",
+        "usingComponents": {
+          "van-cell": "/vant-weapp/dist/cell/index",
+          "van-popup": "/vant-weapp/dist/popup/index",
+          "van-tab": "/vant-weapp/dist/tab/index",
+          "van-tabs": "/vant-weapp/dist/tabs/index",
+          "van-row": "/vant-weapp/dist/row/index",
+          "van-col": "/vant-weapp/dist/col/index",
+          "van-button": "/vant-weapp/dist/button/index",
+          "van-icon": "/vant-weapp/dist/icon/index"
+        }
+      }
+    },
     {
       "path": "packageA/logs",
       "subPackage": true
@@ -37,16 +52,16 @@
     "color": "#666",
     "list": [
       {
-        "pagePath": "pages/recommend/recommend",
-        "iconPath": "static/images/recommend_default.png",
-        "selectedIconPath": "static/images/recommend_selected.png",
-        "text": "推荐"
-      },
-      {
         "pagePath": "pages/coupon/coupon",
         "iconPath": "static/images/coupon_default.png",
         "selectedIconPath": "static/images/coupon_selected.png",
         "text": "福利券"
+      },
+      {
+        "pagePath": "pages/recommend/recommend",
+        "iconPath": "static/images/recommend_default.png",
+        "selectedIconPath": "static/images/recommend_selected.png",
+        "text": "推荐"
       },
       {
         "pagePath": "pages/cart/cart",

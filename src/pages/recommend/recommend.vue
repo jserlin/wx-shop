@@ -12,7 +12,7 @@
     </div>
     <scroll-view scroll-y class="goods-wrap">
         <div class="goods-con">
-          <div class="card" @click="" v-for="(subitem, subindex) in goodsList" :key="subindex">
+          <div class="card" @click="" v-for="(subitem, subindex) in goodsList" @click="toDetail" :key="subindex">
             <div class="img-wrap">
               <img class="img" src="http://yanxuan.nosdn.127.net/149dfa87a7324e184c5526ead81de9ad.png" alt="">
               <div class="desc">三峡水牛头层皮，高端夏凉必备</div>
@@ -49,6 +49,10 @@ export default {
       const url = '/pages/category/category'
       this.$router.push(url)
     },
+    toDetail() {
+      const url = '/pages/product/detail'
+      this.$router.push(url)
+    }
   },
 }
 </script>
