@@ -15,6 +15,15 @@
         "navigationBarTitleText": "分类"
       }
     },
+    {
+      "path": "pages/search/search",
+      "config": {
+        "navigationBarTitleText": "搜索",
+        "usingComponents": {
+          "van-search": "/vant-weapp/dist/search/index"
+        }
+      }
+    },
     "pages/coupon/coupon",
     "pages/cart/cart",
     "pages/my/my",
@@ -30,14 +39,14 @@
           "van-row": "/vant-weapp/dist/row/index",
           "van-col": "/vant-weapp/dist/col/index",
           "van-button": "/vant-weapp/dist/button/index",
-          "van-icon": "/vant-weapp/dist/icon/index"
+          "van-icon": "/vant-weapp/dist/icon/index",
+          "van-goods-action": "/vant-weapp/dist/goods-action/index",
+          "van-goods-action-icon": "/vant-weapp/dist/goods-action-icon/index",
+          "van-goods-action-button": "/vant-weapp/dist/goods-action-button/index"
         }
       }
     },
-    {
-      "path": "packageA/logs",
-      "subPackage": true
-    }
+    "pages/login/login"
   ],
   "window": {
     "backgroundTextStyle": "light",
