@@ -1,215 +1,220 @@
 <template>
-	<div class="container">
-		<div class="user_wrap" @click="login">
-			<div class="left">
-				<img v-if="isLogin" :src="user.avatar" alt="" class="avatar">
-				<img v-if="!isLogin" src=" https://oss.qianbaocard.org/20180628/fd5d6a847d6243f0aba924d893d42dca.png" alt="" class="avatar">
-			</div>
-			<div class="right">
-				<div class="title">{{user.nickName}}</div>
-				<div class="desc">微信用户</div>
-			</div>
-		</div>
-    <div class="item-group">
-      <div class="item">
-        <div class="left">订单</div>
-        <div class="right">
-          <img class="img" src="/static/images/icon_back.png" alt="">
+  <div class="container">
+    <div class="user-center-section user-info rel">
+      <image src="/static/images/my_bg.png" alt />
+      <div class="user-info-content row-padding abs flex-box">
+        <div class="img-avatar">
+          <image src="/static/images/my_bg.png" alt />
+        </div>
+        <div class="user-name">
+          <p class="font-30">范晓萱</p>
+          <p class="font-28">
+            福利券金额：
+            <span class="font-red">¥ 500.00</span>
+          </p>
         </div>
       </div>
     </div>
-    <div class="item-group">
-      <div class="item">
-        <div class="left">
-          <img class="img" src="/static/images/my_icon_position.png" alt="">
-          <span class="span">收货地址</span>
+
+    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;">
+      <div class="flex-box item-space-between">
+        <span>订单</span>
+        <span class="icon-back">
+          <image src="/static/images/icon_back.png" />
+        </span>
+      </div>
+    </div>
+    <div
+      class="flex-box item-space-between text-center mb20rpx"
+      style="background: #fff; padding: 18rpx 0;"
+    >
+      <div class="flex-item">
+        <div class="img-wrap">
+          <image src="/static/images/my_icon_cancel.png" alt />
         </div>
-        <div class="right">
-          <img class="img" src="/static/images/icon_back.png" alt="">
+        <p>已取消</p>
+      </div>
+      <div class="flex-item">
+        <div class="img-wrap rel">
+          <image src="/static/images/my_icon_send.png" alt />
+        </div>
+        <p>待发货</p>
+      </div>
+      <div class="flex-item">
+        <div class="img-wrap rel">
+          <image src="/static/images/my_icon_Receive.png" alt />
+        </div>
+        <p>待收货</p>
+      </div>
+      <div class="flex-item">
+        <div class="img-wrap">
+          <image src="/static/images/my_icon_aftersale.png" alt />
+        </div>
+        <p>收货</p>
+      </div>
+    </div>
+
+    <div class="row-padding" style="background: #fff;">
+      <div class="user-center-row rel">
+        <div class="img-wrap abs" style="margin: 0;">
+          <image src="/static/images/my_icon_position.png" alt />
+        </div>
+        <div class="flex-box item-space-between user-operation">
+          <span>收货地址</span>
+          <span class="icon-back">
+            <image src="/static/images/icon_back.png" />
+          </span>
+        </div>
+      </div>
+      <div class="user-center-row rel">
+        <div class="img-wrap abs" style="margin: 0;">
+          <image src="/static/images/coupon_default.png" alt />
+        </div>
+        <div class="flex-box item-space-between user-operation">
+          <span>我的福利券</span>
+          <span class="icon-back">
+            <image src="/static/images/icon_back.png" />
+          </span>
+        </div>
+      </div>
+      <div class="user-center-row rel">
+        <div class="img-wrap abs" style="margin: 0;">
+          <image src="/static/images/my_icon_bill.png" alt />
+        </div>
+        <div class="flex-box item-space-between user-operation">
+          <span>账单明细</span>
+          <span class="icon-back">
+            <image src="/static/images/icon_back.png" />
+          </span>
         </div>
       </div>
     </div>
-	</div>
+  </div>
 </template>
 <script>
 export default {
-  data(){
+  data() {
     return {
-      user:{
-        nickName:"阿凡提",
-        avatar:"http://yanxuan.nosdn.127.net/d6a7b9a2eb6af92d709429798a4ca3ea.png",
-        id:"1"
-      },
-      path: 'pages/tabbar/togetherPay'
+      user: {
+        nickName: "阿凡提",
+        avatar: "",
+        id: "1"
+      }
+    };
+  },
+  computed: {},
+
+  mounted() {},
+
+  onHide() {
+    wx.stopAccelerometer();
+  },
+
+  methods: {}
+};
+</script>
+
+<style scoped lang="less">
+.abs {
+  position: absolute;
+}
+.rel {
+  position: relative;
+}
+.text-center {
+  text-align: center;
+}
+.flex-box {
+  display: flex;
+  &.item-space-between {
+    align-items: center;
+    justify-content: space-between;
+  }
+  .flex-item {
+    flex: 1;
+  }
+}
+.icon-back {
+  width: 24rpx;
+  height: 24rpx;
+  line-height: 24rpx;
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+.font-red {
+  color: #ab2929;
+}
+.font-30 {
+  font-size: 30rpx;
+  color: #333;
+}
+.font-28 {
+  font-size: 28rpx;
+  color: #666;
+}
+.mb20rpx {
+  margin-bottom: 20rpx;
+}
+.user-operation{
+	margin-left: 50rpx;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 28rpx;
+  background: #eee;
+  .img-wrap {
+    width: 40rpx;
+    height: 40rpx;
+    margin: 13rpx auto;
+    image {
+      width: 100%;
+      height: 100%;
     }
-  },
-  computed:{
-    isLogin(){
-      // return !!this.user.wx
-      return !!this.true
-    },
-    sessionFrom(){
-      var { nickName, avatar, id } = this.user
-      return JSON.stringify({
-        userId:id,
-        nickName,
-        avatar: avatar || 'https://oss.qianbaocard.org/20180628/fd5d6a847d6243f0aba924d893d42dca.png'
-      })
+  }
+  .row-padding {
+    padding: 0 20rpx 0 30rpx;
+  }
+  .user-center-section {
+    margin-bottom: 20rpx;
+    &.user-info {
+      width: 100%;
+      height: 270rpx;
+      background: #e2ce9c;
+      image {
+        width: 100%;
+        height: 270rpx;
+      }
     }
-  },
-  mounted(){
-    var task = decodeURIComponent(this.$root.$mp.query.task || '')
-    if (task) {
-      wx.navigateTo({
-        url:task
-      })
+    .user-info-content {
+      width: 100%;
+      height: 140rpx;
+      top: 50%;
+      transform: translateY(-50%);
     }
-  },
-  onHide(){
-    wx.stopAccelerometer()
-  },
-  methods:{
-    loginFirst(url){
-      let task = encodeURIComponent(url)
-      let fromPage = encodeURIComponent(`pages/tabbar/mine?task=${task}`)
-      wx.navigateTo({
-        url:`/pages/login?from=${fromPage}`
-      })
-    },
-    login(){
-      if (this.user.wx) return //已登陆
-      let fromPage = encodeURIComponent(`pages/tabbar/mine`)
-      wx.navigateTo({
-        url:`/pages/login?from=${fromPage}`
-      })
-    },
-    nullFun(){
-      wx.showModal({
-        title: '提示',
-        content: '小程序暂未开放此功能，请联系客服处理',
-        showCancel:false,
-      })
-    },
-    clearStorage(){
-      wx.clearStorage()
+    .img-avatar {
+      width: 140rpx;
+      height: 140rpx;
+      margin-right: 20rpx;
+      border-radius: 50%;
+      border: 2px solid #e9d9b5;
+      overflow: hidden;
+    }
+    .user-name {
+      padding: 10rpx 0;
+      line-height: 60rpx;
+    }
+  }
+  .user-center-row {
+    background: #fff;
+    padding: 24rpx 0;
+    border-bottom: 1rpx solid #eee;
+    &:last-child {
+      border-bottom: 0;
     }
   }
 }
-</script>
-<style scoped lang="less">
-	.container {
-    width: 100%;
-		background: #f7f7f7;
-		.user_wrap {
-      width: 100%;
-			background-color: #1e1e1e;
-			display: flex;
-			align-items: center;
-			padding: 65rpx 30rpx;
-			border-radius: 10rpx;
-			.left {
-				width: 150rpx;
-				height: 150rpx;
-				img {
-					width: 100%;
-					height: 100%;
-					border-radius: 50%;
-				}
-			}
-			.right {
-				flex:1;
-				padding-left: 30rpx;
-				.title {
-					color: #fff;
-					font-size: 36rpx;
-				}
-				.desc {
-					margin-top: 10rpx;
-					color: #999;
-					font-size: 32rpx
-				}
-			}
-    }
-    .item-group{
-      margin-top: 20rpx;
-      background: #fff;
-      width: 100%;
-      color: #666;
-      .item{
-        display: flex;
-        padding: 20rpx;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 28rpx;
-        border-bottom: 1px solid #d9d9d9;
-        .left{
-          flex: 1;
-          .img{
-            width: 40rpx;
-            height: 40rpx;
-          }
-          .span {
-            margin-left: 30rpx;
-          }
-        }
-        .right{
-          width: 40rpx;
-          height: 40rpx;
-          .img{
-            width: 100%;
-            height: 100%;
-          }
-        }
-      }
-    }
-		.channel {
-			.item {
-				padding: 0 30rpx;
-				height: 105rpx;
-				display: flex;
-				align-items: center;
-				position: relative;
-				color: #333;
-				.stop {
-					position: absolute;
-					left: 0;
-					top: 0;
-					right: 0;
-					bottom: 0;
-					z-index: 10;
-				}
-				button {
-					width: 100%;
-					height: 100%;
-					margin: 0;
-					border:none;
-					display: flex;
-					align-items: center;
-					padding: 0;
-					text-align: left;
-					font-size: inherit;
-				}
-				.channel-icon {
-					font-size: 40rpx;
-					margin-right: 20rpx;
-				}
-				.title {
-					flex: 1;
-				}
-				.qb-icon-arrow {
-					transform: rotate(90deg);
-					font-size: 40rpx;
-				}
-				&:nth-last-child(n+2):after {
-					content: "";
-					position: absolute;
-					left: 30rpx;
-					right: 30rpx;
-					bottom: 0;
-					height: 2rpx;
-					background: #c3c3c3;
-				}
-			}
-		}
-	}
 </style>
