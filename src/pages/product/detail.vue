@@ -31,8 +31,8 @@
           </div>
         </div>
         <van-row>
-          <van-col span="12">span: 8</van-col>
-          <van-col span="12">span: 8</van-col>
+          <van-col span="8"><span class="grey">中国品牌</span></van-col>
+          <van-col span="14"><span class="grey">库存: 9527</span></van-col>
         </van-row>
       </div>
       <div class="select-wrap">
@@ -45,8 +45,15 @@
       </div>
       <!-- 底部tab -->
       <div class="footer-wrap">
+        <van-goods-action>
+          <!-- <van-goods-action-icon icon="chat-o" text="客服" /> -->
+          <van-goods-action-icon icon="cart-o" text="购物车" info="5" />
+          <!-- <van-goods-action-icon icon="shop-o" text="店铺" /> -->
+          <van-goods-action-button text="加入购物车" type="warning" />
+          <van-goods-action-button @click="toBuy" text="立即购买" />
+        </van-goods-action>
         <!-- <div class="btn-group"> -->
-          <van-row>
+          <!-- <van-row>
             <van-col span="8">
               <van-icon name="https://b.yzcdn.cn/vant/icon-demo-1126.png" />
             </van-col>
@@ -56,11 +63,56 @@
             <van-col span="8">
               <van-button hairline type="primary">加入购物车</van-button>
             </van-col>
-          </van-row>
+          </van-row> -->
         <!-- </div> -->
       </div>
       <!-- 商品规格选择弹出层 -->
-      <van-popup :show="showPopup" position="bottom" @close="showPopup = false">内容</van-popup>
+      <van-popup :show="showPopup" position="bottom" @close="showPopup = false">
+        <div class="dt-paramselect">
+          <div class="info-con">
+            <div class="left">
+              <img class="img" src="http://yanxuan.nosdn.127.net/5cc861b114573015c81013c02f189b91.png?quality=90&thumbnail=200x200&imageView" alt="">
+            </div>
+            <div class="right">
+              <div class="con">
+                <div class="price">
+                  <span class="span">价格：¥</span>
+                  <span class="span">239</span>
+                </div>
+                <div class="sku">
+                  <span class="span">已选择：</span>
+                  <span class="span it">请选择规格数量</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spec-con">
+            <div class="u-format">
+              <div class="tt">颜色</div>
+              <div class="con">
+                <div class="tab sel">
+                  <span class="span">象牙白</span>
+                </div>
+                <div class="tab">
+                  <span class="span">替换复合滤芯 3片装</span>
+                </div>
+              </div>
+            </div>
+            <div class="u-format">
+              <div class="tt">数量</div>
+              <div class="con m-selNumRow">
+                <div class="m-selnum">
+                  <div class="less"><i class="qb-icon qb-icon-jian"/></div>
+                  <div class="textWrap">
+                    <input class="input" type="tel" value="1">
+                  </div>
+                  <div class="more"><i class="qb-icon qb-icon-jia"/></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </van-popup>
       <!-- 商品详情 规则参数 tabs -->
       <van-tabs :active="active" @change="onChange">
         <van-tab title="商品详情">
@@ -111,6 +163,10 @@ export default {
   methods: {
     onChange(event) {
       console.log("TCL: onChange -> event", event)
+    },
+    toBuy() {
+      const url = '/pages/order/submitOrder'
+      this.$router.push(url)
     }
   }
 }
@@ -124,8 +180,13 @@ export default {
 }
 
 .pub {
-    margin-bottom: 20rpx;
+    margin-bottom: 28rpx;
     background: #fff;
+}
+.grey{
+  line-height: 52rpx;
+  color: #999;
+  font-size: 28rpx;
 }
 // banner轮播
 .product-banner {
@@ -188,7 +249,6 @@ export default {
 .product-info {
   padding: 20rpx;
   .content {
-    margin-bottom: 20rpx;
     display: flex;
     align-items: center;
     .desc {
@@ -366,5 +426,109 @@ export default {
     width: 100vw;
     // height: auto;
   }
+}
+// 规格选择
+.dt-paramselect {
+	padding: 36rpx 30rpx 130rpx 30rpx;
+	.info-con{
+		// height: 240rpx;
+		display: flex;
+		padding-bottom: 42rpx;
+		.left{
+			overflow: hidden;
+			// margin-right: -196rpx;
+			width: 196rpx;
+			height: 196rpx;
+			    background-color: #f4f4f4;
+			.img{
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.right{
+			flex: 1;
+			display: flex;
+			align-items: flex-end;
+			line-height: 1;
+			margin-left: 20rpx;
+			.con{
+				.price{
+					// font-size: 28rpx;
+					padding-bottom: 4rpx;
+					line-height: 40rpx;
+					color: #b4282d;
+				}
+				.sku{
+					overflow: hidden;
+					max-width: 400rpx;
+					// font-size: 28rpx;
+					line-height: 40rpx;
+					word-wrap: normal;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+	}
+	.spec-con{
+		.u-format{
+			.tt{
+				line-height: 1;
+				// font-size: 28rpx;
+				padding-bottom: 24rpx;
+			}
+			.con{
+				padding-bottom: 30rpx;
+				.tab{
+					display: inline-block;
+					position: relative;
+					vertical-align: middle;
+					border-radius: 6rpx;
+					padding: 0 34rpx;
+					font-size: 24rpx;
+					line-height: 64rpx;
+					margin-right: 24rpx;
+					margin-bottom: 16rpx;
+					border: 2rpx solid #333;
+				}
+				.sel{
+					border: 2rpx solid #b4282d;
+					color: #b4282d;
+				}
+			}
+			.m-selNumRow{
+				position: relative;
+				display: flex;
+				align-items: center;
+				.m-selnum{
+					display: inline-flex;
+					line-height: 66rpx;
+					text-align: center;
+					border: 1rpx solid #d9d9d9;
+					.less,.more{
+						position: relative;
+						width: 90rpx;
+						height: 66rpx;
+					}
+					.textWrap{
+						width: 130rpx;
+						text-align: center;
+						border-left: 1rpx solid #d9d9d9;
+						border-right: 1rpx solid #d9d9d9;
+						.input{
+							height: 100%;
+							width: 100%;
+							box-sizing: border-box;
+							margin: 0;
+							text-align: center;
+							color: #333;
+							border: none;
+							background-color: transparent;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 </style>

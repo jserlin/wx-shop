@@ -25,3 +25,4 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 - [页面集中式配置 mpvue-entry](https://github.com/F-loat/mpvue-entry)
 - [UI vant-weapp](https://github.com/youzan/vant-weapp)
 - [路由 mpvue-router-patch](https://github.com/F-loat/mpvue-router-patch)
+- [请求库 flyio](https://wendux.github.io/dist/#/doc/flyio/readme)

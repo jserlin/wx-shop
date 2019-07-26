@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     toSearch() {
-      const url = '/packageA/logs'
+      const url = '/pages/search/search'
       this.$router.push(url)
     },
     toCate() {
