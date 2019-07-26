@@ -50,7 +50,7 @@
           <van-goods-action-icon icon="cart-o" text="购物车" info="5" />
           <!-- <van-goods-action-icon icon="shop-o" text="店铺" /> -->
           <van-goods-action-button text="加入购物车" type="warning" />
-          <van-goods-action-button text="立即购买" />
+          <van-goods-action-button @click="toBuy" text="立即购买" />
         </van-goods-action>
         <!-- <div class="btn-group"> -->
           <!-- <van-row>
@@ -163,6 +163,10 @@ export default {
   methods: {
     onChange(event) {
       console.log("TCL: onChange -> event", event)
+    },
+    toBuy() {
+      const url = '/pages/order/submitOrder'
+      this.$router.push(url)
     }
   }
 }
