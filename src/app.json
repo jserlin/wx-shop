@@ -114,6 +114,25 @@
       }
     },
     {
+      "path": "pages/order/orderDetail",
+      "config": {
+        "navigationBarTitleText": "订单详情",
+        "usingComponents": {
+          "van-cell": "/vant-weapp/dist/cell/index",
+          "van-icon": "/vant-weapp/dist/icon/index"
+        }
+      }
+    },
+    {
+      "path": "pages/order/returnGoodsDetail",
+      "config": {
+        "navigationBarTitleText": "退货详情",
+        "usingComponents": {
+          "van-cell": "/vant-weapp/dist/cell/index"
+        }
+      }
+    },
+    {
       "path": "pages/product/detail",
       "config": {
         "navigationBarTitleText": "详情",

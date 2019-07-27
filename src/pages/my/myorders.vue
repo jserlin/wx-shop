@@ -38,7 +38,7 @@
           <span>（含邮费 0.00）</span>
         </div>
         <div class="order-button">
-          <span class="btn btn-outline mr20rpx">查看订单</span>
+          <span class="btn btn-outline mr20rpx" @click="toOrderDetail">查看订单</span>
           <span class="btn btn-outline" @click="toLogistics">查看物流</span>
         </div>
       </div>
@@ -76,6 +76,10 @@ export default {
     },
     toLogistics() {
       const url = '/pages/order/logisticsDetail'
+      this.$router.push(url)
+    },
+    toOrderDetail() {
+      const url = '/pages/order/orderDetail'
       this.$router.push(url)
     }
   },
