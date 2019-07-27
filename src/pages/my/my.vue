@@ -58,7 +58,7 @@
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_position.png" alt />
         </div>
-        <div class="flex-box item-space-between user-operation">
+        <div class="flex-box item-space-between user-operate">
           <span>收货地址</span>
           <span class="icon-back">
             <image src="/static/images/icon_back.png" />
@@ -69,7 +69,7 @@
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/coupon_default.png" alt />
         </div>
-        <div class="flex-box item-space-between user-operation">
+        <div class="flex-box item-space-between user-operate">
           <span>我的福利券</span>
           <span class="icon-back">
             <image src="/static/images/icon_back.png" />
@@ -80,7 +80,7 @@
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_bill.png" alt />
         </div>
-        <div class="flex-box item-space-between user-operation">
+        <div class="flex-box item-space-between user-operate">
           <span>账单明细</span>
           <span class="icon-back">
             <image src="/static/images/icon_back.png" />
@@ -192,7 +192,7 @@ export default {
       border-bottom: 0;
     }
 	}
-	.user-operation{
+	.user-operate{
 		margin-left: 50rpx;
 	}
 }
