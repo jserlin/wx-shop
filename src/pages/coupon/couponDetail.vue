@@ -106,12 +106,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .container {
-    position: relative;
-    padding-bottom: 104rpx;
-    font-family: PingFangSC-Light, helvetica, 'Heiti SC';
-    background: #f7f7f7;
-    min-height: 100%;
-    box-sizing: border-box;
+  position: relative;
+  padding-bottom: 104rpx;
+  font-family: PingFangSC-Light, helvetica, 'Heiti SC';
+  background: #f7f7f7;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 .grey{
   line-height: 52rpx;

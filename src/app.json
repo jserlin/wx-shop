@@ -91,6 +91,16 @@
       }
     },
     {
+      "path": "pages/order/logisticsDetail",
+      "config": {
+        "navigationBarTitleText": "物流",
+        "usingComponents": {
+          "van-steps": "/vant-weapp/dist/steps/index",
+          "van-icon": "/vant-weapp/dist/icon/index"
+        }
+      }
+    },
+    {
       "path": "pages/product/detail",
       "config": {
         "navigationBarTitleText": "详情",

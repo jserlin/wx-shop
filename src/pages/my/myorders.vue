@@ -39,7 +39,7 @@
         </div>
         <div class="order-button">
           <span class="btn btn-outline mr20rpx">查看订单</span>
-          <span class="btn btn-outline">查看物流</span>
+          <span class="btn btn-outline" @click="toLogistics">查看物流</span>
         </div>
       </div>
     </div>
@@ -73,6 +73,10 @@ export default {
   methods: {
     onChange(i) {
       this.active = i;
+    },
+    toLogistics() {
+      const url = '/pages/order/logisticsDetail'
+      this.$router.push(url)
     }
   },
   mounted() {
