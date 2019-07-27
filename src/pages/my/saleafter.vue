@@ -89,8 +89,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .my-orders-wrap {
+  font-size: 28rpx;
   .orders-tab {
-    padding: 32rpx 0;
+    padding: 20rpx 0;
     background: #fff;
   }
   .flex-item {
@@ -103,8 +104,7 @@ export default {
   .order-item {
     background-color: #fff;
     .order-title {
-      padding: 0 30rpx;
-      line-height: 116rpx;
+      padding: 20rpx 30rpx;
       border-bottom: #eee 1rpx solid;
     }
     .order-name {
@@ -115,14 +115,14 @@ export default {
       text-align: right;
     }
     .order-id {
-      padding: 16rpx 30rpx;
+      padding: 20rpx 30rpx;
       line-height: 54rpx;
     }
     .order-goods {
       flex: 1;
     }
     .goods-list {
-      padding: 30rpx;
+      padding: 20rpx 30rpx;
       background-color: #eee;
     }
     .goods-img {
@@ -139,7 +139,7 @@ export default {
       line-height: 72rpx;
     }
     .goods-count {
-      padding: 30rpx;
+      padding: 20rpx 30rpx;
       text-align: right;
       border-top: 1rpx solid #efefef;
       border-bottom: 1rpx solid #efefef;

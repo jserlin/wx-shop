@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <div class="flex-item-right coupon-operation">
+      <div class="flex-item-right coupon-operate">
         <!-- 更改类名切换按钮 btn-normal btn-outline -->
         <span v-if="(el%2)" class="btn btn-normal">已购买</span>
         <span v-else class="btn btn-outline">撤销</span>
@@ -35,10 +35,11 @@ export default {
 <style lang="less" scoped>
 .coupon-list-wrapper {
   margin: 20rpx 0;
+  font-size: 28rpx;
 }
 .coupon-list-wrapper .coupon-item {
   margin-bottom: 20rpx;
-  padding: 30rpx;
+  padding: 20rpx 30rpx;
   background: #fff;
 }
 .coupon-list-wrapper .coupon-img-wrapper {
@@ -68,17 +69,17 @@ export default {
   line-height: 80rpx;
   font-size: 26rpx;
 }
-.coupon-list-wrapper .coupon-operation {
+.coupon-list-wrapper .coupon-operate {
   position: relative;
   display: flex;
   align-items: flex-end;
   width: 160rpx;
 }
-.coupon-list-wrapper .coupon-operation .btn {
+.coupon-list-wrapper .coupon-operate .btn {
   position: absolute;
   right: 0;
 }
-.coupon-list-wrapper .coupon-operation .btn-normal {
+.coupon-list-wrapper .coupon-operate .btn-normal {
   color: #ab2b2c;
 }
 </style>
