@@ -28,6 +28,16 @@
     "pages/cart/cart",
     "pages/my/my",
     {
+      "path": "pages/my/myorders",
+      "config": {
+        "navigationBarTitleText": "我的订单",
+        "usingComponents": {
+          "van-tab": "/vant-weapp/dist/tab/index",
+          "van-tabs": "/vant-weapp/dist/tabs/index"
+        }
+      }
+    },
+    {
       "path": "pages/product/detail",
       "config": {
         "navigationBarTitleText": "详情",
