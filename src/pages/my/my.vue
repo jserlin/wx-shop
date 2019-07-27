@@ -16,8 +16,8 @@
       </div>
     </div>
 
-    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;">
-      <div class="flex-box item-space-between">
+    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders(1)">
+      <div class="flex-box item-space-between" >
         <span>订单</span>
         <span class="icon-back">
           <image src="/static/images/icon_back.png" />
@@ -26,36 +26,35 @@
     </div>
     <div
       class="flex-box item-space-between text-center mb20rpx"
-      style="background: #fff; padding: 18rpx 0;"
-    >
-      <div class="flex-item">
+      style="background: #fff; padding: 18rpx 0;">
+      <div class="flex-item" @click="toOrders(2)">
         <div class="img-wrap">
           <image src="/static/images/my_icon_cancel.png" alt />
         </div>
         <p>已取消</p>
       </div>
-      <div class="flex-item">
+      <div class="flex-item" @click="toOrders(3)">
         <div class="img-wrap rel">
           <image src="/static/images/my_icon_send.png" alt />
         </div>
         <p>待发货</p>
       </div>
-      <div class="flex-item">
+      <div class="flex-item" @click="toOrders(4)">
         <div class="img-wrap rel">
           <image src="/static/images/my_icon_Receive.png" alt />
         </div>
         <p>待收货</p>
       </div>
-      <div class="flex-item">
+      <div class="flex-item" @click="toSaleAfter">
         <div class="img-wrap">
           <image src="/static/images/my_icon_aftersale.png" alt />
         </div>
-        <p>收货</p>
+        <p>售后</p>
       </div>
     </div>
 
     <div class="row-padding" style="background: #fff;">
-      <div class="user-center-row rel">
+      <div class="user-center-row rel" @click="toAddress">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_position.png" alt />
         </div>
@@ -66,7 +65,7 @@
           </span>
         </div>
       </div>
-      <div class="user-center-row rel">
+      <div class="user-center-row rel" @click="toMycoupon">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/coupon_default.png" alt />
         </div>
@@ -77,7 +76,7 @@
           </span>
         </div>
       </div>
-      <div class="user-center-row rel">
+      <div class="user-center-row rel" @click="toBillDetail">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_bill.png" alt />
         </div>
@@ -102,6 +101,7 @@ export default {
       }
     };
   },
+
   computed: {},
 
   mounted() {},
@@ -110,56 +110,32 @@ export default {
     wx.stopAccelerometer();
   },
 
-  methods: {}
+  methods: {
+    toOrders(to) {
+      const url = to ? `/pages/my/myorders?a=${to}` : '/pages/my/myorders'
+      this.$router.push(url)
+    },
+    toMycoupon(){
+      const url = '/pages/my/mycoupon'
+      this.$router.push(url)
+    },
+    toSaleAfter(){
+      const url = '/pages/my/saleafter'
+      this.$router.push(url)
+    },
+    toBillDetail(){
+      const url = '/pages/my/billdetail'
+      this.$router.push(url)
+    },
+    toAddress(){
+      const url = '/pages/my/address'
+      this.$router.push(url)
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
-.abs {
-  position: absolute;
-}
-.rel {
-  position: relative;
-}
-.text-center {
-  text-align: center;
-}
-.flex-box {
-  display: flex;
-  &.item-space-between {
-    align-items: center;
-    justify-content: space-between;
-  }
-  .flex-item {
-    flex: 1;
-  }
-}
-.icon-back {
-  width: 24rpx;
-  height: 24rpx;
-  line-height: 24rpx;
-  image {
-    width: 100%;
-    height: 100%;
-  }
-}
-.font-red {
-  color: #ab2929;
-}
-.font-30 {
-  font-size: 30rpx;
-  color: #333;
-}
-.font-28 {
-  font-size: 28rpx;
-  color: #666;
-}
-.mb20rpx {
-  margin-bottom: 20rpx;
-}
-.user-operation{
-	margin-left: 50rpx;
-}
 .container {
   display: flex;
   flex-direction: column;
@@ -215,6 +191,9 @@ export default {
     &:last-child {
       border-bottom: 0;
     }
-  }
+	}
+	.user-operation{
+		margin-left: 50rpx;
+	}
 }
 </style>
