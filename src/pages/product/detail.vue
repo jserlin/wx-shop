@@ -299,7 +299,7 @@ export default {
           .del {
             position: absolute;
             left: 0;
-            bottom: 14rpx;
+            bottom: 18rpx;
             width: 100%;
             height: 2rpx;
             background: #7f7f7f;

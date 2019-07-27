@@ -24,7 +24,18 @@
         }
       }
     },
-    "pages/coupon/coupon",
+    {
+      "path": "pages/coupon/coupon",
+      "config": {
+        "navigationBarTitleText": "福利券专区"
+      }
+    },
+    {
+      "path": "pages/coupon/couponDetail",
+      "config": {
+        "navigationBarTitleText": "福利券详情"
+      }
+    },
     {
       "path": "pages/cart/cart",
       "config": {
