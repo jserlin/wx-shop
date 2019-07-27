@@ -45,26 +45,18 @@
       </div>
       <!-- 底部tab -->
       <div class="footer-wrap">
-        <van-goods-action>
-          <!-- <van-goods-action-icon icon="chat-o" text="客服" /> -->
-          <van-goods-action-icon icon="cart-o" text="购物车" info="5" />
-          <!-- <van-goods-action-icon icon="shop-o" text="店铺" /> -->
-          <van-goods-action-button text="加入购物车" type="warning" />
-          <van-goods-action-button @click="toBuy" text="立即购买" />
-        </van-goods-action>
-        <!-- <div class="btn-group"> -->
-          <!-- <van-row>
-            <van-col span="8">
-              <van-icon name="https://b.yzcdn.cn/vant/icon-demo-1126.png" />
-            </van-col>
-            <van-col span="8">
-              <van-button hairline type="default">立即购买</van-button>
-            </van-col>
-            <van-col span="8">
-              <van-button hairline type="primary">加入购物车</van-button>
-            </van-col>
-          </van-row> -->
-        <!-- </div> -->
+        <div class="flex-wrap">
+          <div class="cart-wrap">
+            <div class="tag-info">3</div>
+            <img class="img" src="/static/images/shopping_default.png" alt="">
+          </div>
+          <div class="flex-col">
+            <div class="button buy" @click="toBuy">立即购买</div>
+          </div>
+          <div class="flex-col">
+            <div class="button car">加入购物车</div>
+          </div>
+        </div>
       </div>
       <!-- 商品规格选择弹出层 -->
       <van-popup :show="showPopup" position="bottom" @close="showPopup = false">
@@ -102,11 +94,17 @@
               <div class="tt">数量</div>
               <div class="con m-selNumRow">
                 <div class="m-selnum">
-                  <div class="less"><i class="qb-icon qb-icon-jian"/></div>
+                  <div class="less">
+                    <span class="span">-</span>
+                    <!-- <img class="img" src="/static/images/my_icon_position.png" alt=""> -->
+                  </div>
                   <div class="textWrap">
                     <input class="input" type="tel" value="1">
                   </div>
-                  <div class="more"><i class="qb-icon qb-icon-jia"/></div>
+                  <div class="more">
+                    <span class="span">+</span>
+                    <!-- <img class="img" src="/static/images/my_icon_position.png" alt=""> -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -378,45 +376,63 @@ export default {
 // 底部
 .footer-wrap {
   position: fixed;
+  padding: 10rpx 0;
   left: 0;
   bottom: 0;
-  z-index: 100;
+  z-index: 110;
   width: 100vw;
-  height: 104rpx;
+  height: 80rpx;
   background: #fff;
   border-top: 1rpx solid #d9d9d9;
-  .btn-group {
-    // display: flex;
-    button {
+  .flex-wrap{
+    display: flex;
+    align-items: center;
+    .cart-wrap{
+      position: relative;
+      width: 70rpx;
+      height: 70rpx;
+      margin: 0 26vw 0 40rpx;
+      .img{
+        width: 100%;
+        height: 100%;
+      }
+      .tag-info{
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 32rpx;
+        height: 32rpx;
+        line-height: 32rpx;
+        text-align: center;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 24rpx;
+        background: #b4282d;
+        z-index: 100;
+        transform: translate(10rpx, -2rpx)
+      }
+    }
+    .flex-col{
       flex: 1;
-      border-radius: 0;
-      &::after {
-        border-radius: 0;
-      }
-      &.f3 {
-        flex: 6;
-      }
-      .qb-icon {
-        font-size: 56rpx;
-        line-height: 104rpx;
-      }
-      &.ww {
-        flex: none;
-        width: 120rpx;
-      }
-      &.ff {
-        font-size: 28rpx;
-        line-height: 104rpx;
-      }
+      margin-right: 20rpx;
     }
-    .cart {
-      font-size: 28rpx;
-    }
-    .addcart {
-      font-size: 28rpx;
-      color: #fff;
-      background: #b4282d;
-    }
+  }
+  .button{
+    line-height: 80rpx;
+    height: 80rpx;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 28rpx;
+    border-radius: 10rpx;
+  }
+  .buy {
+    color: #333;
+    background: #fff;
+    border: 1rpx solid #999;
+  }
+  .car {
+    color: #fff;
+    background: #b4282d;
   }
 }
 
@@ -465,7 +481,11 @@ export default {
 					line-height: 40rpx;
 					word-wrap: normal;
 					white-space: nowrap;
-					text-overflow: ellipsis;
+          text-overflow: ellipsis;
+          .span{
+            font-size: 28rpx;
+            color: #999;
+          }
 				}
 			}
 		}
@@ -508,7 +528,12 @@ export default {
 					.less,.more{
 						position: relative;
 						width: 90rpx;
-						height: 66rpx;
+            height: 66rpx;
+            text-align: center;
+            .span{
+              font-size: 40rpx;
+              line-height: 66rpx;
+            }
 					}
 					.textWrap{
 						width: 130rpx;
