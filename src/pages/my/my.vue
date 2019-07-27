@@ -16,8 +16,8 @@
       </div>
     </div>
 
-    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;">
-      <div class="flex-box item-space-between" @click="toOrders">
+    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders(1)">
+      <div class="flex-box item-space-between" >
         <span>订单</span>
         <span class="icon-back">
           <image src="/static/images/icon_back.png" />
@@ -45,16 +45,16 @@
         </div>
         <p>待收货</p>
       </div>
-      <div class="flex-item">
+      <div class="flex-item" @click="toSaleAfter">
         <div class="img-wrap">
           <image src="/static/images/my_icon_aftersale.png" alt />
         </div>
-        <p>收货</p>
+        <p>售后</p>
       </div>
     </div>
 
     <div class="row-padding" style="background: #fff;">
-      <div class="user-center-row rel">
+      <div class="user-center-row rel" @click="toAddress">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_position.png" alt />
         </div>
@@ -65,7 +65,7 @@
           </span>
         </div>
       </div>
-      <div class="user-center-row rel">
+      <div class="user-center-row rel" @click="toMycoupon">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/coupon_default.png" alt />
         </div>
@@ -76,7 +76,7 @@
           </span>
         </div>
       </div>
-      <div class="user-center-row rel">
+      <div class="user-center-row rel" @click="toBillDetail">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_bill.png" alt />
         </div>
@@ -113,6 +113,22 @@ export default {
   methods: {
     toOrders(to) {
       const url = to ? `/pages/my/myorders?a=${to}` : '/pages/my/myorders'
+      this.$router.push(url)
+    },
+    toMycoupon(){
+      const url = '/pages/my/mycoupon'
+      this.$router.push(url)
+    },
+    toSaleAfter(){
+      const url = '/pages/my/saleafter'
+      this.$router.push(url)
+    },
+    toBillDetail(){
+      const url = '/pages/my/billdetail'
+      this.$router.push(url)
+    },
+    toAddress(){
+      const url = '/pages/my/address'
       this.$router.push(url)
     }
   }

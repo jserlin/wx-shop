@@ -30,11 +30,31 @@
     {
       "path": "pages/my/myorders",
       "config": {
-        "navigationBarTitleText": "我的订单",
-        "usingComponents": {
-          "van-tab": "/vant-weapp/dist/tab/index",
-          "van-tabs": "/vant-weapp/dist/tabs/index"
-        }
+        "navigationBarTitleText": "我的订单"
+      }
+    },
+    {
+      "path": "pages/my/address",
+      "config": {
+        "navigationBarTitleText": "收货地址"
+      }
+    },
+    {
+      "path": "pages/my/saleafter",
+      "config": {
+        "navigationBarTitleText": "售后订单"
+      }
+    },
+    {
+      "path": "pages/my/mycoupon",
+      "config": {
+        "navigationBarTitleText": "我的福利券"
+      }
+    },
+    {
+      "path": "pages/my/billdetail",
+      "config": {
+        "navigationBarTitleText": "账单详情"
       }
     },
     {
