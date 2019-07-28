@@ -65,10 +65,11 @@
     {
       "path": "pages/my/create-address",
       "config": {
-        "navigationBarTitleText": "新增收货地址",
+        "navigationBarTitleText": "收货地址",
         "usingComponents": {
-          "van-icon": "/vant-weapp/dist/icon/index",
-          "van-checkbox": "/vant-weapp/dist/checkbox/index"
+          "van-field": "/vant-weapp/dist/field/index",
+          "van-popup": "/vant-weapp/dist/popup/index",
+          "van-area": "/vant-weapp/dist/area/index"
         }
       }
     },

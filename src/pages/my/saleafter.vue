@@ -38,7 +38,7 @@
           <span class="font-gray">退款金额：</span>
           <span class="font-red">¥ 18.90</span>
         </div>
-        <div class="order-button">
+        <div class="order-button" @click="goDetail">
           <span class="btn btn-outline">查看详情</span>
         </div>
       </div>
@@ -77,6 +77,10 @@ export default {
   methods: {
     onChange(i) {
       this.active = i;
+    },
+    goDetail(){
+      const url = '/pages/order/returnGoodsDetail'
+      this.$router.push(url)
     }
   },
   mounted() {

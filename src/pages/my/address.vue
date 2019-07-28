@@ -60,8 +60,18 @@ export default {
     line-height: 70rpx;
   }
   .address-operate {
+    padding-bottom: 30rpx;
+    position: relative;
     border-top: 1px solid #f6f6f6;
-    border-bottom: 14rpx solid cyan;
+    &::after{
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 14rpx;
+      background: url(http://yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-1579543565.png) repeat;
+    }
   }
   .icon-wrap {
     margin: 0 25rpx;
