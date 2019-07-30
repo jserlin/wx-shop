@@ -2,7 +2,7 @@
   <div class="container">
     <div class="user-center-section user-info rel">
       <image src="/static/images/my_bg.png" alt />
-      <div class="user-info-content row-padding abs flex-box">
+      <div class="user-info-content row-padding abs flex-box" @click="goLogin">
         <div class="img-avatar">
           <image src="/static/images/my_bg.png" alt />
         </div>
@@ -91,6 +91,7 @@
   </div>
 </template>
 <script>
+import { getUserInfo } from '@/api/'
 export default {
   data() {
     return {
@@ -104,13 +105,20 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() {
+    this.getUserInfo()
+  },
 
   onHide() {
     wx.stopAccelerometer();
   },
 
   methods: {
+    getUserInfo(){
+      getUserInfo().then(res=>{
+        console.log(res)
+      })
+    },
     toOrders(to) {
       const url = to ? `/pages/my/myorders?a=${to}` : '/pages/my/myorders'
       this.$router.push(url)
@@ -129,6 +137,10 @@ export default {
     },
     toAddress(){
       const url = '/pages/my/address'
+      this.$router.push(url)
+    },
+    goLogin(){
+      const url = '/pages/login/login'
       this.$router.push(url)
     }
   }

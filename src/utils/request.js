@@ -9,7 +9,8 @@ Request.interceptors.request.use((request)=>{
   //给所有请求添加自定义header
   // request.headers["X-Tag"]="flyio";
     //打印出请求体
-    // console.log(request.body)
+    const token = localStorage.getItem('userToken')
+    token && (request.body.userToken = token)
     //终止请求
     //var err=new Error("xxx")
     //err.request=request
