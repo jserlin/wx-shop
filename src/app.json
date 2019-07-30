@@ -183,16 +183,16 @@
     "color": "#666",
     "list": [
       {
-        "pagePath": "pages/coupon/coupon",
-        "iconPath": "static/images/coupon_default.png",
-        "selectedIconPath": "static/images/coupon_selected.png",
-        "text": "福利券"
-      },
-      {
         "pagePath": "pages/recommend/recommend",
         "iconPath": "static/images/recommend_default.png",
         "selectedIconPath": "static/images/recommend_selected.png",
-        "text": "推荐"
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "iconPath": "static/images/coupon_default.png",
+        "selectedIconPath": "static/images/coupon_selected.png",
+        "text": "分类"
       },
       {
         "pagePath": "pages/cart/cart",

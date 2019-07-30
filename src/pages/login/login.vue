@@ -12,21 +12,22 @@
     <van-field
       :value="username"
       @input="changeUsername"
-      :border="false"
-      label="手机号码"
-      placeholder="请输入手机号码"
-    />
-    <van-field
-      v-model="code"
-      :border="false"
+      border
       center
       clearable
-      label="短信验证码"
-      placeholder="请输入短信验证码"
+      label="手机号码"
+      placeholder="请输入手机号码"
       use-button-slot
     >
       <van-button slot="button" size="small" type="primary" @click="getPhoneCode">发送验证码</van-button>
     </van-field>
+
+    <van-field
+      :value="code"
+      :border="false"
+      label="短信验证码"
+      placeholder="请输入短信验证码"
+    />
     <div style="padding: 20rpx 30rpx;">
       <van-button loading type="danger" block size="normal" loading-text="加载中..." />
     </div>
@@ -51,12 +52,15 @@ export default {
     // })
 	},
 	mounted(){
-		this.getPhoneCode()
+    this.getPhoneCode()
 	},
   methods: {
     getPhoneCode() {
 			if(this.username){
-				const data = { username: this.username }
+        const data = { username: this.username }
+        // console.log(FormData)
+        // const data = new FormData()
+        data.append('username', this.username)
         getValidCode(data).then(res => {
           console.log(res);
         });
