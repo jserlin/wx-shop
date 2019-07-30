@@ -159,7 +159,16 @@
         }
       }
     },
-    "pages/login/login"
+    {
+      "path": "pages/login/login",
+      "config": {
+        "navigationBarTitleText": "用户登录",
+        "usingComponents": {
+          "van-field": "/vant-weapp/dist/field/index",
+          "van-button": "/vant-weapp/dist/button/index"
+        }
+      }
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",

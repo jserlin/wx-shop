@@ -7,7 +7,15 @@ import Request from '@/utils/request'
  */
 export async function getValidCode(data) {
   const url = '/wxuser/get_valid_code'
-  return Request.post(url, data)
+  console.log(data)
+  try{
+    return Request.post(url, data)
+  }catch(e){
+    console.log(e)
+    return {
+      data: 'error'
+    }
+  }
 }
 
 /**
