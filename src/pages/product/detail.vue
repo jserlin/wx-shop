@@ -130,6 +130,7 @@
   </div>
 </template>
 <script>
+import { getProductDetail } from '@/api/'
 
 export default {
   data() {
@@ -158,7 +159,14 @@ export default {
   //     path: `/pages/product/productDetail?id=${this.productInfo.id}`
   //   }
   // }
+  mounted() {
+    this._getProductDetail(this.$route.query.id)
+  },
   methods: {
+    async _getProductDetail(id) {
+      const result = await getProductDetail({id})
+      console.log("TCL: _getProductDetail -> result", result)
+    },
     onChange(event) {
       console.log("TCL: onChange -> event", event)
     },

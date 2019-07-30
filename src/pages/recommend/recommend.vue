@@ -12,13 +12,13 @@
     </div>
     <scroll-view scroll-y class="goods-wrap">
         <div class="goods-con">
-          <div class="card" v-for="(subitem, subindex) in goodsList" @click="toDetail" :key="subindex">
+          <div class="card" v-for="(subitem, subindex) in goodsList" @click="toDetail(subitem.id)" :key="subindex">
             <div class="img-wrap">
-              <img class="img" src="http://yanxuan.nosdn.127.net/149dfa87a7324e184c5526ead81de9ad.png" alt="">
-              <div class="desc">三峡水牛头层皮，高端夏凉必备</div>
+              <img class="img" :src="subitem.picUrl" alt="">
+              <div class="desc">{{subitem.simpleDesc}}</div>
             </div>
-            <p class="p price">￥599</p>
-            <p class="info">三峡水牛头层皮，高端夏凉必备</p>
+            <p class="p price">￥{{subitem.goodsPrice}}</p>
+            <p class="info">{{subitem.goodsName}}</p>
           </div>
         </div>
     </scroll-view >
@@ -27,7 +27,7 @@
 
 <script>
 import card from '@/components/card'
-import { getIndexList, getProductDetail, getBannerLists } from '@/api/'
+import { getIndexList, getProductDetail, getValidCode } from '@/api/'
 
 export default {
   mpType: 'page',
@@ -38,21 +38,37 @@ export default {
     return {
       motto: '推荐',
       newCategoryList: 8,
-      goodsList: 6,
+      goodsList: [],
     }
   },
   mounted() {
-    getIndexList({
-      welfare: 1,
-      page: 1,
-      goodsType: 0
-    }).then((res) => {
-      console.log(res)
-    })
-    getProductDetail({id:1})
-    getBannerLists()
+    this.pageNum = 1
+    this.getIndexList()
+    // getProductDetail({id:1})
+    // getValidCode({username: '17621920232'})
   },
   methods: {
+    async getIndexList() {
+      const params = {
+        welfare: 1,
+        page: this.pageNum,
+        goodsType: 0
+      }
+     const result = await getIndexList(params)
+     if (result.data) {
+       const _arr = result.data.map(item => {
+         const _obj = {
+           id: item.id,
+           picUrl: item.picUrl1,
+           simpleDesc: item.simpleDesc,
+           goodsPrice: item.goodsPrice,
+           goodsName: item.goodsName
+         }
+         return Object.freeze(_obj)
+       })
+       this.goodsList.push(..._arr)
+     }
+    },
     toSearch() {
       const url = '/pages/search/search'
       this.$router.push(url)
@@ -61,9 +77,12 @@ export default {
       const url = '/pages/category/category'
       this.$router.push(url)
     },
-    toDetail() {
-      const url = '/pages/product/detail'
-      this.$router.push(url)
+    toDetail(id) {
+      const path = '/pages/product/detail'
+      this.$router.push({
+        path,
+        query: { id}
+      })
     }
   },
 }
