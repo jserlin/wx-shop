@@ -27,6 +27,7 @@
 
 <script>
 import card from '@/components/card'
+import { getIndexList, getProductDetail, getBannerLists } from '@/api/'
 
 export default {
   mpType: 'page',
@@ -39,6 +40,17 @@ export default {
       newCategoryList: 8,
       goodsList: 6,
     }
+  },
+  mounted() {
+    getIndexList({
+      welfare: 1,
+      page: 1,
+      goodsType: 0
+    }).then((res) => {
+      console.log(res)
+    })
+    getProductDetail({id:1})
+    getBannerLists()
   },
   methods: {
     toSearch() {
