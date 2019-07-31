@@ -3,36 +3,42 @@
     <div>
       <div class="product-banner">
         <swiper class="swiper" circular="true" @change="setCurrentIndex">
-          <div v-for="(item, index) in bannerImgUrl" :key="index">
-            <swiper-item class="swiper-item">
-              <image :src="item" class="slide-image" />
+          <!-- <div v-for="(item, index) in bannerImgUrl" :key="index"> -->
+            <swiper-item class="swiper-item" v-if="productInfo.picUrl1">
+              <image :src="productInfo.picUrl1" class="slide-image" />
             </swiper-item>
-          </div>
+            <swiper-item class="swiper-item" v-if="productInfo.picUrl2">
+              <image :src="productInfo.picUrl2" class="slide-image" />
+            </swiper-item>
+            <swiper-item class="swiper-item" v-if="productInfo.picUrl3">
+              <image :src="productInfo.picUrl3" class="slide-image" />
+            </swiper-item>
+          <!-- </div> -->
         </swiper>
         <!-- <div class="btn-share">
           <button class="button" data-name="shareBtn" open-type="share">分享好物</button>
         </div> -->
-        <div class="indicator">{{currentIndex}}/{{bannerImgUrl.length}}</div>
+        <!-- <div class="indicator">{{currentIndex}}/{{bannerImgUrl.length}}</div> -->
       </div>
       <!-- 基本信息 -->
       <div class="product-info pub">
         <div class="cloumn">
           <div class="price">
             <div class="span">￥</div>
-            <div class="price-now"> 280</div>
+            <div class="price-now"> {{productInfo.goodsPrice}}</div>
             <div class="price-del">
-            <div class="del"></div>360</div>
+            <div class="del"></div>{{productInfo.primaryPrice}}</div>
           </div>
             <!-- <div class="price-right">购买最高得48积分</div> -->
         </div>
         <div class="content">
           <div class="desc">
-            <div class="title">小种红茶饮料 450毫升*12瓶</div>
+            <div class="title">{{productInfo.simpleDesc}}</div>
           </div>
         </div>
         <van-row>
-          <van-col span="8"><span class="grey">中国品牌</span></van-col>
-          <van-col span="14"><span class="grey">库存: 9527</span></van-col>
+          <van-col span="8"><span class="grey">{{productInfo.categoryName}}</span></van-col>
+          <van-col span="14"><span class="grey">库存: {{productInfo.inventory}}</span></van-col>
         </van-row>
       </div>
       <div class="select-wrap">
@@ -114,15 +120,15 @@
       <!-- 商品详情 规则参数 tabs -->
       <van-tabs :active="active" @change="onChange">
         <van-tab title="商品详情">
-          <div class="">商品详情</div>
           <div class="productDescImg-wrap">
-            <img v-for="(item, index) in productDescImg" :key="index" mode="widthFix" class="imgDesc" :src="item" alt="">
+            <rich-text :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
           </div>
         </van-tab>
         <van-tab title="规格参数">
-          <div class="">规格参数</div>
           <div class="productDescImg-wrap">
-            <img v-for="(item, index) in productDescImg" :key="index" mode="widthFix" class="imgDesc" :src="item" alt="">
+            <img mode="widthFix" class="imgDesc" :src="productInfo.primaryPicUrl" alt="">
+            <!-- <img mode="widthFix" class="imgDesc" :src="productInfo.picUrl2" alt="">
+            <img mode="widthFix" class="imgDesc" :src="productInfo.picUrl3" alt=""> -->
           </div>
         </van-tab>
       </van-tabs>
@@ -135,37 +141,40 @@ import { getProductDetail } from '@/api/'
 export default {
   data() {
     return {
-      active: 1,
+      active: 0,
       showPopup: false,
-      bannerImgUrl: [
-        'https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0',
-        'https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0',
-        'https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0'
-      ],
+      bannerImgUrl: [],
       currentIndex: 1,
-      productDescImg: [
-          'http://yanxuan.nosdn.127.net/d6271f89d8fda25b80f35b592514b50d.jpg',
-          'http://yanxuan.nosdn.127.net/fa930e294230cc03abcb263b46db4363.jpg'
-      ],
-      productInfo: {
-          tags: []
-      }
+      productInfo: {}
     }
   },
-  // onShareAppMessage: function() {
-  //   return {
-  //     title: this.productInfo.name || '',
-  //     desc: this.productInfo.description || '',
-  //     path: `/pages/product/productDetail?id=${this.productInfo.id}`
-  //   }
-  // }
+  onShareAppMessage: function() {
+    return {
+      title: this.productInfo.goodsName || '',
+      desc: this.productInfo.simpleDesc || '',
+      path: `/pages/product/detail?id=${this.productInfo.id}`
+    }
+  },
   mounted() {
     this._getProductDetail(this.$route.query.id)
   },
   methods: {
     async _getProductDetail(id) {
       const result = await getProductDetail({id})
-      console.log("TCL: _getProductDetail -> result", result)
+      if (result.data) {
+        const regex = new RegExp('style=""/>', 'gi');
+        const _data = result.data
+        // 通过正则给返回的 html 图片 加上样式
+        _data.detailHtml = _data.detailHtml.replace(regex, `style="display:block;max-width: 100%;"/>`)
+        this.productInfo = _data
+        console.log("TCL: _getProductDetail -> this.productInfo", this.productInfo)
+      }
+      [1,2,3,4,5].map(item => {
+        const key = this.productInfo[`picUrl${item}`]
+        if (key) {
+          this.bannerImgUrl.push(key)
+        }
+      })
     },
     onChange(event) {
       console.log("TCL: onChange -> event", event)
@@ -178,6 +187,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+img{
+  display: block;
+  width: 100%;
+}
 .container {
     position: relative;
     padding-bottom: 104rpx;

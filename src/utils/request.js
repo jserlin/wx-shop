@@ -3,7 +3,7 @@ import { baseUrl } from  './config'
 const Request = new Fly
 
 Request.config.baseURL = baseUrl
-Request.config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+// Request.config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 
 //添加请求拦截器
 Request.interceptors.request.use((config)=>{

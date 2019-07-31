@@ -6,20 +6,18 @@
         <span class="icon"></span>
       </div>
     </div>
-
-    <swiper
-      style="margin: 20rpx 30rpx;"
-      :indicator-dots="indicatorDots"
-      :autoplay="autoplay"
-      :interval="interval"
-      :duration="duration"
-    >
-      <swiper-item v-for="(item,i) in imgUrls" :key="i">
-        <image :src="item" class="slide-image" width="355" height="150" />
-      </swiper-item>
-    </swiper>
-
-    <scroll-view scroll-y class="goods-wrap">
+    <scroll-view scroll-y class="goods-wrap" @scrolltolower="getIndexList">
+      <swiper
+        style="margin: 20rpx 30rpx;"
+        :indicator-dots="indicatorDots"
+        :autoplay="autoplay"
+        :interval="interval"
+        :duration="duration"
+      >
+        <swiper-item v-for="(item,i) in imgUrls" :key="i">
+          <image :src="item.imgUrl" class="slide-image" width="355" height="150" />
+        </swiper-item>
+      </swiper>
       <div class="goods-con">
         <div
           class="card"
@@ -41,7 +39,7 @@
 
 <script>
 import card from "@/components/card";
-import { getIndexList, getProductDetail, getValidCode } from "@/api/";
+import { getIndexList, getProductDetail, getBannerLists } from "@/api/";
 
 export default {
   mpType: "page",
@@ -53,11 +51,7 @@ export default {
       motto: "推荐",
       newCategoryList: 8,
       goodsList: [],
-      imgUrls: [
-        "https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640",
-        "https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640",
-        "https://images.unsplash.com/photo-1551446591-142875a901a1?w=640"
-      ],
+      imgUrls: [],
       indicatorDots: false,
       autoplay: false,
       interval: 5000,
@@ -65,13 +59,29 @@ export default {
     };
   },
   mounted() {
-    this.pageNum = 1;
-    this.getIndexList();
+    this.pageNum = 0;
+    this._getBannerLists()
+    this.getIndexList()
     // getProductDetail({id:1})
-    // getValidCode({username: '17621920232'})
   },
   methods: {
+    async _getBannerLists() {
+     const result = await getBannerLists()
+     if (result.data) {
+       this.imgUrls = result.data.map(item => {
+         const _obj = {
+           imgUrl: `http://shop.ahaxkj.com${item.imgUrl}`
+         }
+         return _obj
+       })
+     }
+    },
+    // 商品列表接口
     async getIndexList() {
+      if(this.noMore) {
+        return
+      }
+      this.pageNum+=1
       const params = {
         welfare: 1,
         page: this.pageNum,
@@ -90,6 +100,7 @@ export default {
           return Object.freeze(_obj);
         });
         this.goodsList.push(..._arr);
+        this.noMore = this.goodsList.length >= result.count
       }
     },
     toSearch() {
