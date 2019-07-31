@@ -2,21 +2,95 @@
 // make sure to call Vue.use(Vuex) if using a module system
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getStorage, setStorage, removeStorage } from '@/utils/wx'
+import { userLogin, getUserInfo, getShoppingCartLists } from '@/api/'
+const TokenKey = 'wxAppToken'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0
+    token: '',
+    userInfo: {},
+    shoppingCartLists: []
   },
   mutations: {
-    increment: (state) => {
-      const obj = state
-      obj.count += 1
+    SET_TOKEN: (state, token) => {
+      state.token = token
     },
-    decrement: (state) => {
-      const obj = state
-      obj.count -= 1
+    SET_USERINFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    },
+    SET_SHOPPINGCART: (state, shoppingCartLists) => {
+      state.shoppingCartLists = shoppingCartLists
+    }
+  },
+  actions: {
+    // 从localStorage 获取token
+    getToken({ commit }) {
+      return new Promise((resolve, reject) => {
+        getStorage(TokenKey).then((res) => {
+          console.log("TCL: getToken -> res", res)
+          commit('SET_TOKEN', token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 购物车列表
+    getShoppingLists({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getShoppingCartLists(state.token).then(response => {
+          const data = response
+          if (!data) {
+            reject('Verification failed, please Login again.')
+          }
+          commit('SET_SHOPPINGCART', data)
+          resolve(data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 登录  登录时将token存在localStorage中
+    login({ commit }, userInfo) {
+      const { username, valid_code } = userInfo
+      return new Promise((resolve, reject) => {
+        userLogin({ username: username.trim(), valid_code: valid_code }).then(response => {
+          const { token } = response
+          commit('SET_TOKEN', token)
+          setStorage(TokenKey, token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取用户信息
+    getInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getUserInfo(state.token).then(response => {
+          const data = response
+
+          if (!data) {
+            reject('Verification failed, please Login again.')
+          }
+          commit('SET_USERINFO', data)
+          resolve(data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 登出
+    logout({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        commit('SET_TOKEN', '')
+        commit('SET_USERINFO', {})
+        removeStorage(TokenKey)
+        resolve()
+      })
     }
   }
 })

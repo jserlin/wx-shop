@@ -3,22 +3,22 @@
     <div>
       <div class="product-banner">
         <swiper class="swiper" circular="true" @change="setCurrentIndex">
-          <!-- <div v-for="(item, index) in bannerImgUrl" :key="index"> -->
-            <swiper-item class="swiper-item" v-if="productInfo.picUrl1">
-              <image :src="productInfo.picUrl1" class="slide-image" />
+          <div v-for="(item, index) in bannerImgUrl" :key="index">
+            <swiper-item class="swiper-item">
+              <image :src="item" class="slide-image" />
             </swiper-item>
-            <swiper-item class="swiper-item" v-if="productInfo.picUrl2">
+            <!-- <swiper-item class="swiper-item" v-if="productInfo.picUrl2">
               <image :src="productInfo.picUrl2" class="slide-image" />
             </swiper-item>
             <swiper-item class="swiper-item" v-if="productInfo.picUrl3">
               <image :src="productInfo.picUrl3" class="slide-image" />
-            </swiper-item>
-          <!-- </div> -->
+            </swiper-item> -->
+          </div>
         </swiper>
         <!-- <div class="btn-share">
           <button class="button" data-name="shareBtn" open-type="share">分享好物</button>
         </div> -->
-        <!-- <div class="indicator">{{currentIndex}}/{{bannerImgUrl.length}}</div> -->
+        <div class="indicator">{{currentIndex}}/{{bannerImgUrl.length}}</div>
       </div>
       <!-- 基本信息 -->
       <div class="product-info pub">
@@ -45,22 +45,22 @@
         <van-cell is-link @click="showPopup = true">
           <view slot="title">
             <span>规格选择</span>
-            <span class="select-cell-text">请选择</span>
+            <span class="select-cell-text">{{currentSkuInfo.displayString ? currentSkuInfo.displayString : '请选择'}}</span>
           </view>
         </van-cell>
       </div>
       <!-- 底部tab -->
       <div class="footer-wrap">
         <div class="flex-wrap">
-          <div class="cart-wrap">
-            <div class="tag-info">3</div>
+          <div class="cart-wrap" @click="toCart">
+            <div v-show="cartNum" class="tag-info">{{cartNum}}</div>
             <img class="img" src="/static/images/shopping_default.png" alt="">
           </div>
           <div class="flex-col">
             <div class="button buy" @click="toBuy">立即购买</div>
           </div>
           <div class="flex-col">
-            <div class="button car">加入购物车</div>
+            <div class="button car" @click="addToCart">加入购物车</div>
           </div>
         </div>
       </div>
@@ -69,45 +69,49 @@
         <div class="dt-paramselect">
           <div class="info-con">
             <div class="left">
-              <img class="img" src="http://yanxuan.nosdn.127.net/5cc861b114573015c81013c02f189b91.png?quality=90&thumbnail=200x200&imageView" alt="">
+              <img class="img" :src="currentSkuInfo.picUrl || productInfo.primaryPicUrl" alt="">
             </div>
             <div class="right">
               <div class="con">
                 <div class="price">
                   <span class="span">价格：¥</span>
-                  <span class="span">239</span>
+                  <span class="span">{{currentSkuInfo.goodsPrice || productInfo.goodsPrice}}</span>
                 </div>
                 <div class="sku">
-                  <span class="span">已选择：</span>
-                  <span class="span it">请选择规格数量</span>
+                  <span class="span" v-show="currentSkuInfo.displayString">已选择：{{currentSkuInfo.displayString}}</span>
+                  <span class="span it" v-show="!currentSkuInfo.displayString">请选择规格数量</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="spec-con">
             <div class="u-format">
-              <div class="tt">颜色</div>
+              <!-- <div class="tt">颜色</div> -->
               <div class="con">
-                <div class="tab sel">
-                  <span class="span">象牙白</span>
+                <div class="tab"
+                  v-for="(item, index) in productInfo.skuList"
+                  :key="index"
+                  @click="setCurrentSku(item)"
+                  :class="{'sel': currentSkuInfo.displayString === item.displayString}">
+                  <span class="span">{{item.displayString}}</span>
                 </div>
-                <div class="tab">
+                <!-- <div class="tab">
                   <span class="span">替换复合滤芯 3片装</span>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="u-format">
               <div class="tt">数量</div>
               <div class="con m-selNumRow">
                 <div class="m-selnum">
-                  <div class="less">
+                  <div class="less" @click="less">
                     <span class="span">-</span>
                     <!-- <img class="img" src="/static/images/my_icon_position.png" alt=""> -->
                   </div>
                   <div class="textWrap">
-                    <input class="input" type="tel" value="1">
+                    <input class="input" type="tel" :value="goodNum">
                   </div>
-                  <div class="more">
+                  <div class="more" @click="add">
                     <span class="span">+</span>
                     <!-- <img class="img" src="/static/images/my_icon_position.png" alt=""> -->
                   </div>
@@ -121,7 +125,7 @@
       <van-tabs :active="active" @change="onChange">
         <van-tab title="商品详情">
           <div class="productDescImg-wrap">
-            <rich-text :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
+            <rich-text class="rich" :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
           </div>
         </van-tab>
         <van-tab title="规格参数">
@@ -133,10 +137,13 @@
         </van-tab>
       </van-tabs>
     </div>
+    <van-toast id="van-toast" />
   </div>
 </template>
 <script>
-import { getProductDetail } from '@/api/'
+import Toast from 'vant-weapp/dist/toast/toast'
+import { getProductDetail, addShoppingCart } from '@/api/'
+import { getStorage, setStorage, removeStorage } from '@/utils/wx'
 
 export default {
   data() {
@@ -145,7 +152,14 @@ export default {
       showPopup: false,
       bannerImgUrl: [],
       currentIndex: 1,
+      goodNum: 1,
+      currentSkuInfo: {},
       productInfo: {}
+    }
+  },
+  computed: {
+    cartNum() {
+      return this.$store.state.shoppingCartLists.length
     }
   },
   onShareAppMessage: function() {
@@ -156,6 +170,8 @@ export default {
     }
   },
   mounted() {
+    // setStorage('aa111', 'asdfasdf')
+    // this.$store.dispatch('getShoppingLists')
     this._getProductDetail(this.$route.query.id)
   },
   methods: {
@@ -179,18 +195,35 @@ export default {
     onChange(event) {
       console.log("TCL: onChange -> event", event)
     },
+    add() {
+      this.goodNum ++
+    },
+    less() {
+      if (this.goodNum === 1) {
+        Toast('不能再少了~')
+        return
+      }
+      this.goodNum --
+    },
+    setCurrentSku(currentSku) {
+      this.currentSkuInfo = currentSku
+    },
+    addToCart() {
+      // 待续
+      // addShoppingCart()
+    },
     toBuy() {
       const url = '/pages/order/submitOrder'
       this.$router.push(url)
+    },
+    toCart() {
+      const url = '/pages/cart/cart'
+      this.$router.push({path: url, isTab: true})
     }
   }
 }
 </script>
 <style lang="less" scoped>
-img{
-  display: block;
-  width: 100%;
-}
 .container {
     position: relative;
     padding-bottom: 104rpx;
