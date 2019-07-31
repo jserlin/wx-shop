@@ -6,7 +6,7 @@
         <div class="img-avatar">
           <image src="/static/images/my_bg.png" alt />
         </div>
-        <div class="user-name">
+        <div class="user-name" v-if="userInfo">
           <p class="font-30">范晓萱</p>
           <p class="font-28">
             福利券金额：
@@ -17,7 +17,7 @@
     </div>
 
     <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders(1)">
-      <div class="flex-box item-space-between" >
+      <div class="flex-box item-space-between">
         <span>订单</span>
         <span class="icon-back">
           <image src="/static/images/icon_back.png" />
@@ -26,7 +26,8 @@
     </div>
     <div
       class="flex-box item-space-between text-center mb20rpx"
-      style="background: #fff; padding: 18rpx 0;">
+      style="background: #fff; padding: 18rpx 0;"
+    >
       <div class="flex-item" @click="toOrders(2)">
         <div class="img-wrap">
           <image src="/static/images/my_icon_cancel.png" alt />
@@ -91,15 +92,11 @@
   </div>
 </template>
 <script>
-import { getUserInfo } from '@/api/'
+import { getUserInfo } from "@/api/";
 export default {
   data() {
     return {
-      user: {
-        nickName: "阿凡提",
-        avatar: "",
-        id: "1"
-      }
+      userInfo: false
     };
   },
 
@@ -109,39 +106,37 @@ export default {
     this.getUserInfo()
   },
 
-  onHide() {
-    wx.stopAccelerometer();
-  },
-
   methods: {
-    getUserInfo(){
-      getUserInfo().then(res=>{
-        console.log(res)
-      })
-    },
     toOrders(to) {
-      const url = to ? `/pages/my/myorders?a=${to}` : '/pages/my/myorders'
-      this.$router.push(url)
+      const url = to ? `/pages/my/myorders?a=${to}` : "/pages/my/myorders";
+      this.$router.push(url);
     },
-    toMycoupon(){
-      const url = '/pages/my/mycoupon'
-      this.$router.push(url)
+    toMycoupon() {
+      const url = "/pages/my/mycoupon";
+      this.$router.push(url);
     },
-    toSaleAfter(){
-      const url = '/pages/my/saleafter'
-      this.$router.push(url)
+    toSaleAfter() {
+      const url = "/pages/my/saleafter";
+      this.$router.push(url);
     },
-    toBillDetail(){
-      const url = '/pages/my/billdetail'
-      this.$router.push(url)
+    toBillDetail() {
+      const url = "/pages/my/billdetail";
+      this.$router.push(url);
     },
-    toAddress(){
-      const url = '/pages/my/address'
-      this.$router.push(url)
+    toAddress() {
+      const url = "/pages/my/address";
+      this.$router.push(url);
     },
-    goLogin(){
-      const url = '/pages/login/login'
-      this.$router.push(url)
+    goLogin() {
+      if (!this.userInfo) {
+        const url = "/pages/login/login";
+        this.$router.push(url);
+      }
+    },
+    getUserInfo() {
+      getUserInfo().then(res => {
+        console.log(res);
+      });
     }
   }
 };
@@ -203,9 +198,9 @@ export default {
     &:last-child {
       border-bottom: 0;
     }
-	}
-	.user-operate{
-		margin-left: 50rpx;
-	}
+  }
+  .user-operate {
+    margin-left: 50rpx;
+  }
 }
 </style>
