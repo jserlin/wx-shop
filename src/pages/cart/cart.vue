@@ -2,22 +2,22 @@
   <div class="cart">
     <div class="top">
       <div class="tip-item">30天无忧退货</div>
-      <div class="tip-item">>48小时快速退款</div>
+      <div class="tip-item">48小时快速退款</div>
       <div class="tip-item">满88元免邮费</div>
     </div>
     <div class="cartlist">
-      <div class="item" >
+      <div class="item" v-for="(goods, index) in cartList" :key="index">
         <div class="con">
-          <div class="icon"></div>
+          <div class="icon" @click="toggleCheck(goods, index)" :class="{active: goods.checked}"></div>
           <div class="img-wrap">
-            <img class="img" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
+            <img class="img" :src="goods.goodsImage" alt="">
           </div>
           <div class="info">
-            <div class="name">黑科技·冰能持久冷感夏凉被</div>
+            <div class="name">{{goods.goodsName}}</div>
             <div class="desc">
-              <span class="span">浅卡其; 150*200cm</span>
+              <span class="span">{{goods.displayString}}</span>
             </div>
-            <div class="price">￥10</div>
+            <div class="price">￥{{goods.price}}</div>
           </div>
         </div>
         <div class="m-selNumRow">
@@ -26,35 +26,7 @@
               <div class="span">-</div>
             </div>
             <div class="textWrap">
-              <input class="input" type="tel" value="1">
-            </div>
-            <div class="more">
-              <div class="span">+</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="item" >
-        <div class="con">
-          <div class="icon active"></div>
-          <div class="img-wrap">
-            <img class="img" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
-          </div>
-          <div class="info">
-            <div class="name">黑科技·冰能持久冷感夏凉被</div>
-            <div class="desc">
-              <span class="span">浅卡其; 150*200cm</span>
-            </div>
-            <div class="price">￥10</div>
-          </div>
-        </div>
-        <div class="m-selNumRow">
-          <div class="m-selnum">
-            <div class="less">
-              <div class="span">-</div>
-            </div>
-            <div class="textWrap">
-              <input class="input" type="tel" value="1">
+              <input class="input" type="tel" :value="goods.num">
             </div>
             <div class="more">
               <div class="span">+</div>
@@ -64,9 +36,9 @@
       </div>
     </div>
     <!-- 没商品时展示 -->
-    <!-- <div  class="nogoods" >
+    <div  class="nogoods" v-show="!cartList.length">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
-    </div> -->
+    </div>
     <div class="foot-fixed">
       <div class="left allcheck">
         全选
@@ -75,23 +47,49 @@
         <div>
           ￥11
         </div>
-        <div>下单</div>
+        <div @click="toConfirmOrder">下单</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import card from '@/components/card'
+import { checkShoppingCartLists } from '@/api/'
 
 export default {
   mpType: 'page',
-  components: {
-    card
-  },
   data () {
     return {
-      motto: '购物车'
+      cartList: []
+    }
+  },
+  computed: {
+    shoppingCartLists() {
+      return this.$store.state.shoppingCartLists
+    }
+  },
+  watch: {
+    shoppingCartLists(nv) {
+     this.cartList = nv.map(item => {
+       item.checked = false
+       return item
+     })
+    }
+  },
+  computed: {
+    shoppingCartLists() {
+      return this.$store.state.shoppingCartLists
+    }
+  },
+  methods: {
+    toggleCheck(goods, index) {
+      // console.log("TCL: toggleCheck -> goods", goods)
+      goods.checked = !goods.checked
+      // this.$set(this.cartList[index], 'checked', !this.cartList[index].checked)
+    },
+    toConfirmOrder() {
+      // 下单前需要校验下所选商品 是够可以一单
+      // checkShoppingCartLists()
     }
   }
 }

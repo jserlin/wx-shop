@@ -49,7 +49,6 @@ const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         getShoppingCartLists({userToken: token || state.token}).then(response => {
           const { data } = response
-          console.log("TCL: getShoppingLists -> data", data)
           if (!data) {
             reject('Verification failed, please Login again.')
           }

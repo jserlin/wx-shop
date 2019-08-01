@@ -57,7 +57,7 @@
             <img class="img" src="/static/images/shopping_default.png" alt="">
           </div>
           <div class="flex-col">
-            <div class="button buy" @click="toBuy">立即购买</div>
+            <div class="button buy" @click="toCart">立即购买</div>
           </div>
           <div class="flex-col">
             <div class="button car" @click="addToCart">加入购物车</div>
