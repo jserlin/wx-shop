@@ -30,11 +30,14 @@ const store = new Vuex.Store({
     getToken({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         getStorage(TokenKey).then((res) => {
-          console.log("TCL: getToken -> res", res)
-          commit('SET_TOKEN', token)
-          // 有token后获取用户信息
-          dispatch('getInfo')
-          resolve()
+          if (res.data) {
+            commit('SET_TOKEN', token)
+            // 有token后获取用户信息
+            dispatch('getInfo', token)
+            resolve()
+          } else {
+            reject()
+          }
         }).catch(error => {
           reject(error)
         })
@@ -60,21 +63,25 @@ const store = new Vuex.Store({
       const { username, valid_code } = userInfo
       return new Promise((resolve, reject) => {
         userLogin({ username: username.trim(), valid_code: valid_code }).then(response => {
-          const { token } = response
-          commit('SET_TOKEN', token)
-          // 有token后获取用户信息
-          dispatch('getInfo')
-          setStorage(TokenKey, token)
-          resolve()
+          const { data } = response
+          if (data) {
+            commit('SET_TOKEN', data)
+            // 有token后获取用户信息
+            dispatch('getInfo', data)
+            setStorage(TokenKey, data)
+            resolve()
+          } else {
+            reject()
+          }
         }).catch(error => {
           reject(error)
         })
       })
     },
     // 获取用户信息
-    getInfo({ commit, state }) {
+    getInfo({ commit, state }, token) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getUserInfo({userToken: token}).then(response => {
           const data = response
 
           if (!data) {
@@ -98,5 +105,4 @@ const store = new Vuex.Store({
     }
   }
 })
-
 export default store

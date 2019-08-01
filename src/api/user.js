@@ -29,8 +29,7 @@ export async function userLogin(data) {
 
 /**
  * 个人中心接口
- * @param {String} username  用户手机号即登录账号
- * @param {String} valid_code  收到的短信验证码
+ * @param {String} userToken  用户token
  */
 export async function getUserInfo(data) {
   const url = '/wxuser/queryUserInfo'
