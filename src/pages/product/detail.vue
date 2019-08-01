@@ -142,7 +142,7 @@
 </template>
 <script>
 import Toast from 'vant-weapp/dist/toast/toast'
-import { getProductDetail, addShoppingCart } from '@/api/'
+import { getProductDetail, addShoppingCart, toConfirmOrder } from '@/api/'
 import { getStorage, setStorage, removeStorage } from '@/utils/wx'
 
 export default {
@@ -159,7 +159,9 @@ export default {
   },
   computed: {
     cartNum() {
-      return this.$store.state.shoppingCartLists.length
+      return this.$store.state.shoppingCartLists.reduce((pre, item) => {
+        return pre + (+item.num)
+      }, 0)
     }
   },
   onShareAppMessage: function() {
@@ -183,7 +185,6 @@ export default {
         // 通过正则给返回的 html 图片 加上样式
         _data.detailHtml = _data.detailHtml.replace(regex, `style="display:block;max-width: 100%;"/>`)
         this.productInfo = _data
-        console.log("TCL: _getProductDetail -> this.productInfo", this.productInfo)
       }
       [1,2,3,4,5].map(item => {
         const key = this.productInfo[`picUrl${item}`]
@@ -208,13 +209,37 @@ export default {
     setCurrentSku(currentSku) {
       this.currentSkuInfo = currentSku
     },
-    addToCart() {
-      // 待续
-      // addShoppingCart()
+    async addToCart() {
+      if (this.$store.state.token) {
+        // 没有选择规格 弹出选择规格页面
+        if(!this.currentSkuInfo.skuId) {
+          this.showPopup = true
+          return
+        }
+        const params = {
+          goodsId: this.productInfo.id,
+          userToken: this.$store.state.token,
+          skuId: this.currentSkuInfo.skuId,
+          goodsType: this.productInfo.goodsType
+        }
+        const result = await addShoppingCart(params)
+        if (result.code === 'success') {
+          this.$store.dispatch('getShoppingLists')
+          Toast('加入购物车成功')
+        }
+      } else {
+        const url = '/pages/login/login'
+        this.$router.push({path: url, query: {back: 1}})
+      }
     },
     toBuy() {
-      const url = '/pages/order/submitOrder'
-      this.$router.push(url)
+      if (this.$store.state.token) {
+        const url = '/pages/order/submitOrder'
+        this.$router.push({path: url, query: {ids: this.productInfo.id}})
+      } else {
+        const url = '/pages/login/login'
+        this.$router.push({path: url, query: {back: 1}})
+      }
     },
     toCart() {
       const url = '/pages/cart/cart'

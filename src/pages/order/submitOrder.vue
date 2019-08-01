@@ -75,6 +75,7 @@
   </div>
 </template>
 <script>
+import { toConfirmOrder, toWxPay } from '@/api/'
 
 export default {
   data() {
@@ -85,6 +86,25 @@ export default {
   methods: {
     onSubmit(event) {
       console.log("TCL: onChange -> event", event)
+    }
+  },
+  mounted() {
+    this.getConfirmOrder()
+  },
+  methods: {
+    getConfirmOrder() {
+      if (this.$store.state.token) {
+        // this.$store.commit('SET_AUTH_TYPE', thirdpart)
+        const params = {
+          ids: this.$route.query.ids,
+          userToken: this.$store.state.token,
+          addressId: ''
+        }
+        toConfirmOrder(params)
+      } else {
+        const url = '/pages/login/login'
+        this.$router.push({path: url, query: {back: 1}})
+      }
     }
   }
 }

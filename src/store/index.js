@@ -31,9 +31,10 @@ const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         getStorage(TokenKey).then((res) => {
           if (res.data) {
-            commit('SET_TOKEN', token)
-            // 有token后获取用户信息
-            dispatch('getInfo', token)
+            commit('SET_TOKEN', res.data)
+            // 有token后获取用户信息 购物车信息
+            dispatch('getInfo', res.data)
+            dispatch('getShoppingLists', res.data)
             resolve()
           } else {
             reject()
@@ -44,10 +45,11 @@ const store = new Vuex.Store({
       })
     },
     // 购物车列表
-    getShoppingLists({ commit, state }) {
+    getShoppingLists({ commit, state }, token) {
       return new Promise((resolve, reject) => {
-        getShoppingCartLists(state.token).then(response => {
-          const data = response
+        getShoppingCartLists({userToken: token || state.token}).then(response => {
+          const { data } = response
+          console.log("TCL: getShoppingLists -> data", data)
           if (!data) {
             reject('Verification failed, please Login again.')
           }
@@ -66,8 +68,9 @@ const store = new Vuex.Store({
           const { data } = response
           if (data) {
             commit('SET_TOKEN', data)
-            // 有token后获取用户信息
+            // 有token后获取用户信息 购物车信息
             dispatch('getInfo', data)
+            dispatch('getShoppingLists', data)
             setStorage(TokenKey, data)
             resolve()
           } else {
@@ -82,8 +85,7 @@ const store = new Vuex.Store({
     getInfo({ commit, state }, token) {
       return new Promise((resolve, reject) => {
         getUserInfo({userToken: token}).then(response => {
-          const data = response
-
+          const { data } = response
           if (!data) {
             reject('Verification failed, please Login again.')
           }

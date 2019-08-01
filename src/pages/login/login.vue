@@ -61,17 +61,11 @@ export default {
       this.$store.dispatch('login', {
         username: this.username,
         valid_code: this.code
-      }).then(res=>{
-        // 用户信息
-        this.$router.back();
+      }).then(()=>{
+        if(this.$route.query.back) {
+          this.$router.back()
+        }
       })
-      // userLogin({
-      //   username: this.username,
-      //   valid_code: this.code
-      // }).then(res=>{
-      //   // 用户信息
-      //   this.$router.back();
-      // })
     }
   }
 };
