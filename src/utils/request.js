@@ -19,6 +19,13 @@ Request.interceptors.request.use((config)=>{
 //添加响应拦截器，响应拦截器会在then/catch处理之前执行
 Request.interceptors.response.use(
   (response) => {
+      if (response.data.code === 'fail') {
+        wx.showToast({
+          duration: 2000,
+          icon: 'none',
+          title: response.data.msg || '接口返回异常'
+        });
+      }
       //只将请求结果的data字段返回
       return response.data
   },
