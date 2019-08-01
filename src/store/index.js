@@ -27,11 +27,13 @@ const store = new Vuex.Store({
   },
   actions: {
     // 从localStorage 获取token
-    getToken({ commit }) {
+    getToken({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         getStorage(TokenKey).then((res) => {
           console.log("TCL: getToken -> res", res)
           commit('SET_TOKEN', token)
+          // 有token后获取用户信息
+          dispatch('getInfo')
           resolve()
         }).catch(error => {
           reject(error)
@@ -54,12 +56,14 @@ const store = new Vuex.Store({
       })
     },
     // 登录  登录时将token存在localStorage中
-    login({ commit }, userInfo) {
+    login({ commit, dispatch }, userInfo) {
       const { username, valid_code } = userInfo
       return new Promise((resolve, reject) => {
         userLogin({ username: username.trim(), valid_code: valid_code }).then(response => {
           const { token } = response
           commit('SET_TOKEN', token)
+          // 有token后获取用户信息
+          dispatch('getInfo')
           setStorage(TokenKey, token)
           resolve()
         }).catch(error => {

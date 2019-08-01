@@ -58,13 +58,20 @@ export default {
     },
 
     goMyCenter(){
-      userLogin({
+      this.$store.dispatch('login', {
         username: this.username,
         valid_code: this.code
       }).then(res=>{
         // 用户信息
         this.$router.back();
       })
+      // userLogin({
+      //   username: this.username,
+      //   valid_code: this.code
+      // }).then(res=>{
+      //   // 用户信息
+      //   this.$router.back();
+      // })
     }
   }
 };
