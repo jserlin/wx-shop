@@ -29,7 +29,7 @@
               <div class="modal"></div>
               <input class="input" disable type="tel" :value="goods.num">
             </div>
-            <div class="more">
+            <div class="more" @click="addGoods(goods)">
               <div class="span">+</div>
             </div>
           </div>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { checkShoppingCartLists } from '@/api/'
+import { checkShoppingCartLists, addShoppingCart } from '@/api/'
 
 export default {
   mpType: 'page',
@@ -130,6 +130,24 @@ export default {
         })
         this.checkedList = []
       }
+    },
+    addGoods(goods) {
+      const params = {
+        goodsId: goods.spuId,
+        userToken: this.$store.state.token,
+        skuId: goods.skuId,
+        goodsType: goods.goodsType
+      }
+      addShoppingCart(params).then((result) => {
+        if (result.code === 'success') {
+          this.$store.dispatch('getShoppingLists')
+          wx.showToast({
+            icon: 'none',
+            title: '添加成功'
+          })
+        }
+      })
+
     },
     async toConfirmOrder() {
       if (!this.checkedList.length) {
