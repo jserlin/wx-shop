@@ -1,107 +1,122 @@
 <template>
   <div class="container">
-    <div class="product-wrap mb20">
+    <div class="product-wrap mb20" v-if="goodsInfo">
       <div class="content">
-          <div class="img-wrap">
-            <img class="img-item" src="https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0">
-          </div>
-          <div class="desc">
-              <div class="title">商品标题</div>
-              <!-- <div class="type">星空灰</div> -->
-              <div class="price">
-              <div class="price-now">￥11</div>
-              <!-- <div class="price-del">
-                <div class="del"></div>
-                ￥111
-              </div> -->
-              </div>
-          </div>
-          <div class="product-num">
-            x1
-          </div>
-      </div>
-    </div>
-    <div @click="showReason = true">
-      <van-cell title="退换货原因" is-link  @click="showReason = true" />
-    </div>
-    <div class="reason-wrap mb20">
-      <div class="left">退换货详细原因</div>
-      <div class="right">
-        <van-field
-          :value="reasonDetail"
-          placeholder="必填"
-          @change="onChange"
-        />
-      </div>
-      <!-- <van-cell title="退换货详细原因">
-        <div class="input-wrap" slot="right-icon">
-          <van-field
-            :value="reasonDetail"
-            placeholder="请输入用户名"
-            border
-            @change="onChange"
+        <div class="img-wrap">
+          <img
+            class="img-item"
+            :src="goodsInfo.goodsImage"
           />
         </div>
-      </van-cell> -->
+        <div class="desc">
+          <div class="title">{{goodsInfo.goodsName}}</div>
+          <div class="price">
+            <div class="price-now">￥{{goodsInfo.price}}</div>
+          </div>
+        </div>
+        <div class="product-num">x{{goodsInfo.num}}</div>
+      </div>
     </div>
 
-    <van-cell title="商品价格">
-      <span class="red" slot="right-icon">￥188</span>
+    <div @click="showReason = true" v-if="goodsInfo">
+      <van-cell title="退换货原因" :value="reason" is-link @click="showReason = true" />
+    </div>
+
+    <div class="reason-wrap mb20" v-if="goodsInfo">
+      <div class="left">退换货详细原因</div>
+      <div class="right">
+        <van-field :value="reasonDetail" placeholder="必填" @change="onChange" />
+      </div>
+    </div>
+
+    <van-cell title="商品价格" v-if="goodsInfo">
+      <span class="red" slot="right-icon">￥{{goodsInfo.totalPrice}}</span>
     </van-cell>
 
     <!-- 选择原因 弹出层 -->
-    <van-popup position="bottom" :show="showReason" @close="showReason = false">
+    <van-popup position="bottom" :show="showReason" @close="showReason = false" v-if="goodsInfo">
       <van-picker show-toolbar :columns="columns" @change="onPickerChange" />
     </van-popup>
 
     <!-- 底部tab -->
-    <div class="footer-wrap">
-      <van-submit-bar
-        label="退款金额: "
-        :price="price"
-        button-text="立即退换"
-        @submit="onSubmit"
-      />
+    <div class="footer-wrap" v-if="goodsInfo">
+      <van-submit-bar label="退款金额: " :price="price" button-text="立即退换" @submit="onSubmit" />
     </div>
   </div>
 </template>
 <script>
-
+import { getReturnofGoods, postReturnOfGoods } from "@/api";
 export default {
   data() {
     return {
-      price: 1188,
-      reason: '',
-      reasonDetail: '',
+      orderCode: null,
+      skuId: null,
+      goodsInfo: null,
+      orderInfo: null,
       showReason: false,
-      columns: ['无理由退货', '质量问题']
+      reason: undefined,
+      reasonDesc: undefined,
+      columns: ["必选", "无理由退货", "质量问题"]
+    };
+  },
+  onShow() {
+    const { query } = this.$route;
+    if (query.orderCode) {
+      this.orderCode = query.orderCode;
+      this.skuId = query.skuId;
+      this.reason = this.columns[0]
+      this.getReturnofGoods();
     }
   },
   methods: {
     onSubmit(event) {
-      console.log("TCL: onChange -> event", event)
+      this.reason && this.reason !== '必选' && this.reasonDesc && postReturnOfGoods({
+        reason: this.reason,
+        reasonDesc: this.reasonDesc,
+        userToken: this.$store.state.token,
+        skuId: this.skuId,
+        orderCode: this.orderCode
+      }).then(res=>{
+        if(res && res.code === 'success'){
+          const url = "/pages/my/my";
+          this.$router.push({ path: url, isTab: true });
+        }
+      })
     },
     onChange(val) {
-      console.log("TCL: onChange -> val", val)
+      this.reasonDesc = val.mp.detail;
     },
     onPickerChange(val) {
-      console.log("TCL: onPickerChange -> val", val)
+      this.showReason = !this.showReason
+      this.reason = val.target.value
+    },
+    getReturnofGoods() {
+      getReturnofGoods({
+        userToken: this.$store.state.token,
+        orderCode: this.orderCode,
+        skuId: this.skuId
+      }).then(res => {
+        if (res && res.code === "success") {
+          this.goodsInfo = res.data;
+          this.orderInfo = res.order;
+        }
+      });
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .container {
   position: relative;
   padding-bottom: 104rpx;
-  font-family: PingFangSC-Light, helvetica, 'Heiti SC';
+  font-family: PingFangSC-Light, helvetica, "Heiti SC";
   background: #fff;
   background: #fafafa;
   color: #333;
   min-height: 100vh;
   box-sizing: border-box;
   // 退换货原因
-  .reason-wrap{
+  .reason-wrap {
     position: relative;
     display: flex;
     align-items: center;
@@ -112,20 +127,20 @@ export default {
     color: #333;
     background-color: #fff;
     box-sizing: border-box;
-    .left{
+    .left {
       flex: 2;
     }
-    .right{
+    .right {
       flex: 3;
       box-sizing: border-box;
     }
   }
 }
-.img{
+.img {
   width: 100%;
   height: 100%;
 }
-.red{
+.red {
   color: #f60;
 }
 // 底部
@@ -139,12 +154,12 @@ export default {
   background: #fff;
   border-top: 1rpx solid #d9d9d9;
 }
-.mb20{
+.mb20 {
   margin-bottom: 20rpx;
 }
-.product-wrap{
+.product-wrap {
   background: #fff;
-  .head-title{
+  .head-title {
     padding-top: 20rpx;
     margin-left: 20rpx;
     font-size: 28rpx;
@@ -152,17 +167,17 @@ export default {
     height: 40rpx;
     color: #333;
   }
-  .foot{
+  .foot {
     padding: 20rpx 0;
     margin-right: 30rpx;
     font-size: 28rpx;
     line-height: 40rpx;
     height: 40rpx;
     text-align: right;
-    .span{
+    .span {
       color: #333;
     }
-    .money{
+    .money {
       color: #b4282d;
     }
   }
@@ -172,9 +187,10 @@ export default {
     padding: 30rpx 10rpx 30rpx 0rpx;
     display: flex;
     align-items: center;
+    justify-content: center;
     border-bottom: 1px solid #d9d9d9;
     &:last-child {
-      border: none
+      border: none;
     }
     .img-wrap {
       margin-right: 40rpx;
@@ -223,11 +239,10 @@ export default {
       }
     }
     .red {
-      color: #B4282D
+      color: #b4282d;
     }
     .product-num {
       font-size: 28rpx;
-      align-self: flex-start;
       margin-right: 30rpx;
     }
   }

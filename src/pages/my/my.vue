@@ -66,6 +66,7 @@
           </span>
         </div>
       </div>
+      <!-- 暂无
       <div class="user-center-row rel" @click="toMycoupon">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/coupon_default.png" alt />
@@ -87,7 +88,7 @@
             <image src="/static/images/icon_back.png" />
           </span>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -47,8 +47,9 @@
           <span class="font-red">¥ {{el.totalPrice}}</span>
         </div>
         <div class="order-button">
+          <span class="btn btn-outline mr20rpx" v-if="el.returnStatus === '1'">取消退货</span>
+          <span class="btn btn-outline mr20rpx" v-if="el.returnStatus === '3'">绑定寄回物流</span>
           <span class="btn btn-outline" @click="goDetail({skuId: el.skuId, id: el.orderCode})">查看详情</span>
-          <span class="btn btn-outline" v-if="el.returnStatus === 1">取消退货</span>
         </div>
       </div>
     </div>

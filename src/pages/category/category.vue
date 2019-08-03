@@ -1,12 +1,5 @@
 <template>
   <div class="category">
-    <!-- <div class="search">
-      <div class="ser">
-        <span class="icon"></span>
-        <span>商品搜索,共239款好物</span>
-      </div>
-
-    </div> -->
     <div class="content">
       <scroll-view class="left" scroll-y="true">
         <div class="iconText" @click="selectitem(item,index)" v-for="(item, index) in listData" :class="[index==nowIndex?'active':'']" :key="index">
@@ -14,9 +7,6 @@
         </div>
       </scroll-view>
       <scroll-view class="right" scroll-y="true" @scrolltolower="getIndexList">
-        <!-- <div class="banner">
-          <img :src="detailData.banner_url" alt="">
-        </div> -->
         <div class="title">
           <span>—</span>
           <span>{{detailData.name}}</span>
@@ -25,7 +15,7 @@
         <div class="bottom">
           <div @click="clickDetail(item)" v-for="(item,index) in detailData.subList" :key="index" class="item">
             <img :src="item.img" alt="">
-            <span>{{item.name}}</span>
+            <span class="font-28">{{item.name}}</span>
           </div>
         </div>
       </scroll-view>

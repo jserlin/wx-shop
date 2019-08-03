@@ -18,9 +18,7 @@
       <div class="list-item content" v-for="(el, i) in orderInfo.detailList" :key="i">
         <div class="flex-box">
           <div class="img-wrap">
-            <img class="img-item"
-              :src="el.goodsImage"
-            />
+            <img class="img-item" :src="el.goodsImage" />
           </div>
           <div class="desc">
             <div class="title">{{goodsName}}</div>
@@ -28,7 +26,17 @@
               <div class="price-now">￥{{el.price}}</div>
               <div class="type">{{el.displayString}}</div>
             </div>
-            <div class="tuihuo" @click="toRetunGoods">申请退货</div>
+            <!-- orderInfo.orderStatus === '4' && el.returnStatus === '0' -->
+            <div class="tuihuo" v-if="el.returnStatus === '0'" @click="toRetunGoods(el)">申请退货</div>
+            <div class="type" v-else>
+              {{el.returnStatus == 0 ? '正常' :
+            el.returnStatus == 1 ? '退货申请中' :
+            el.returnStatus == 2 ? '渠道取消退货' :
+            el.returnStatus == 3 ? '已返回退货地址' :
+            el.returnStatus == 4 ? '已收到退货包裹' :
+            el.returnStatus == 5 ? '拒绝退货' :
+            el.returnStatus == 6 ? '超时取消退货' : '已退货退款'}}
+            </div>
           </div>
         </div>
         <div class="product-num">x{{el.num}}</div>
@@ -81,9 +89,16 @@ export default {
     }
   },
   methods: {
-    toRetunGoods() {
-      const url = "/pages/order/applyReturnGoods";
-      this.$router.push(url);
+    toRetunGoods(item) {
+      const path = "/pages/order/applyReturnGoods";
+
+      this.$router.push({
+        path,
+        query: {
+          orderCode: item.orderCode,
+          skuId: item.skuId
+        }
+      });
     },
     getOrderDetail() {
       getOrderInfo({

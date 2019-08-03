@@ -6,13 +6,12 @@
       <div class="tip-item">满88元免邮费</div>
     </div>
     <div class="cartlist">
-
-      <van-swipe-cell  v-for="(goods, index) in cartList" :key="index" right-width="65">
-        <div class="item">
+      <div class="item" v-for="(goods, index) in cartList" :key="index">
+        <van-swipe-cell :right-width="65">
           <div class="con">
             <div class="icon" @click="toggleCheck(goods, index)" :class="{active: goods.checked}"></div>
             <div class="img-wrap">
-              <img class="img" :src="goods.goodsImage" alt="">
+              <img class="img" :src="goods.goodsImage" alt />
             </div>
             <div class="info">
               <div class="name">{{goods.goodsName}}</div>
@@ -29,31 +28,30 @@
               </div>
               <div class="textWrap">
                 <div class="modal"></div>
-                <input class="input" disable type="tel" :value="goods.num">
+                <input class="input" disable type="tel" :value="goods.num" />
               </div>
               <div class="more" @click="updateGoods(goods, 'add')">
                 <div class="span">+</div>
               </div>
             </div>
           </div>
-        </div>
-        <div slot="right" class="del-wrap" @click="delShoppingCart(goods)">
-          <div class="del-btn">删除</div>
-        </div>
-      </van-swipe-cell>
+          <div slot="right" class="del-wrap" @click="delShoppingCart(goods)">
+            <div class="del-btn">删除</div>
+          </div>
+        </van-swipe-cell>
+      </div>
     </div>
     <!-- 没商品时展示 -->
-    <div  class="nogoods" v-show="!cartList.length">
-      <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
+    <div class="nogoods" v-show="!cartList.length">
+      <img
+        src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png"
+        alt
+      />
     </div>
     <div class="foot-fixed">
-      <div class="left allcheck" :class="{active: checkAll}" @click="checkAllGoods">
-        {{selectText}}
-      </div>
+      <div class="left allcheck" :class="{active: checkAll}" @click="checkAllGoods">{{selectText}}</div>
       <div class="right">
-        <div>
-          ￥{{totalPrice}}
-        </div>
+        <div>￥{{totalPrice}}</div>
         <div @click="toConfirmOrder">下单</div>
       </div>
     </div>
@@ -61,146 +59,155 @@
 </template>
 
 <script>
-import { checkShoppingCartLists, updateShoppingCart, delShoppingCart } from '@/api/'
+import {
+  checkShoppingCartLists,
+  updateShoppingCart,
+  delShoppingCart
+} from "@/api/";
 
 export default {
-  mpType: 'page',
-  data () {
+  mpType: "page",
+  data() {
     return {
       cartList: [],
       checkAll: false,
       checkedList: [],
-      selectText: '全选'
-    }
+      selectText: "全选"
+    };
   },
   computed: {
     shoppingCartLists() {
-      return this.$store.state.shoppingCartLists
+      return this.$store.state.shoppingCartLists;
     },
     totalPrice() {
       return this.cartList.reduce((total, item) => {
         if (item.checked) {
-          total += (+item.totalPrice)
+          total += +item.totalPrice;
         }
-        return total
-      }, 0)
+        return total;
+      }, 0);
     }
   },
   watch: {
     shoppingCartLists(nv) {
-     this.cartList = nv.map(item => {
-       const _obj = Object.assign({}, item)
-       if (this.checkedList.includes(item.id)) {
-         _obj.checked = true
-       } else {
-         _obj.checked = false
-       }
-       return _obj
-     })
+      this.cartList = nv.map(item => {
+        const _obj = Object.assign({}, item);
+        if (this.checkedList.includes(item.id)) {
+          _obj.checked = true;
+        } else {
+          _obj.checked = false;
+        }
+        return _obj;
+      });
     },
     checkedList(nv) {
-      this.checkAll = this.checkedList.length === this.cartList.length
+      this.checkAll = this.checkedList.length === this.cartList.length;
       if (this.checkAll) {
-        this.selectText = '全选'
-      } else{
-        this.selectText = nv.length ? `已选${nv.length}` : '全选'
+        this.selectText = "全选";
+      } else {
+        this.selectText = nv.length ? `已选${nv.length}` : "全选";
       }
     }
   },
   methods: {
     toggleCheck(goods, index) {
       // console.log("TCL: toggleCheck -> goods", goods)
-      goods.checked = !goods.checked
-      if(goods.checked) {
+      goods.checked = !goods.checked;
+      if (goods.checked) {
         if (!this.checkedList.includes(goods.id)) {
-          this.checkedList.push(goods.id)
+          this.checkedList.push(goods.id);
         }
       } else {
-        this.checkedList.splice(this.checkedList.indexOf(goods.id), 1)
+        this.checkedList.splice(this.checkedList.indexOf(goods.id), 1);
       }
       // this.$set(this.cartList[index], 'checked', !this.cartList[index].checked)
     },
     checkAllGoods() {
-      this.checkAll = !this.checkAll
+      this.checkAll = !this.checkAll;
       if (this.checkAll) {
         this.cartList.forEach(item => {
-          item.checked = true
-        })
+          item.checked = true;
+        });
         this.checkedList = this.cartList.reduce((pre, item) => {
-          pre.psuh(item.id)
-          return pre
-        }, [])
+          pre.push(item.id);
+          return pre;
+        }, []);
+        console.log(this.checkedList)
       } else {
         this.cartList.forEach(item => {
-          item.checked = false
-        })
-        this.checkedList = []
+          item.checked = false;
+        });
+        this.checkedList = [];
       }
     },
     updateGoods(goods, type) {
-      if (type === 'add') {
-        goods.num ++
+      if (type === "add") {
+        goods.num++;
       } else {
-        goods.num --
+        if (goods.num <= 1) {
+          return;
+        }
+        goods.num--;
       }
       const params = {
         id: goods.id,
         userToken: this.$store.state.token,
         num: goods.num
-      }
-      updateShoppingCart(params).then((result) => {
-        if (result.code === 'success') {
-          this.$store.dispatch('getShoppingLists')
+      };
+      updateShoppingCart(params).then(result => {
+        if (result.code === "success") {
+          this.$store.dispatch("getShoppingLists");
           wx.showToast({
-            icon: 'none',
-            title: '修改成功'
-          })
+            icon: "none",
+            title: "修改成功"
+          });
         }
-      })
+      });
     },
     delShoppingCart(goods) {
       const params = {
         ids: goods.id,
         userToken: this.$store.state.token
-      }
-      delShoppingCart(params).then((result) => {
-        if (result.code === 'success') {
-          this.$store.dispatch('getShoppingLists')
+      };
+      delShoppingCart(params).then(result => {
+        if (result.code === "success") {
+          this.$store.dispatch("getShoppingLists");
           wx.showToast({
-            icon: 'none',
-            title: '删除成功'
-          })
+            icon: "none",
+            title: "删除成功"
+          });
         }
-      })
+      });
     },
     async toConfirmOrder() {
+      console.log(this.checkedList)
       if (!this.checkedList.length) {
         wx.showToast({
-          icon: 'none',
-          title: '请选择商品'
-        })
-        return
+          icon: "none",
+          title: "请选择商品"
+        });
+        return;
       }
-      const ids = this.checkedList.join(',')
+      const ids = this.checkedList.join(",");
       // 下单前需要校验下所选商品 是够可以一单
       const result = await checkShoppingCartLists({
         ids,
         userToken: this.$store.state.token
-      })
-      if (result.code === 'success') {
-        const url = '/pages/order/submitOrder'
-        this.$router.push({path: url, query: {ids}})
+      });
+      if (result.code === "success") {
+        const url = "/pages/order/submitOrder";
+        this.$router.push({ path: url, query: { ids } });
       }
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">
 .cart {
   position: relative;
   padding-bottom: 104rpx;
-  font-family: PingFangSC-Light, helvetica, 'Heiti SC';
+  font-family: PingFangSC-Light, helvetica, "Heiti SC";
   background: #fff;
   background: #fafafa;
   color: #333;
@@ -211,7 +218,8 @@ export default {
     justify-content: space-between;
     padding: 30rpx 20rpx;
     .tip-item {
-      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/servicePolicyRed-518d32d74b.png) 0 center no-repeat;
+      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/servicePolicyRed-518d32d74b.png)
+        0 center no-repeat;
       background-size: 10rpx;
       padding-left: 15rpx;
       display: flex;
@@ -223,14 +231,16 @@ export default {
   .cartlist {
     background: #fff;
     margin-bottom: 110rpx;
-    .del-wrap{
+    .del-wrap {
+      width: 130rpx;
+      height: 100%;
+      margin-left: 24rpx;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #fff;
-      height: 100%;
       background-color: #f44;
-      .del-btn{
+      .del-btn {
         padding: 6rpx 10rpx;
       }
     }
@@ -246,12 +256,14 @@ export default {
         .icon {
           height: 125rpx;
           width: 40rpx;
-          background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat center center;
+          background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png)
+            no-repeat center center;
           background-size: 40rpx 40rpx;
           margin: 0 30rpx;
         }
         .icon.active {
-          background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat center center;
+          background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png)
+            no-repeat center center;
           background-size: 40rpx 40rpx;
         }
         .img-wrap {
@@ -270,24 +282,24 @@ export default {
         .info {
           flex: 1;
           padding: 20rpx;
-          .name{
+          .name {
             line-height: 36rpx;
             font-size: 28rpx;
           }
-          .desc{
-            color: #7F7F7F;
+          .desc {
+            color: #7f7f7f;
             margin-top: 10rpx;
             font-size: 24rpx;
             line-height: 36rpx;
             .span {
               display: inline-block;
               padding: 0 10rpx;
-              border: 1rpx solid #EFEFEF;
-              border-radius: .02667rem;
-              background: #FAFAFA;
+              border: 1rpx solid #efefef;
+              border-radius: 0.02667rem;
+              background: #fafafa;
             }
           }
-          .price{
+          .price {
             padding-top: 30rpx;
             font-size: 32rpx;
           }
@@ -326,13 +338,15 @@ export default {
     .left {
       display: flex;
       align-items: center;
-      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png)
+        no-repeat;
       background-size: 34rpx 34rpx;
       background-position: 20rpx;
       padding-left: 70rpx;
     }
     .active {
-      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
+      background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png)
+        no-repeat;
       background-size: 34rpx 34rpx;
       background-position: 20rpx;
     }
@@ -364,28 +378,29 @@ export default {
   }
 }
 // 数量加减 样式
-.m-selNumRow{
+.m-selNumRow {
   position: absolute;
   right: 30rpx;
   bottom: 30rpx;
   display: flex;
   align-items: center;
-  .m-selnum{
+  .m-selnum {
     display: inline-flex;
     line-height: 66rpx;
     text-align: center;
     border: 1rpx solid #d9d9d9;
-    .less,.more{
+    .less,
+    .more {
       position: relative;
       width: 60rpx;
       height: 50rpx;
       text-align: center;
-      .span{
+      .span {
         font-size: 30rpx;
         line-height: 50rpx;
       }
     }
-    .textWrap{
+    .textWrap {
       position: relative;
       width: 58rpx;
       text-align: center;
@@ -397,7 +412,7 @@ export default {
         height: 100%;
         z-index: 10;
       }
-      .input{
+      .input {
         height: 100%;
         width: 100%;
         box-sizing: border-box;
