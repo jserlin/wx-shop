@@ -142,8 +142,8 @@ export default {
                 const obj = {
                   name: item.categoryName,
                   categoryId: item.categoryId,
-                  img: `http://shop.ahaxkj.com${item.img}`
-                  // img: `http://shop.ahaxkj.com/logo/20190530095815_177.jpg`
+                  img: `https://pay.tuixiang.com:8881${item.img}`
+                  // img: `https://pay.tuixiang.com:8881/logo/20190530095815_177.jpg`
                 }
                 return obj
               })
