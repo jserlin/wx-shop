@@ -43,7 +43,6 @@ export default {
       username: "18117219026"
     };
   },
-  onShow() {},
   mounted() {},
   methods: {
     getPhoneCode() {

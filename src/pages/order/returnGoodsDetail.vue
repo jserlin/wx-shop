@@ -1,130 +1,141 @@
 <template>
   <div class="container">
-    <div class="product-wrap mb20">
-      <div class="head-title">退货商品</div>
+    <div class="product-wrap mb20" v-if="returnOrderInfo">
       <div class="content">
-          <div class="img-wrap">
-            <img class="img-item" src="https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0">
+        <div class="img-wrap">
+          <img
+            class="img-item"
+            :src="returnOrderInfo.goodsImage"
+          />
+        </div>
+        <div class="desc">
+          <div class="title">{{returnOrderInfo.goodsName}}</div>
+          <div class="price">
+            <div class="price-now">￥{{returnOrderInfo.price}}</div>
           </div>
-          <div class="desc">
-              <div class="title">商品标题</div>
-              <div class="price">
-              <div class="price-now">￥11</div>
-              <!-- <div class="price-del">
-                <div class="del"></div>
-                ￥111
-              </div> -->
-              </div>
-              <div class="type">星空灰</div>
-          </div>
-          <div class="product-num">
-            x11
-          </div>
+          <div class="type">{{returnOrderInfo.displayString}}</div>
+        </div>
+        <div class="product-num">x{{returnOrderInfo.num}}</div>
       </div>
     </div>
-    <div class="mb20">
+    <div class="mb20" v-if="returnOrderInfo">
       <van-cell title="退款金额">
-        <span class="red" slot="right-icon">￥18.50</span>
+        <span class="red" slot="right-icon">￥{{returnOrderInfo.totalPrice}}</span>
       </van-cell>
     </div>
-    <div class="group">
+    <div class="group" v-if="returnOrderInfo">
       <van-cell>
         <span class="grey" slot="title">订单编号</span>
-        <span slot="right-icon">9527</span>
+        <span slot="right-icon">{{returnOrderInfo.orderCode}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退单编号</span>
-        <span slot="right-icon">9527</span>
+        <span slot="right-icon">{{returnOrderInfo.returnApplyId}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退货时间</span>
-        <span slot="right-icon">1111-11-11</span>
+        <span slot="right-icon">{{returnOrderInfo.returnTime}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退货状态</span>
-        <span slot="right-icon">1111-11-11</span>
+        <span slot="right-icon">{{returnOrderInfo.returnStatus == 0 ? '正常' :
+            returnOrderInfo.returnStatus == 1 ? '退货申请中' :
+            returnOrderInfo.returnStatus == 2 ? '渠道取消退货' :
+            returnOrderInfo.returnStatus == 3 ? '已返回退货地址' :
+            returnOrderInfo.returnStatus == 4 ? '已收到退货包裹' :
+            returnOrderInfo.returnStatus == 5 ? '拒绝退货' :
+            returnOrderInfo.returnStatus == 6 ? '超时取消退货' : '已退货退款'}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退换货原因</span>
-        <span slot="right-icon">无理由</span>
+        <span slot="right-icon">{{returnOrderInfo.reason}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退换货详细原因</span>
-        <span slot="right-icon">aaaa</span>
+        <span slot="right-icon">{{returnOrderInfo.reasonDesc || '未填写'}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退换货收件人姓名</span>
-        <span slot="right-icon">网易严选</span>
+        <span slot="right-icon">{{returnOrderInfo.returnName || '未填写'}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退换货收件人手机</span>
-        <span slot="right-icon">18811114444</span>
+        <span slot="right-icon">{{returnOrderInfo.returnMobile || '未填写'}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退货地址</span>
-        <span slot="right-icon">北京市北京市东城区复兴道</span>
+        <span slot="right-icon" style="fdisplay: inline-block; max-width:70%;">{{returnOrderInfo.returnFullAddress || '未填写'}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退货物流单号</span>
-        <span slot="right-icon">1119527</span>
+        <span slot="right-icon">{{returnOrderInfo.trackingNum}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">退货物流公司</span>
-        <span slot="right-icon">顺丰</span>
+        <span slot="right-icon">{{returnOrderInfo.trackingCompany}}</span>
       </van-cell>
     </div>
   </div>
 </template>
 <script>
-
+import { getReturnofGoodInfo } from "@/api";
 export default {
   data() {
     return {
-      infoId: null
-    }
+      infoId: null,
+      returnOrderInfo: null
+    };
   },
-  onShow(){
+  onLoad() {
     const { query } = this.$route;
-    if (query.id) {
+    if (query.returnApplyId) {
       this.infoId = query;
       this.getReturnGoodsInfo();
     }
   },
   methods: {
-    getReturnGoodsInfo(){
-      console.log(this.infoId)
+    getReturnGoodsInfo() {
+      getReturnofGoodInfo({
+        returnApplyId: this.infoId.returnApplyId,
+        userToken: this.$store.state.token
+      }).then(res => {
+        console.log(res);
+        if (res.code === "success") {
+          this.returnOrderInfo = res.data;
+        }
+      });
     },
     toRetunGoods() {
-      const url = '/pages/order/applyReturnGoods'
-      this.$router.push(url)
+      const url = "/pages/order/applyReturnGoods";
+      this.$router.push(url);
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .container {
-    position: relative;
-    font-family: PingFangSC-Light, helvetica, 'Heiti SC';
-    background: #fff;
-    background: #fafafa;
-    color: #333;
-    min-height: 100vh;
-    box-sizing: border-box;
+  position: relative;
+  font-family: PingFangSC-Light, helvetica, "Heiti SC";
+  background: #fff;
+  background: #fafafa;
+  color: #333;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
-.img{
+.img {
   width: 100%;
   height: 100%;
 }
-.mb20{
+.mb20 {
   margin-bottom: 20rpx;
 }
 .grey {
   color: #999;
 }
 
-.product-wrap{
+.product-wrap {
   background: #fff;
-  .head-title{
+  .head-title {
     padding-top: 20rpx;
     margin-left: 20rpx;
     font-size: 28rpx;
@@ -132,17 +143,17 @@ export default {
     height: 40rpx;
     color: #333;
   }
-  .foot{
+  .foot {
     padding: 20rpx 0;
     margin-right: 30rpx;
     font-size: 28rpx;
     line-height: 40rpx;
     height: 40rpx;
     text-align: right;
-    .span{
+    .span {
       color: #333;
     }
-    .money{
+    .money {
       color: #b4282d;
     }
   }
@@ -154,7 +165,7 @@ export default {
     align-items: center;
     border-bottom: 1px solid #d9d9d9;
     &:last-child {
-      border: none
+      border: none;
     }
     .img-wrap {
       margin-right: 40rpx;
@@ -201,7 +212,7 @@ export default {
           }
         }
       }
-      .tuihuo{
+      .tuihuo {
         padding: 0 20rpx;
         width: 100rpx;
         border-radius: 8rp;
@@ -211,7 +222,7 @@ export default {
       }
     }
     .red {
-      color: #f60
+      color: #f60;
     }
     .product-num {
       font-size: 28rpx;

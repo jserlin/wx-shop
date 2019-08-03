@@ -59,7 +59,7 @@ export default {
       columns: ["必选", "无理由退货", "质量问题"]
     };
   },
-  onShow() {
+  onLoad() {
     const { query } = this.$route;
     if (query.orderCode) {
       this.orderCode = query.orderCode;

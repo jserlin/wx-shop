@@ -63,12 +63,12 @@ const store = new Vuex.Store({
     login({ commit, dispatch }, userInfo) {
       const { username, valid_code } = userInfo
       return new Promise((resolve, reject) => {
-        userLogin({ username: username.trim(), valid_code: valid_code }).then(response => {
+        userLogin({ username: username.trim(), valid_code: valid_code }).then(async response => {
           const { data } = response
           if (data) {
-            commit('SET_TOKEN', data)
+            await commit('SET_TOKEN', data)
             // 有token后获取用户信息 购物车信息
-            dispatch('getInfo', data)
+            await dispatch('getInfo', data)
             dispatch('getShoppingLists', data)
             setStorage(TokenKey, data)
             resolve()

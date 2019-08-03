@@ -32,7 +32,7 @@ export default {
       addressList: []
     };
   },
-  onShow() {
+  onLoad() {
     getUserAddress({
       userToken: this.$store.state.token,
     }).then(res=>{

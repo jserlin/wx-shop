@@ -129,7 +129,7 @@
         </div>
       </van-popup>
       <!-- 商品详情 规则参数 tabs -->
-      <van-tabs :active="active" @change="onChange" v-if="productInfo">
+      <van-tabs :active="active" v-if="productInfo">
         <van-tab title="商品详情">
           <div class="productDescImg-wrap">
             <rich-text class="rich" :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
@@ -176,7 +176,7 @@ export default {
       path: `/pages/product/detail?id=${this.productInfo.id}`
     };
   },
-  mounted() {
+  onLoad() {
     this._getProductDetail(this.$route.query.id);
   },
   methods: {
@@ -185,18 +185,18 @@ export default {
       this.productInfo = null;
       this.bannerImgUrl = [];
       this.goodNum = 1;
-      this.currentSkuInfo = {}
+      this.currentSkuInfo = {};
     },
     async _getProductDetail(id) {
-      this.resetData()
+      this.resetData();
       const result = await getProductDetail({ id });
       if (result.data) {
-        const regex = new RegExp('style=""/>', "gi");
+        const regex = new RegExp('style=""', "gi");
         const _data = result.data;
         // 通过正则给返回的 html 图片 加上样式
         _data.detailHtml = _data.detailHtml.replace(
           regex,
-          `style="display:block;max-width: 100%;"/>`
+          `style="display:block; width:100%; height: 100%;"`
         );
         this.productInfo = _data;
       }
@@ -207,9 +207,6 @@ export default {
         }
       });
     },
-    onChange(event) {
-      console.log("TCL: onChange -> event", event);
-    },
     add() {
       this.goodNum++;
     },
@@ -219,6 +216,9 @@ export default {
         return;
       }
       this.goodNum--;
+    },
+    setCurrentIndex(val) {
+      this.currentIndex = val.target.current + 1;
     },
     setCurrentSku(currentSku) {
       this.currentSkuInfo = currentSku;

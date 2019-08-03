@@ -6,7 +6,7 @@
         <div class="img-avatar">
           <image src="/static/images/my_bg.png" alt="头像" />
         </div>
-        <div class="user-name" v-show="userShow">
+        <div class="user-name" v-if="userShow">
           <p class="font-30">{{userInfo.truename}}</p>
           <p class="font-28">
             福利券金额：
@@ -104,11 +104,10 @@ export default {
   computed: {},
 
   onShow() {
+    console.log(this.$store.state.userInfo)
     if(this.$store.state.token && this.$store.state.userInfo){
       this.userShow = true
       this.userInfo = this.$store.state.userInfo
-      // 无刷新个人信息
-      this.onLoad && this.onLoad()
     }else{
       this.userInfo = false
     }
@@ -172,11 +171,10 @@ export default {
       background: #e2ce9c;
       image {
         width: 100%;
-        height: 270rpx;
+        height: 100%;
       }
     }
     .user-info-content {
-      width: 100%;
       height: 140rpx;
       top: 50%;
       transform: translateY(-50%);

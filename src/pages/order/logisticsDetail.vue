@@ -39,7 +39,7 @@ export default {
       steps: []
     }
   },
-  onShow() {
+  onLoad() {
     const { query } = this.$route;
     if (query.id) {
       this.id = query.id;

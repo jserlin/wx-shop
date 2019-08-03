@@ -81,7 +81,7 @@ export default {
       id: null
     };
   },
-  onShow() {
+  onLoad() {
     const { query } = this.$route;
     if (query.id) {
       this.id = query.id;

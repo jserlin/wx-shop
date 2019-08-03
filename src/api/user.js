@@ -2,7 +2,7 @@
 import Request from '@/utils/request'
 
 /**
- * 获取登录短信验证码接口
+ * 获取登录短信验证码接口 ✅
  * @param {String} username  用户手机号即登录账号
  */
 export async function getValidCode(data) {
@@ -18,7 +18,7 @@ export async function getValidCode(data) {
 }
 
 /**
- * 获取登录短信验证码接口
+ * 获取登录短信验证码接口 ✅
  * @param {String} username  用户手机号即登录账号
  * @param {String} valid_code  收到的短信验证码
  */
@@ -28,7 +28,7 @@ export async function userLogin(data) {
 }
 
 /**
- * 个人中心接口
+ * 个人中心接口 ✅
  * @param {String} userToken  用户token
  */
 export async function getUserInfo(data) {
@@ -37,7 +37,7 @@ export async function getUserInfo(data) {
 }
 
 /**
- * 个人中心－订单列表
+ * 个人中心－订单列表 ✅
  * @param {String} orderStatus 订单状态 1已取消 2待发货 3待收货 不传为全部
  * @param {String} page 当前页数
  */
@@ -47,7 +47,7 @@ export async function getMyCenterOrder(data) {
 }
 
 /**
- * 个人中心－取消订单
+ * 个人中心－取消订单 ✅
  * @param {String} orderCode
  */
 export async function cancelOrderByOrders(data) {
@@ -56,7 +56,7 @@ export async function cancelOrderByOrders(data) {
 }
 
 /**
- * 个人中心－订单详情
+ * 个人中心－订单详情 ✅
  * @param {String} orderCode
  */
 export async function getOrderInfo(data) {
@@ -65,7 +65,7 @@ export async function getOrderInfo(data) {
 }
 
 /**
- * 个人中心－订单商品申请退货
+ * 个人中心－订单商品申请退货 ✅
  * @param {String} orderCode
  * @param {String} skuId 单个商品id
  */
@@ -75,7 +75,7 @@ export async function getReturnofGoods(data) {
 }
 
 /**
- * 个人中心－提交申请退货
+ * 个人中心－提交申请退货 ✅
  * @param {String} orderCode
  * @param {String} skuId
  * @param {String} reason 退货类型
@@ -87,7 +87,7 @@ export async function postReturnOfGoods(data) {
 }
 
 /**
- * 个人中心－售后退货列表
+ * 个人中心－售后退货列表 ✅
  * @param {String} returnStatus 退货订单状态 0为全部 3为待退货 2为已取消 5为已拒绝 7为已完成
  */
 export async function getReturnofGoodList(data) {
@@ -159,6 +159,7 @@ export async function singleAddressInfo(data) {
   return Request.post(url, data)
 }
 
+/* */
 export async function addNewAddress(data){
   const url = '/tAddress/wx/add'
   return Request.post(url, data)
@@ -181,8 +182,9 @@ export async function editNewAddress(data){
   const url = '/tAddress/wx/update'
   return Request.post(url, data)
 }
+
 /**
- * orderCode 订单详情物流
+ * orderCode 订单详情物流 ✅
  */
 export async function getOrderExpress(data){
   const url = '/tOrder/wx/queryExpress'

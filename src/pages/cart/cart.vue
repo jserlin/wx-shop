@@ -10,7 +10,7 @@
         <van-swipe-cell :right-width="65">
           <div class="con">
             <div class="icon" @click="toggleCheck(goods, index)" :class="{active: goods.checked}"></div>
-            <div class="img-wrap">
+            <div class="img-wrap" @click="goGoodsInfo(goods)">
               <img class="img" :src="goods.goodsImage" alt />
             </div>
             <div class="info">
@@ -121,6 +121,13 @@ export default {
         this.checkedList.splice(this.checkedList.indexOf(goods.id), 1);
       }
       // this.$set(this.cartList[index], 'checked', !this.cartList[index].checked)
+    },
+    goGoodsInfo(item) {
+      const path = "/pages/product/detail";
+      this.$router.push({
+        path,
+        query: { id: item.goodsId }
+      });
     },
     checkAllGoods() {
       this.checkAll = !this.checkAll;

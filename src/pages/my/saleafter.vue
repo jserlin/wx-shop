@@ -49,7 +49,7 @@
         <div class="order-button">
           <span class="btn btn-outline mr20rpx" v-if="el.returnStatus === '1'">取消退货</span>
           <span class="btn btn-outline mr20rpx" v-if="el.returnStatus === '3'">绑定寄回物流</span>
-          <span class="btn btn-outline" @click="goDetail({skuId: el.skuId, id: el.orderCode})">查看详情</span>
+          <span class="btn btn-outline" @click="goDetail(el)">查看详情</span>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@ export default {
       orderList: []
     };
   },
-  onShow(){
+  onLoad(){
     this.getSaleafterOrder()
   },
   methods: {

@@ -15,7 +15,7 @@
         :duration="duration"
       >
         <swiper-item v-for="(item,i) in imgUrls" :key="i">
-          <image :src="item.imgUrl" class="slide-image" width="355" height="150" />
+          <image :src="item.imgUrl" class="slide-image" />
         </swiper-item>
       </swiper>
       <div class="goods-con">
@@ -128,6 +128,10 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   background: #f7f7f7;
+  .slide-image{
+    width: 100%;
+    height: 100%;
+  }
   .search {
     width: 100%;
     box-sizing: border-box;
