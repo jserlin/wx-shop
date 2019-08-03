@@ -17,6 +17,19 @@ export function formatTime (date) {
 
   return `${t1} ${t2}`
 }
+/**
+ * 获取html代码中图片地址
+ * @param htmlstr
+ * @returns {Array}
+ */
+export function getimgsrc(htmlstr) {
+  const reg = /<img.+?src=('|")?([^'"]+)('|")?(?:\s+|>)/gim;
+  const arr = [];
+  while (tem = reg.exec(htmlstr)) {
+    arr.push(tem[2]);
+  }
+  return arr;
+}
 
 export default {
   formatNumber,

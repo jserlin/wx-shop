@@ -9,22 +9,22 @@
     </div> -->
     <div class="content">
       <scroll-view class="left" scroll-y="true">
-        <div class="iconText" @click="selectitem(item.id,index)" v-for="(item, index) in listData" :class="[index==nowIndex?'active':'']" :key="index">
-          {{item.name}}
+        <div class="iconText" @click="selectitem(item,index)" v-for="(item, index) in listData" :class="[index==nowIndex?'active':'']" :key="index">
+          {{item.categoryName}}
         </div>
       </scroll-view>
-      <scroll-view class="right" scroll-y="true">
+      <scroll-view class="right" scroll-y="true" @scrolltolower="getIndexList">
         <!-- <div class="banner">
           <img :src="detailData.banner_url" alt="">
         </div> -->
         <div class="title">
           <span>—</span>
-          <span>{{detailData.name}}分类</span>
+          <span>{{detailData.name}}</span>
           <span>—</span>
         </div>
         <div class="bottom">
-          <div @click="categoryList(item.id)" v-for="(item,index) in detailData.subList" :key="index" class="item">
-            <img :src="item.wap_banner_url" alt="">
+          <div @click="clickDetail(item)" v-for="(item,index) in detailData.subList" :key="index" class="item">
+            <img :src="item.img" alt="">
             <span>{{item.name}}</span>
           </div>
         </div>
@@ -34,50 +34,123 @@
 </template>
 
 <script>
-import card from '@/components/card'
+import { getCategoryLists, getIndexList } from '@/api/'
+// 入参 分类里面类目 各不同
+const options = {
+  '-1': {
+    welfare: 1,
+    goodsType: 0
+  },
+  '-2': {
+    goodsType: 1
+  },
+  '-3': {
+    recommend: 1,
+    goodsType: 0
+  }
+}
 
 export default {
   mpType: 'page',
-  components: {
-    card
-  },
   data () {
     return {
-      id: "1005000",
       nowIndex: 0,
-      listData: [
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'},
-        {name:'居家'}
-      ],
+      categoryPid: 0,
+      listData: [],
       detailData: {
-        banner_url: 'http://yanxuan.nosdn.127.net/92357337378cce650797444bc107b0f7.jpg',
-        name: '居家',
-        subList: [
-          {
-            wap_banner_url: 'http://yanxuan.nosdn.127.net/149dfa87a7324e184c5526ead81de9ad.png',
-            name: '名字'
-          }
-        ]
+        name: '',
+        subList: []
       }
     }
   },
+  watch: {
+    categoryPid(nv) {
+      // 这三个走获取商品列表接口
+      const arr = [-1, -2, -3]
+      if (arr.includes(nv)) {
+        this.pageNum = 0
+        this.noMore = false
+        this.getIndexList()
+      } else {
+        this._getCategoryLists()
+      }
+    }
+  },
+  mounted() {
+    this.pageNum = 0
+    this._getCategoryLists()
+  },
   methods: {
-    async selectitem(id, index) {
-      this.nowIndex = index;
+    async selectitem(item, index) {
+      this.currentCateName = item.categoryName
+      this.categoryPid = item.categoryId
+      this.nowIndex = index
     },
     async getListData() {
     },
-    categoryList(id) {
-      console.log("tiaozhuan");
+    clickDetail(item) {
+      if (item.id && this.categoryPid === -3) {
+        this.$router.push({
+          path: '/pages/product/detail',
+          query: {id: item.id}
+        })
+      }
+    },
+    getIndexList() {
+      const arr = [-1, -2, -3]
+      if (!arr.includes(this.categoryPid) || this.noMore) {
+        return
+      }
+      this.pageNum+=1
+      const params = Object.assign({page: this.pageNum}, options[this.categoryPid])
+      getIndexList(params).then(result => {
+        if (result.code === 'success') {
+          const subList = result.data.map(item => {
+            const obj = {
+              name: item.goodsName,
+              id: item.id,
+              img: item.primaryPicUrl
+            }
+            return obj
+          })
+          this.detailData.name = this.currentCateName
+          this.detailData.subList = [...this.detailData.subList, ...subList]
+          this.noMore = this.detailData.subList.length >= result.count
+        }
+      })
+    },
+    _getCategoryLists() {
+      const params = {
+        categoryPid: this.categoryPid
+      }
+      getCategoryLists(params).then(res => {
+        if (res.code === 'success') {
+          if (this.categoryPid === 0) {
+            this.categoryPid = res.data[0].categoryId
+            this.currentCateName = res.data[0].categoryName
+            this.listData = res.data.map(item => {
+              const obj = {
+                categoryName: item.categoryName,
+                categoryId: item.categoryId
+              }
+              return obj
+            })
+          } else {
+            this.detailData = {
+              name: this.currentCateName,
+              subList: res.data.map(item => {
+                const obj = {
+                  name: item.categoryName,
+                  categoryId: item.categoryId,
+                  img: `http://shop.ahaxkj.com${item.img}`
+                  // img: `http://shop.ahaxkj.com/logo/20190530095815_177.jpg`
+                }
+                return obj
+              })
+            }
+          }
+        }
+      })
     }
   },
 }
