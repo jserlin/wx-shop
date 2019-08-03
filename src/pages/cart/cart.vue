@@ -139,7 +139,6 @@ export default {
           pre.push(item.id);
           return pre;
         }, []);
-        console.log(this.checkedList)
       } else {
         this.cartList.forEach(item => {
           item.checked = false;
@@ -187,7 +186,6 @@ export default {
       });
     },
     async toConfirmOrder() {
-      console.log(this.checkedList)
       if (!this.checkedList.length) {
         wx.showToast({
           icon: "none",

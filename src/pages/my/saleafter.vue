@@ -15,26 +15,30 @@
         <div class="flex-box order-title item-space-between">
           <span class="order-name">{{el.refundType == 1 ? '无理由(普通退货)' : '质量问题(顺丰到付)'}}</span>
           <!-- 0正常 1退货申请中 2渠道取消退货 3已返回退货地址 4已收到退货包裹 5拒绝退货 6超时取消退货 7已退货退款 -->
-          <span class="order-status font-red">{{el.returnStatus == 0 ? '正常' :
+          <span class="order-status font-red">
+            {{el.returnStatus == 0 ? '正常' :
             el.returnStatus == 1 ? '退货申请中' :
             el.returnStatus == 2 ? '渠道取消退货' :
             el.returnStatus == 3 ? '已返回退货地址' :
             el.returnStatus == 4 ? '已收到退货包裹' :
             el.returnStatus == 5 ? '拒绝退货' :
             el.returnStatus == 6 ? '超时取消退货' : '已退货退款'
-            }}</span>
+            }}
+          </span>
         </div>
         <div class="order-id">
           <p>
-            <span class="font-gray fl">订单编号：</span>{{el.orderCode}}
+            <span class="font-gray fl">订单编号：</span>
+            {{el.orderCode}}
           </p>
           <p>
-            <span class="font-gray fl">退单编号：</span>{{el.skuId}}
+            <span class="font-gray fl">退单编号：</span>
+            {{el.skuId}}
           </p>
           <p class="font-gray">退单时间：{{el.returnTime}}</p>
         </div>
         <div class="goods-list flex-box item-space-between">
-          <div class="order-goods flex-box">
+          <div class="order-goods flex-box" @click="goGoodsInfo(el)">
             <span class="goods-img">
               <img :src="el.goodsImage" alt />
             </span>
@@ -47,16 +51,22 @@
           <span class="font-red">¥ {{el.totalPrice}}</span>
         </div>
         <div class="order-button">
-          <span class="btn btn-outline mr20rpx" v-if="el.returnStatus === '1'">取消退货</span>
-          <span class="btn btn-outline mr20rpx" v-if="el.returnStatus === '3'">绑定寄回物流</span>
+          <span
+            class="btn btn-outline mr20rpx"
+            @click="cancelReturnOrder(el)"
+            v-if="el.returnStatus === '1'"
+          >取消退货</span>
+          <span class="btn btn-outline mr20rpx" @click="goBindExpress(el)" v-if="!el.trackingNum && el.returnStatus === '3'">绑定寄回物流</span>
           <span class="btn btn-outline" @click="goDetail(el)">查看详情</span>
         </div>
       </div>
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
-import { getReturnofGoodList } from "@/api";
+import { getReturnofGoodList, cancelReturnOfGoods } from "@/api";
+import Dialog from "vant-weapp/dist/dialog/dialog";
 export default {
   data() {
     return {
@@ -86,19 +96,19 @@ export default {
       orderList: []
     };
   },
-  onLoad(){
-    this.getSaleafterOrder()
+  onShow() {
+    this.getSaleafterOrder();
   },
   methods: {
     onChange(i) {
       this.active = i;
-      this.getSaleafterOrder()
+      this.getSaleafterOrder();
     },
     goDetail(info) {
       const path = "/pages/order/returnGoodsDetail";
       this.$router.push({
         path,
-        query:info
+        query: info
       });
     },
     getSaleafterOrder() {
@@ -107,11 +117,48 @@ export default {
         returnStatus: this.active,
         page: 1
       }).then(res => {
-        if(res && res.code === 'success'){
-          this.orderList = res.data
+        if (res && res.code === "success") {
+          this.orderList = res.data;
         }
       });
-    }
+    },
+    cancelReturnOrder(el) {
+      Dialog.confirm({
+        message: "确认取消退货订单？",
+        showCancelButton: true,
+        asyncClose: true
+      })
+        .then(() => {
+          cancelReturnOfGoods({
+            userToken: this.$store.state.token,
+            returnApplyId: el.returnApplyId
+          }).then(res => {
+            if(res && res.code === 'success'){
+              Dialog.close();
+            }
+          });
+        })
+        .catch(() => {
+          Dialog.close();
+        });
+    },
+    goBindExpress(el){
+      const path = '/pages/order/bindOrderExpress'
+      this.$router.push({
+        path,
+        query: {
+          returnApplyId: el.returnApplyId
+        }
+      })
+    },
+
+    goGoodsInfo(item) {
+      const path = "/pages/product/detail";
+      this.$router.push({
+        path,
+        query: { id: item.goodsId }
+      });
+    },
   }
 };
 </script>

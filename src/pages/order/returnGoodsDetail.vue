@@ -99,7 +99,6 @@ export default {
         returnApplyId: this.infoId.returnApplyId,
         userToken: this.$store.state.token
       }).then(res => {
-        console.log(res);
         if (res.code === "success") {
           this.returnOrderInfo = res.data;
         }

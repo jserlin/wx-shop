@@ -104,7 +104,6 @@ export default {
   computed: {},
 
   onShow() {
-    console.log(this.$store.state.userInfo)
     if(this.$store.state.token && this.$store.state.userInfo){
       this.userShow = true
       this.userInfo = this.$store.state.userInfo

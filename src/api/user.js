@@ -96,7 +96,7 @@ export async function getReturnofGoodList(data) {
 }
 
 /**
- * 个人中心－取消申请退货
+ * 个人中心－取消申请退货 ✅
  * @param {String} returnApplyId 退货订单编号
  */
 export async function cancelReturnOfGoods(data) {
@@ -105,7 +105,7 @@ export async function cancelReturnOfGoods(data) {
 }
 
 /**
- * 个人中心－申请退货详情
+ * 个人中心－申请退货详情 ✅
  * @param {String} returnApplyId 退货订单编号
  */
 export async function getReturnofGoodInfo(data) {
@@ -114,7 +114,7 @@ export async function getReturnofGoodInfo(data) {
 }
 
 /**
- * 个人中心－退货详情物流信息
+ * 个人中心－退货详情物流信息 ✅
  * @param {String} returnApplyId 退货订单编号
  * @param {String} trackingCompany 物流公司id
  * @param {String} trackingNum 物流单号
@@ -125,7 +125,7 @@ export async function bindReturnOfGoodExpress(data) {
 }
 
 /**
- * 个人中心－收货地址
+ * 个人中心－收货地址 ✅
  */
 export async function getUserAddress(data) {
   const url = '/tAddress/wx/query'
@@ -133,7 +133,7 @@ export async function getUserAddress(data) {
 }
 
 /**
- * 个人中心－删除收货地址
+ * 个人中心－删除收货地址 ✅
  * @param {String} ids 地址id
  */
 export async function deleteUserAddress(data) {
@@ -142,7 +142,7 @@ export async function deleteUserAddress(data) {
 }
 
 /**
- * 个人中心－设置默认收货地址
+ * 个人中心－设置默认收货地址 ✅
  * @param {String} ids 地址id
  */
 export async function setUserAddressDefault(data) {
@@ -159,7 +159,7 @@ export async function singleAddressInfo(data) {
   return Request.post(url, data)
 }
 
-/* */
+/* ✅ */
 export async function addNewAddress(data){
   const url = '/tAddress/wx/add'
   return Request.post(url, data)
@@ -189,4 +189,10 @@ export async function editNewAddress(data){
 export async function getOrderExpress(data){
   const url = '/tOrder/wx/queryExpress'
   return Request.post(url, data)
+}
+
+// ✅
+export async function getAddressAll(){
+  const url = '/src/style/area.json'
+  return Request.get(url)
 }

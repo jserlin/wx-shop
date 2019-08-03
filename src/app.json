@@ -58,7 +58,8 @@
         "navigationBarTitleText": "收货地址",
         "usingComponents": {
           "van-icon": "/vant-weapp/dist/icon/index",
-          "van-checkbox": "/vant-weapp/dist/checkbox/index"
+          "van-checkbox": "/vant-weapp/dist/checkbox/index",
+          "van-dialog": "/vant-weapp/dist/dialog/index"
         }
       }
     },
@@ -76,7 +77,10 @@
     {
       "path": "pages/my/saleafter",
       "config": {
-        "navigationBarTitleText": "售后订单"
+        "navigationBarTitleText": "售后订单",
+        "usingComponents": {
+          "van-dialog": "/vant-weapp/dist/dialog/index"
+        }
       }
     },
     {
@@ -121,6 +125,18 @@
         "usingComponents": {
           "van-cell": "/vant-weapp/dist/cell/index",
           "van-icon": "/vant-weapp/dist/icon/index"
+        }
+      }
+    },
+    {
+      "path": "pages/order/bindOrderExpress",
+      "config": {
+        "navigationBarTitleText": "绑定物流信息",
+        "usingComponents": {
+          "van-cell": "/vant-weapp/dist/cell/index",
+          "van-field": "/vant-weapp/dist/field/index",
+          "van-popup": "/vant-weapp/dist/popup/index",
+          "van-picker": "/vant-weapp/dist/picker/index"
         }
       }
     },
