@@ -6,35 +6,41 @@
       <div class="tip-item">满88元免邮费</div>
     </div>
     <div class="cartlist">
-      <div class="item" v-for="(goods, index) in cartList" :key="index">
-        <div class="con">
-          <div class="icon" @click="toggleCheck(goods, index)" :class="{active: goods.checked}"></div>
-          <div class="img-wrap">
-            <img class="img" :src="goods.goodsImage" alt="">
-          </div>
-          <div class="info">
-            <div class="name">{{goods.goodsName}}</div>
-            <div class="desc">
-              <span class="span">{{goods.displayString}}</span>
+
+      <van-swipe-cell  v-for="(goods, index) in cartList" :key="index" right-width="65">
+        <div class="item">
+          <div class="con">
+            <div class="icon" @click="toggleCheck(goods, index)" :class="{active: goods.checked}"></div>
+            <div class="img-wrap">
+              <img class="img" :src="goods.goodsImage" alt="">
             </div>
-            <div class="price">￥{{goods.price}}</div>
+            <div class="info">
+              <div class="name">{{goods.goodsName}}</div>
+              <div class="desc">
+                <span class="span">{{goods.displayString}}</span>
+              </div>
+              <div class="price">￥{{goods.price}}</div>
+            </div>
+          </div>
+          <div class="m-selNumRow">
+            <div class="m-selnum">
+              <div class="less" @click="updateGoods(goods)">
+                <div class="span">-</div>
+              </div>
+              <div class="textWrap">
+                <div class="modal"></div>
+                <input class="input" disable type="tel" :value="goods.num">
+              </div>
+              <div class="more" @click="updateGoods(goods, 'add')">
+                <div class="span">+</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="m-selNumRow">
-          <div class="m-selnum">
-            <div class="less">
-              <div class="span">-</div>
-            </div>
-            <div class="textWrap">
-              <div class="modal"></div>
-              <input class="input" disable type="tel" :value="goods.num">
-            </div>
-            <div class="more" @click="addGoods(goods)">
-              <div class="span">+</div>
-            </div>
-          </div>
+        <div slot="right" class="del-wrap" @click="delShoppingCart(goods)">
+          <div class="del-btn">删除</div>
         </div>
-      </div>
+      </van-swipe-cell>
     </div>
     <!-- 没商品时展示 -->
     <div  class="nogoods" v-show="!cartList.length">
@@ -55,7 +61,7 @@
 </template>
 
 <script>
-import { checkShoppingCartLists, addShoppingCart } from '@/api/'
+import { checkShoppingCartLists, updateShoppingCart, delShoppingCart } from '@/api/'
 
 export default {
   mpType: 'page',
@@ -131,23 +137,41 @@ export default {
         this.checkedList = []
       }
     },
-    addGoods(goods) {
-      const params = {
-        goodsId: goods.spuId,
-        userToken: this.$store.state.token,
-        skuId: goods.skuId,
-        goodsType: goods.goodsType
+    updateGoods(goods, type) {
+      if (type === 'add') {
+        goods.num ++
+      } else {
+        goods.num --
       }
-      addShoppingCart(params).then((result) => {
+      const params = {
+        id: goods.id,
+        userToken: this.$store.state.token,
+        num: goods.num
+      }
+      updateShoppingCart(params).then((result) => {
         if (result.code === 'success') {
           this.$store.dispatch('getShoppingLists')
           wx.showToast({
             icon: 'none',
-            title: '添加成功'
+            title: '修改成功'
           })
         }
       })
-
+    },
+    delShoppingCart(goods) {
+      const params = {
+        ids: goods.id,
+        userToken: this.$store.state.token
+      }
+      delShoppingCart(params).then((result) => {
+        if (result.code === 'success') {
+          this.$store.dispatch('getShoppingLists')
+          wx.showToast({
+            icon: 'none',
+            title: '删除成功'
+          })
+        }
+      })
     },
     async toConfirmOrder() {
       if (!this.checkedList.length) {
@@ -199,6 +223,17 @@ export default {
   .cartlist {
     background: #fff;
     margin-bottom: 110rpx;
+    .del-wrap{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      height: 100%;
+      background-color: #f44;
+      .del-btn{
+        padding: 6rpx 10rpx;
+      }
+    }
     .item {
       padding: 20rpx 0;
       border-bottom: 1rpx solid #f4f4f4;
