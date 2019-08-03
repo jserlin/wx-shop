@@ -64,6 +64,27 @@ export async function addShoppingCart(data) {
 }
 
 /**
+ * 加减购物车接口
+ * @param {String} id  购物车列表的主键id
+ * @param {String} userToken  用户登录返回的token 可为空 如果没有则跳到登录界面
+ * @param {Number} num  加减购物车列表单个商品
+ */
+export async function updateShoppingCart(data) {
+  const url = '/tShoppingCart/wx/update'
+  return Request.post(url, data)
+}
+
+/**
+ * 删除购物车商品接口
+ * @param {String} id  购物车列表的主键id
+ * @param {String} userToken  用户登录返回的token 可为空 如果没有则跳到登录界面
+ */
+export async function delShoppingCart(data) {
+  const url = '/tShoppingCart/wx/delete'
+  return Request.post(url, data)
+}
+
+/**
  * 购物车选中商品到确定下单界面前需做校验，校验返回成功则说明选中的商品可以一单购买，
  * 如果不成功会返回不成功原因前端只需要提示出来就行，不成功的继续停留在当前购物车界面
  * @param {String} userToken  用户登录返回的token 可为空 如果没有则跳到登录界面

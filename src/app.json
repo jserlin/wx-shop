@@ -39,10 +39,7 @@
     {
       "path": "pages/cart/cart",
       "config": {
-        "navigationBarTitleText": "购物车",
-        "usingComponents": {
-          "van-checkbox": "/vant-weapp/dist/checkbox/index"
-        }
+        "navigationBarTitleText": "购物车"
       }
     },
     "pages/my/my",

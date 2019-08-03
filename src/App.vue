@@ -2,7 +2,7 @@
 export default {
   globalConfig: {
     usingComponents: {
-      'van-tag': 'vant-weapp/dist/tag/index'
+      "van-swipe-cell": "/vant-weapp/dist/swipe-cell/index"
     }
   },
   created () {

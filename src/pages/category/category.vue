@@ -70,6 +70,7 @@ export default {
       if (arr.includes(nv)) {
         this.pageNum = 0
         this.noMore = false
+        this.detailData.subList = []
         this.getIndexList()
       } else {
         this._getCategoryLists()
