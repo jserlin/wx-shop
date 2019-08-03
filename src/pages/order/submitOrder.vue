@@ -20,54 +20,35 @@
 
     <div class="product-wrap mb20">
       <div class="head-title">已选商品</div>
-      <div class="content">
+      <div class="content" v-for="(goods, index) in goodsLists" :key="index">
           <div class="img-wrap">
-            <img class="img-item" src="https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0">
+            <img class="img-item" :src="goods.goodsImage">
           </div>
           <div class="desc">
-              <div class="title">商品标题</div>
-              <div class="type">星空灰</div>
+              <div class="title">{{goods.goodsName}}</div>
+              <div class="type">{{goods.displayString}}</div>
               <div class="price">
-              <div class="price-now">￥11</div>
-                <div class="price-del">
+              <div class="price-now">￥{{goods.price}}</div>
+                <!-- <div class="price-del">
                   <div class="del"></div>
                   ￥111
-                </div>
+                </div> -->
               </div>
           </div>
           <div class="product-num">
-            x11
-          </div>
-      </div>
-      <div class="content">
-          <div class="img-wrap">
-            <img class="img-item" src="https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0">
-          </div>
-          <div class="desc">
-              <div class="title">商品标题</div>
-              <div class="type">星空灰</div>
-              <div class="price">
-              <div class="price-now">￥11</div>
-                <div class="price-del">
-                  <div class="del"></div>
-                  ￥111
-                </div>
-              </div>
-          </div>
-          <div class="product-num">
-            x11
+            x{{goods.num}}
           </div>
       </div>
       <div class="foot">
         <span class="span">应付金额</span>
-        <span class="span money">￥188</span>
+        <span class="span money">￥{{price}}</span>
       </div>
     </div>
     <van-cell title="支付方式" value="微信支付" />
     <!-- 底部tab -->
     <div class="footer-wrap">
       <van-submit-bar
-        :price="price"
+        :price="totalPrice"
         button-text="立即购买"
         @submit="onSubmit"
       />
@@ -80,18 +61,24 @@ import { toConfirmOrder, toWxPay } from '@/api/'
 export default {
   data() {
     return {
-      price: 1188,
-    }
-  },
-  methods: {
-    onSubmit(event) {
-      console.log("TCL: onChange -> event", event)
+      goodsLists: [],
+      price: 0,
+      totalPrice: 0,
     }
   },
   mounted() {
     this.getConfirmOrder()
   },
   methods: {
+    onSubmit(event) {
+      const params = {
+        userToken: this.$store.state.token,
+        cartIds: this.$route.query.ids,
+        addressId: '',
+        openid: ''
+      }
+      toWxPay(params)
+    },
     getConfirmOrder() {
       if (this.$store.state.token) {
         // this.$store.commit('SET_AUTH_TYPE', thirdpart)
@@ -100,7 +87,16 @@ export default {
           userToken: this.$store.state.token,
           addressId: ''
         }
-        toConfirmOrder(params)
+        toConfirmOrder(params).then((res) => {
+          if (res.code === 'success') {
+            this.goodsLists = res.data
+            this.price = this.goodsLists.reduce((total, item) => {
+              total += (+item.totalPrice)
+              return total
+            }, 0)
+            this.totalPrice = this.price * 100
+          }
+        })
       } else {
         const url = '/pages/login/login'
         this.$router.push({path: url, query: {back: 1}})

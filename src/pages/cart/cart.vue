@@ -26,7 +26,8 @@
               <div class="span">-</div>
             </div>
             <div class="textWrap">
-              <input class="input" type="tel" :value="goods.num">
+              <div class="modal"></div>
+              <input class="input" disable type="tel" :value="goods.num">
             </div>
             <div class="more">
               <div class="span">+</div>
@@ -40,12 +41,12 @@
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" alt="">
     </div>
     <div class="foot-fixed">
-      <div class="left allcheck">
-        全选
+      <div class="left allcheck" :class="{active: checkAll}" @click="checkAllGoods">
+        {{selectText}}
       </div>
       <div class="right">
         <div>
-          ￥11
+          ￥{{totalPrice}}
         </div>
         <div @click="toConfirmOrder">下单</div>
       </div>
@@ -60,36 +61,94 @@ export default {
   mpType: 'page',
   data () {
     return {
-      cartList: []
+      cartList: [],
+      checkAll: false,
+      checkedList: [],
+      selectText: '全选'
     }
   },
   computed: {
     shoppingCartLists() {
       return this.$store.state.shoppingCartLists
+    },
+    totalPrice() {
+      return this.cartList.reduce((total, item) => {
+        if (item.checked) {
+          total += (+item.totalPrice)
+        }
+        return total
+      }, 0)
     }
   },
   watch: {
     shoppingCartLists(nv) {
      this.cartList = nv.map(item => {
-       item.checked = false
-       return item
+       const _obj = Object.assign({}, item)
+       if (this.checkedList.includes(item.id)) {
+         _obj.checked = true
+       } else {
+         _obj.checked = false
+       }
+       return _obj
      })
-    }
-  },
-  computed: {
-    shoppingCartLists() {
-      return this.$store.state.shoppingCartLists
+    },
+    checkedList(nv) {
+      this.checkAll = this.checkedList.length === this.cartList.length
+      if (this.checkAll) {
+        this.selectText = '全选'
+      } else{
+        this.selectText = nv.length ? `已选${nv.length}` : '全选'
+      }
     }
   },
   methods: {
     toggleCheck(goods, index) {
       // console.log("TCL: toggleCheck -> goods", goods)
       goods.checked = !goods.checked
+      if(goods.checked) {
+        if (!this.checkedList.includes(goods.id)) {
+          this.checkedList.push(goods.id)
+        }
+      } else {
+        this.checkedList.splice(this.checkedList.indexOf(goods.id), 1)
+      }
       // this.$set(this.cartList[index], 'checked', !this.cartList[index].checked)
     },
-    toConfirmOrder() {
+    checkAllGoods() {
+      this.checkAll = !this.checkAll
+      if (this.checkAll) {
+        this.cartList.forEach(item => {
+          item.checked = true
+        })
+        this.checkedList = this.cartList.reduce((pre, item) => {
+          pre.psuh(item.id)
+          return pre
+        }, [])
+      } else {
+        this.cartList.forEach(item => {
+          item.checked = false
+        })
+        this.checkedList = []
+      }
+    },
+    async toConfirmOrder() {
+      if (!this.checkedList.length) {
+        wx.showToast({
+          icon: 'none',
+          title: '请选择商品'
+        })
+        return
+      }
+      const ids = this.checkedList.join(',')
       // 下单前需要校验下所选商品 是够可以一单
-      // checkShoppingCartLists()
+      const result = await checkShoppingCartLists({
+        ids,
+        userToken: this.$store.state.token
+      })
+      if (result.code === 'success') {
+        const url = '/pages/order/submitOrder'
+        this.$router.push({path: url, query: {ids}})
+      }
     }
   }
 }
@@ -274,10 +333,17 @@ export default {
       }
     }
     .textWrap{
+      position: relative;
       width: 58rpx;
       text-align: center;
       border-left: 1rpx solid #d9d9d9;
       border-right: 1rpx solid #d9d9d9;
+      .modal {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+      }
       .input{
         height: 100%;
         width: 100%;
