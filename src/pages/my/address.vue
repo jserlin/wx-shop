@@ -1,6 +1,6 @@
 <template>
   <div class="address-list">
-    <div class="address-item" v-for="el in [1,2,3,5,4,6,7]" :key="el">
+    <div class="address-item" v-for="el in addressList" :key="el">
       <div class="address-info">
         <p class="flex-box item-space-between">
           <span>公司地址</span>
@@ -22,11 +22,22 @@
   </div>
 </template>
 <script>
+import {
+  getUserAddress
+} from '@/api'
 export default {
   data() {
     return {
-      checked: true
+      checked: true,
+      addressList: []
     };
+  },
+  onShow() {
+    getUserAddress({
+      userToken: this.$store.state.token,
+    }).then(res=>{
+      console.log(res)
+    })
   },
   methods: {
     onChange() {},

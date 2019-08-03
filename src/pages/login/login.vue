@@ -22,7 +22,14 @@
     />
 
     <div style="padding: 20rpx 30rpx;">
-      <van-button :loading="false" type="danger" block size="normal" loading-text="登录中..." @click="goMyCenter">登 录</van-button>
+      <van-button
+        :loading="false"
+        type="danger"
+        block
+        size="normal"
+        loading-text="登录中..."
+        @click="goMyCenter"
+      >登 录</van-button>
     </div>
   </div>
 </template>
@@ -36,36 +43,37 @@ export default {
       username: "18117219026"
     };
   },
-  onShow() { },
-	mounted() { },
+  onShow() {},
+  mounted() {},
   methods: {
     getPhoneCode() {
-			if(this.username){
-        const data = { username: this.username }
+      if (this.username) {
+        const data = { username: this.username };
         getValidCode(data).then(res => {
           // 验证码
           console.log(res);
         });
-			}
+      }
     },
 
     changeUsername(e) {
-			this.username = e.mp.detail
+      this.username = e.mp.detail;
     },
 
     changeDataModule(e) {
-			this.code = e.mp.detail
+      this.code = e.mp.detail;
     },
 
-    goMyCenter(){
-      this.$store.dispatch('login', {
-        username: this.username,
-        valid_code: this.code
-      }).then(()=>{
-        if(this.$route.query.back) {
-          this.$router.back()
-        }
-      })
+    goMyCenter() {
+      this.$store
+        .dispatch("login", {
+          username: this.username,
+          valid_code: this.code
+        })
+        .then(() => {
+          const url = "/pages/my/my";
+          this.$router.push({ path: url, isTab: true });
+        });
     }
   }
 };

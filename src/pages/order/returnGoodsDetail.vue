@@ -80,12 +80,19 @@
 export default {
   data() {
     return {
-      price: 1188,
+      infoId: null
+    }
+  },
+  onShow(){
+    const { query } = this.$route;
+    if (query.id) {
+      this.infoId = query;
+      this.getReturnGoodsInfo();
     }
   },
   methods: {
-    onSubmit(event) {
-      console.log("TCL: onChange -> event", event)
+    getReturnGoodsInfo(){
+      console.log(this.infoId)
     },
     toRetunGoods() {
       const url = '/pages/order/applyReturnGoods'

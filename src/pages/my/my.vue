@@ -4,19 +4,19 @@
       <image src="/static/images/my_bg.png" alt />
       <div class="user-info-content row-padding abs flex-box" @click="goLogin">
         <div class="img-avatar">
-          <image src="/static/images/my_bg.png" alt />
+          <image src="/static/images/my_bg.png" alt="头像" />
         </div>
-        <div class="user-name" v-if="userInfo">
-          <p class="font-30">范晓萱</p>
+        <div class="user-name" v-show="userShow">
+          <p class="font-30">{{userInfo.truename}}</p>
           <p class="font-28">
             福利券金额：
-            <span class="font-red">¥ 500.00</span>
+            <span class="font-red">¥ {{userInfo.money}}</span>
           </p>
         </div>
       </div>
     </div>
 
-    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders(1)">
+    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders('0')">
       <div class="flex-box item-space-between">
         <span>订单</span>
         <span class="icon-back">
@@ -28,19 +28,19 @@
       class="flex-box item-space-between text-center mb20rpx"
       style="background: #fff; padding: 18rpx 0;"
     >
-      <div class="flex-item" @click="toOrders(2)">
+      <div class="flex-item" @click="toOrders('1')">
         <div class="img-wrap">
           <image src="/static/images/my_icon_cancel.png" alt />
         </div>
         <p>已取消</p>
       </div>
-      <div class="flex-item" @click="toOrders(3)">
+      <div class="flex-item" @click="toOrders('2')">
         <div class="img-wrap rel">
           <image src="/static/images/my_icon_send.png" alt />
         </div>
         <p>待发货</p>
       </div>
-      <div class="flex-item" @click="toOrders(4)">
+      <div class="flex-item" @click="toOrders('3')">
         <div class="img-wrap rel">
           <image src="/static/images/my_icon_Receive.png" alt />
         </div>
@@ -92,18 +92,25 @@
   </div>
 </template>
 <script>
-import { getUserInfo } from "@/api/";
 export default {
   data() {
     return {
-      userInfo: false
+      userShow: false,
+      userInfo: {}
     };
   },
 
   computed: {},
 
-  mounted() {
-    this.getUserInfo()
+  onShow() {
+    if(this.$store.state.token && this.$store.state.userInfo){
+      this.userShow = true
+      this.userInfo = this.$store.state.userInfo
+      // 无刷新个人信息
+      this.onLoad && this.onLoad()
+    }else{
+      this.userInfo = false
+    }
   },
 
   methods: {
@@ -132,11 +139,6 @@ export default {
         const url = "/pages/login/login";
         this.$router.push(url);
       }
-    },
-    getUserInfo() {
-      getUserInfo().then(res => {
-        console.log(res);
-      });
     }
   }
 };

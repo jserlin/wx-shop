@@ -47,7 +47,7 @@ const store = new Vuex.Store({
     // 购物车列表
     getShoppingLists({ commit, state }, token) {
       return new Promise((resolve, reject) => {
-        getShoppingCartLists({userToken: token || state.token}).then(response => {
+        getShoppingCartLists({ userToken: token || state.token }).then(response => {
           const { data } = response
           if (!data) {
             reject('Verification failed, please Login again.')
@@ -83,7 +83,7 @@ const store = new Vuex.Store({
     // 获取用户信息
     getInfo({ commit, state }, token) {
       return new Promise((resolve, reject) => {
-        getUserInfo({userToken: token}).then(response => {
+        getUserInfo({ userToken: token }).then(response => {
           const { data } = response
           if (!data) {
             reject('Verification failed, please Login again.')

@@ -1,102 +1,118 @@
 <template>
   <div class="container">
     <!-- 收货地址 -->
-    <div class="address-wraper">
+    <div class="address-wraper" v-if="orderInfo">
       <div class="address-content">
         <div class="left">
           <van-icon name="location-o" />
-          <!-- <div class="name">范晓萱</div> -->
-          <!-- <div class="default">默认</div> -->
         </div>
         <div class="right">
-          <div class="right-item">范晓萱 176****2121</div>
-          <div class="right-item">北京市北京市东城区复兴道</div>
+          <div class="right-item">{{orderInfo.userName + ' ' + orderInfo.userTel}}</div>
+          <div class="right-item">{{orderInfo.address}}</div>
         </div>
       </div>
     </div>
     <div class="line-bg mb20"></div>
-    <div class="product-wrap mb20">
+    <div class="product-wrap mb20" v-if="orderInfo">
       <div class="head-title">商品明细</div>
-      <div class="content">
+      <div class="list-item content" v-for="(el, i) in orderInfo.detailList" :key="i">
+        <div class="flex-box">
           <div class="img-wrap">
-            <img class="img-item" src="https://yanxuan.nosdn.127.net/0a053f1407b976b4b9523b837b15c247.png?imageView&quality=75&thumbnail=750x0">
+            <img class="img-item"
+              :src="el.goodsImage"
+            />
           </div>
           <div class="desc">
-              <div class="title">商品标题</div>
-              <div class="price">
-              <div class="price-now">￥11</div>
-              <div class="type">星空灰</div>
-              <!-- <div class="price-del">
-                <div class="del"></div>
-                ￥111
-              </div> -->
-              </div>
-              <div class="tuihuo" @click="toRetunGoods">申请退货</div>
+            <div class="title">{{goodsName}}</div>
+            <div class="price">
+              <div class="price-now">￥{{el.price}}</div>
+              <div class="type">{{el.displayString}}</div>
+            </div>
+            <div class="tuihuo" @click="toRetunGoods">申请退货</div>
           </div>
-          <div class="product-num">
-            x11
-          </div>
+        </div>
+        <div class="product-num">x{{el.num}}</div>
       </div>
     </div>
     <div class="mb20">
       <van-cell title="商品总计">
-        <span slot="right-icon">￥18.50(含邮费：10.00)</span>
+        <span slot="right-icon">￥{{orderInfo.orderPrice}}(含邮费：{{orderInfo.expFee}})</span>
       </van-cell>
     </div>
     <div class="mb20">
       <van-cell>
         <span class="grey" slot="title">支付方式</span>
-        <span slot="right-icon">账户余额支付</span>
+        <span slot="right-icon">
+          {{orderInfo.payType == 0 ? '企业余额支付' :
+          orderInfo.payType == 1 ? '饭卡支付' :
+          orderInfo.payType == 2 ? '福利劵支付' :
+          orderInfo.payType == 3 ? '微信支付' : ''}}
+        </span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">订单编号</span>
-        <span slot="right-icon">9527</span>
+        <span slot="right-icon">{{orderInfo.orderCode}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">下单时间</span>
-        <span slot="right-icon">1111-11-11</span>
+        <span slot="right-icon">{{orderInfo.createtime}}</span>
       </van-cell>
       <van-cell>
         <span class="grey" slot="title">支付时间</span>
-        <span slot="right-icon">1111-11-11</span>
+        <span slot="right-icon">{{orderInfo.payTime}}</span>
       </van-cell>
     </div>
   </div>
 </template>
 <script>
-
+import { getOrderInfo } from "@/api";
 export default {
   data() {
     return {
-      price: 1188,
+      orderInfo: {},
+      id: null
+    };
+  },
+  onShow() {
+    const { query } = this.$route;
+    if (query.id) {
+      this.id = query.id;
+      this.getOrderDetail();
     }
   },
   methods: {
-    onSubmit(event) {
-      console.log("TCL: onChange -> event", event)
-    },
     toRetunGoods() {
-      const url = '/pages/order/applyReturnGoods'
-      this.$router.push(url)
+      const url = "/pages/order/applyReturnGoods";
+      this.$router.push(url);
+    },
+    getOrderDetail() {
+      getOrderInfo({
+        userToken: this.$store.state.token,
+        orderCode: this.id
+      }).then(res => {
+        if (res && res.code === "success") {
+          this.orderInfo = res.data;
+        }
+      });
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .container {
-    position: relative;
-    font-family: PingFangSC-Light, helvetica, 'Heiti SC';
-    background: #fff;
-    background: #fafafa;
-    color: #333;
-    min-height: 100vh;
-    box-sizing: border-box;
+  position: relative;
+  font-family: PingFangSC-Light, helvetica, "Heiti SC";
+  background: #fff;
+  background: #fafafa;
+  color: #333;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
-.img{
+.img {
   width: 100%;
   height: 100%;
 }
-.mb20{
+.mb20 {
   margin-bottom: 20rpx;
 }
 .grey {
@@ -107,7 +123,8 @@ export default {
   display: block;
   width: 100%;
   height: 10rpx;
-  background: url(//yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-1579543565.png) repeat-x;
+  background: url(//yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-1579543565.png)
+    repeat-x;
   background-size: 60rpx 10rpx;
 }
 .address-wraper {
@@ -153,9 +170,9 @@ export default {
     }
   }
 }
-.product-wrap{
+.product-wrap {
   background: #fff;
-  .head-title{
+  .head-title {
     padding-top: 20rpx;
     margin-left: 20rpx;
     font-size: 28rpx;
@@ -163,17 +180,17 @@ export default {
     height: 40rpx;
     color: #333;
   }
-  .foot{
+  .foot {
     padding: 20rpx 0;
     margin-right: 30rpx;
     font-size: 28rpx;
     line-height: 40rpx;
     height: 40rpx;
     text-align: right;
-    .span{
+    .span {
       color: #333;
     }
-    .money{
+    .money {
       color: #b4282d;
     }
   }
@@ -183,9 +200,10 @@ export default {
     padding: 30rpx 10rpx 30rpx 0rpx;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-bottom: 1px solid #d9d9d9;
     &:last-child {
-      border: none
+      border: none;
     }
     .img-wrap {
       margin-right: 40rpx;
@@ -232,7 +250,7 @@ export default {
           }
         }
       }
-      .tuihuo{
+      .tuihuo {
         padding: 0 20rpx;
         width: 100rpx;
         border-radius: 8rp;
@@ -242,11 +260,10 @@ export default {
       }
     }
     .red {
-      color: #f60
+      color: #f60;
     }
     .product-num {
       font-size: 28rpx;
-      align-self: flex-start;
       margin-right: 30rpx;
     }
   }
