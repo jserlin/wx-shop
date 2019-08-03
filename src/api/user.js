@@ -182,9 +182,9 @@ export async function editNewAddress(data){
   return Request.post(url, data)
 }
 /**
- * orderCode
+ * orderCode 订单详情物流
  */
-export async function getOrderExpress(){
+export async function getOrderExpress(data){
   const url = '/tOrder/wx/queryExpress'
   return Request.post(url, data)
 }

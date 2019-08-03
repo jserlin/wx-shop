@@ -49,7 +49,10 @@
     {
       "path": "pages/my/myorders",
       "config": {
-        "navigationBarTitleText": "我的订单"
+        "navigationBarTitleText": "我的订单",
+        "usingComponents": {
+          "van-dialog": "/vant-weapp/dist/dialog/index"
+        }
       }
     },
     {

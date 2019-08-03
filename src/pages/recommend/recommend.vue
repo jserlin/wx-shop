@@ -70,7 +70,7 @@ export default {
      if (result.data) {
        this.imgUrls = result.data.map(item => {
          const _obj = {
-           imgUrl: `http://shop.ahaxkj.com${item.imgUrl}`
+           imgUrl: `https://pay.tuixiang.com:8881${item.imgUrl}`
          }
          return _obj
        })

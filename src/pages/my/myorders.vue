@@ -10,7 +10,7 @@
       >{{el.name}}</span>
     </div>
     <!-- 订单列表 -->
-    <scroll-view scroll-y class="order-list-wrap"  @scrolltolower="getMoreOrderList">
+    <scroll-view scroll-y class="order-list-wrap" @scrolltolower="getMoreOrderList">
       <div class="order-item mb20rpx" v-for="el in orderList" :key="el.orderCode">
         <div class="flex-box order-title item-space-between">
           <span class="order-name">
@@ -38,8 +38,12 @@
         </div>
         <div class="goods-list flex-box item-space-between">
           <div class="order-goods">
-            <div class="order-goods-item flex-box" v-for="(item, j) in el.detailList" :key="j"
-              @click="goGoodsInfo(item)">
+            <div
+              class="order-goods-item flex-box"
+              v-for="(item, j) in el.detailList"
+              :key="j"
+              @click="goGoodsInfo(item)"
+            >
               <span class="goods-img">
                 <img :src="item.goodsImage" alt />
               </span>
@@ -56,17 +60,23 @@
         </div>
         <div class="order-button">
           <span class="btn btn-outline mr20rpx" @click="toOrderDetail(el)">查看订单</span>
-          <span class="btn btn-outline mr20rpx" @click="toLogistics" v-if="el.orderStatus == 3">查看物流</span>
-          <span class="btn btn-outline" @click="toLogistics" v-if="el.orderStatus == 3">确认收货</span>
-          <span class="btn btn-outline" v-if="el.orderStatus == 2" @click="toLogistics">取消订单</span>
-          <span class="btn btn-outline" v-if="el.orderStatus == 4" @click="toLogistics">查看物流</span>
+          <span
+            class="btn btn-outline mr20rpx"
+            @click="toLogistics(el)"
+            v-if="el.orderStatus == 3 || el.orderStatus == 4"
+          >查看物流</span>
+          <span class="btn btn-outline" v-if="el.orderStatus == 3" @click="toSureOrder(el)">确认收货</span>
+          <span class="btn btn-outline" v-if="el.orderStatus == 2" @click="toCancelOrder(el)">取消订单</span>
         </div>
       </div>
     </scroll-view>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
-import { getMyCenterOrder } from "@/api";
+import { getMyCenterOrder, cancelOrderByOrders } from "@/api";
+import Dialog from "vant-weapp/dist/dialog/dialog";
+
 export default {
   data() {
     return {
@@ -96,11 +106,38 @@ export default {
   methods: {
     onChange(i) {
       this.active = i;
-      this.getOrderList()
+      this.getOrderList();
     },
-    toLogistics() {
-      const url = "/pages/order/logisticsDetail";
-      this.$router.push(url);
+    toSureOrder(item) {
+      console.log(item);
+    },
+    toCancelOrder(item) {
+      Dialog.confirm({
+        message: "确认删除订单？",
+        showCancelButton: true,
+        asyncClose: true
+      }).then(() => {
+        cancelOrderByOrders({
+          userToken: this.$store.state.token,
+          orderCode: item.orderCode
+        }).then(res=>{
+          if(res && res.code === "success"){
+            Dialog.close();
+            this.getOrderList()
+          }
+        })
+      }).catch(() => {
+        Dialog.close();
+      });
+    },
+    toLogistics(item) {
+      const path = "/pages/order/logisticsDetail";
+      this.$router.push({
+        path,
+        query: {
+          id: item.orderCode
+        }
+      });
     },
     toOrderDetail(item) {
       const path = "/pages/order/orderDetail";
@@ -112,26 +149,26 @@ export default {
     getOrderList() {
       getMyCenterOrder({
         userToken: this.$store.state.token,
-        orderStatus: this.active === '0' ? '' : this.active,
+        orderStatus: this.active === "0" ? "" : this.active,
         page: 1
       }).then(res => {
         if (res.code === "success") {
-          this.orderList = res.data
+          this.orderList = res.data;
         }
       });
     },
-    getMoreOrderList(){
+    getMoreOrderList() {
       getMyCenterOrder({
         userToken: this.$store.state.token,
-        orderStatus: this.active === '0' ? '' : this.active,
+        orderStatus: this.active === "0" ? "" : this.active,
         page: ++this.page
       }).then(res => {
         if (res.code === "success") {
-          this.orderList = this.orderList.concat(res.data)
+          this.orderList = this.orderList.concat(res.data);
         }
       });
     },
-    goGoodsInfo(item){
+    goGoodsInfo(item) {
       const path = "/pages/product/detail";
       this.$router.push({
         path,
@@ -143,10 +180,10 @@ export default {
     const { query } = this.$route;
     if (query.a) {
       this.active = query.a;
-      this.getOrderList()
-      return
+      this.getOrderList();
+      return;
     }
-    this.getOrderList()
+    this.getOrderList();
   }
 };
 </script>
@@ -164,7 +201,7 @@ export default {
       border-right: 0 none;
     }
   }
-  .order-list-wrap{
+  .order-list-wrap {
     position: relative;
     height: 100%;
   }

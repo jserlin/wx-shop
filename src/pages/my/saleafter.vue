@@ -111,12 +111,6 @@ export default {
         }
       });
     }
-  },
-  mounted() {
-    const { query } = this.$route;
-    if (query.a) {
-      this.active = query.a;
-    }
   }
 };
 </script>
