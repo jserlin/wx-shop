@@ -207,26 +207,26 @@
     "list": [
       {
         "pagePath": "pages/recommend/recommend",
-        "iconPath": "static/images/recommend_default.png",
-        "selectedIconPath": "static/images/recommend_selected.png",
+        "iconPath": "static/images/icon-index.png",
+        "selectedIconPath": "static/images/icon-index-active.png",
         "text": "首页"
       },
       {
         "pagePath": "pages/category/category",
-        "iconPath": "static/images/coupon_default.png",
-        "selectedIconPath": "static/images/coupon_selected.png",
+        "iconPath": "static/images/icon-list.png",
+        "selectedIconPath": "static/images/icon-list-active.png",
         "text": "分类"
       },
       {
         "pagePath": "pages/cart/cart",
-        "iconPath": "static/images/shopping_default.png",
-        "selectedIconPath": "static/images/shopping_selected.png",
+        "iconPath": "static/images/icon-shopcar.png",
+        "selectedIconPath": "static/images/icon-shopcar-active.png",
         "text": "购物车"
       },
       {
         "pagePath": "pages/my/my",
-        "iconPath": "static/images/my_default.png",
-        "selectedIconPath": "static/images/my_selected.png",
+        "iconPath": "static/images/icon-mycenter.png",
+        "selectedIconPath": "static/images/icon-mycenter-active.png",
         "text": "我的"
       }
     ]

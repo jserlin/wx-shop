@@ -4,7 +4,7 @@
     <div class="line-bg"></div>
     <div class="address-wraper mb20" @click="goAddress">
       <div v-if="!address.trueName" class="address-content" style="justify-content: center">
-        <van-button size="small" >添加收获地址</van-button>
+        <van-button size="small">添加收获地址</van-button>
       </div>
       <div class="address-content" v-if="address.trueName">
         <div class="left">
@@ -43,11 +43,16 @@
         <span class="span money">￥{{price}}</span>
       </div>
     </div>
-    <van-cell v-if="needPostage" title="邮费" value="10元"/>
-    <van-cell title="支付方式" :value="payType" @click="selectPayType"/>
+    <van-cell v-if="needPostage" title="邮费" value="10元" />
+    <van-cell title="支付方式" :value="payType" @click="selectPayType" />
     <!-- 选择原因 弹出层 -->
-    <van-popup position="bottom" :show="showPayType" @close="showPayType = false" >
-      <van-picker show-toolbar :columns="columns" @cancel="showPayType = false" @confirm="onPickerChange" />
+    <van-popup position="bottom" :show="showPayType" @close="showPayType = false">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="showPayType = false"
+        @confirm="onPickerChange"
+      />
     </van-popup>
     <!-- 余额验证码 弹出层 -->
     <van-popup :show="showPayCode" @close="showPayCode = false" z-index="110">
@@ -76,9 +81,9 @@
   </div>
 </template>
 <script>
-import { toConfirmOrder, toWxPay, getPayCode, toPayCode} from "@/api/";
-import { wxPay } from '@/utils/wx'
-import Dialog from 'vant-weapp/dist/dialog/dialog'
+import { toConfirmOrder, toWxPay, getPayCode, toPayCode } from "@/api/";
+import { wxPay } from "@/utils/wx";
+import Dialog from "vant-weapp/dist/dialog/dialog";
 
 export default {
   data() {
@@ -87,12 +92,12 @@ export default {
       price: 0,
       needPostage: false,
       totalPrice: 0,
-      payType: '余额支付',
-      payCode: '',
-      columns: ['微信支付', '余额支付'],
+      payType: "余额支付",
+      payCode: "",
+      columns: ["微信支付", "余额支付"],
       showPayType: false,
       showPayCode: false
-    }
+    };
   },
   computed: {
     address() {
@@ -108,113 +113,135 @@ export default {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
         addressId: this.address.id
+      };
+
+      // test
+      if (true) {
+        getPayCode({
+          userToken: this.$store.state.token
+        }).then(res => {
+          if (res.code === "success") {
+            this.showPayCode = true;
+          }
+        });
+        return;
       }
+
       // 网易商品订单
       if (this.orderType === 0) {
-        if (this.payType === '微信支付') {
-          const params = Object.assign({
-            openid: this.$store.state.openId,
-            // 当余额不足时发起的微信支付传1 当不选余额直接发起微信支付传0
-            IsSelectBalance: 0
-          }, commonOption)
-          this._wxPay(params)
+        if (this.payType === "微信支付") {
+          const params = Object.assign(
+            {
+              openid: this.$store.state.openId,
+              // 当余额不足时发起的微信支付传1 当不选余额直接发起微信支付传0
+              isSelectBalance: 0
+            },
+            commonOption
+          );
+          this._wxPay(params);
         }
-        if (this.payType === '余额支付') {
+        if (this.payType === "余额支付") {
           // 余额不足提示微信支付
-          if ((this.totalPrice / 100) > this.balance) {
+          if (this.totalPrice / 100 > this.balance) {
             Dialog.confirm({
-              message: '账户余额不足 是否微信支付'
-            }).then(() => {
-              const params = Object.assign({
-                openid: this.$store.state.openId,
-                // 当余额不足时发起的微信支付传1 当不选余额直接发起微信支付传0
-                IsSelectBalance: 1
-              }, commonOption)
-              this._wxPay(params)
-            }).catch(() => {
-              // on cancel
+              message: "账户余额不足 是否微信支付"
             })
+              .then(() => {
+                const params = Object.assign(
+                  {
+                    openid: this.$store.state.openId,
+                    // 当余额不足时发起的微信支付传1 当不选余额直接发起微信支付传0
+                    isSelectBalance: 1
+                  },
+                  commonOption
+                );
+                this._wxPay(params);
+              })
+              .catch(() => {
+                // on cancel
+              });
           } else {
             // 余额支付先获取 支付码  支付
             getPayCode({
               userToken: this.$store.state.token
             }).then(res => {
-              if (res.code === 'success') {
-                this.showPayCode = true
+              if (res.code === "success") {
+                this.showPayCode = true;
               }
-            })
+            });
           }
         }
       }
+
       // 堂食订单 只可以余额支付
       if (this.orderType === 1) {
-        if ((this.totalPrice / 100) > this.balance) {
+        if (this.totalPrice / 100 > this.balance) {
           wx.showToast({
             icon: "none",
             title: "账户余额不足"
-          })
+          });
         } else {
           // 余额支付先获取 支付码  支付
           getPayCode({
             userToken: this.$store.state.token
           }).then(res => {
-            if (res.code === 'success') {
-              this.showPayCode = true
+            if (res.code === "success") {
+              this.showPayCode = true;
             }
-          })
+          });
         }
       }
     },
     _wxPay(params) {
       toWxPay(params).then(res => {
-        if (res.code === 'success') {
+        if (res.code === "success") {
           // 支付api参数链接 https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
           // 将返回红的  参数赋值的params里面
           const params = {
-            timeStamp: '',
-            nonceStr: '',
-            package: '',
-            signType: 'MD5',
-            paySign: ''
-          }
+            timeStamp: "",
+            nonceStr: "",
+            package: "",
+            signType: "MD5",
+            paySign: ""
+          };
           wxPay(params).then(res => {
             // 支付成功跳转订单
-            this.goMyOrder()
-          })
+            this.goMyOrder();
+          });
         }
-      })
+      });
     },
     toPayCode() {
-      if(!this.payCode.trim()) {
+      if (!this.payCode.trim()) {
         wx.showToast({
           icon: "none",
           title: "请输入短信支付码"
-        })
-        return
+        });
+        return;
       }
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
         addressId: this.address.id,
         payCode: this.payCode
-      }
+      };
       toPayCode(params).then(res => {
         // 支付成功跳转到我的订单
-        if (res.code === 'success') {
-          this.goMyOrder()
+        if (res.code === "success") {
+          this.goMyOrder();
         }
-      })
+      });
     },
     goMyOrder() {
-      const url = '/pages/my/myorders'
-      this.$router.push({ path: url})
+      const url = "/pages/my/myorders";
+      this.$router.push({ path: url });
     },
     setPayCode(event) {
-      this.payCode = event.mp.detail
+      this.payCode = event.mp.detail;
     },
     onPickerChange(ev) {
       this.payType = ev.target.value;
-      this.showPayType = false
+      this.showPayType = false;
     },
     selectPayType() {
       // 堂食订单 只可以余额支付
@@ -222,10 +249,10 @@ export default {
         wx.showToast({
           icon: "none",
           title: "当前商品只可用余额支付"
-        })
-        return
+        });
+        return;
       }
-      this.showPayType = true
+      this.showPayType = true;
     },
     goAddress() {
       const url = "/pages/my/address";
@@ -242,18 +269,20 @@ export default {
           if (res.code === "success") {
             this.goodsLists = res.data;
             // 1、orderType=0；此订单为网易商品订单，可使用余额支付、微信支付、余额和微信混合支付
-            this.orderType = res.orderType
-            this.balance = res.balance
-            if(res.address) {
-              this.$store.commit('SET_ADDRESS', Object.assign({}, res.address))
+            this.orderType = res.orderType;
+            this.balance = res.balance;
+            if (res.address) {
+              this.$store.commit("SET_ADDRESS", Object.assign({}, res.address));
             }
             this.price = this.goodsLists.reduce((total, item) => {
               total += +item.totalPrice;
               return total;
             }, 0);
             // 当确定界面需要支付的订单金额 <88元则需要在界面加一个10元邮费的栏目，订单总金额也需加上这10元，
-            this.needPostage = this.price < 88
-            this.totalPrice = this.needPostage ? (this.price + 10) * 100 : this.price * 100
+            this.needPostage = this.price < 88;
+            this.totalPrice = this.needPostage
+              ? (this.price + 10) * 100
+              : this.price * 100;
           }
         });
       } else {
