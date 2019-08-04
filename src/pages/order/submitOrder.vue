@@ -10,7 +10,9 @@
         </div>
         <div class="right">
           <div class="right-item">{{address.addressTel}}</div>
-          <div class="right-item">{{address.province}}{{address.city}}{{address.area}}{{address.address}}</div>
+          <div
+            class="right-item"
+          >{{address.province}}{{address.city}}{{address.area}}{{address.address}}</div>
         </div>
         <div class="next">
           <van-icon name="arrow" />
@@ -38,9 +40,9 @@
         <span class="span money">￥{{price}}</span>
       </div>
     </div>
-    <van-cell title="支付方式" :value="payType" @click="showPayType = true"/>
+    <van-cell title="支付方式" :value="payType" @click="showPayType = true" />
     <!-- 选择原因 弹出层 -->
-    <van-popup position="bottom" :show="showPayType" @close="showPayType = false" >
+    <van-popup position="bottom" :show="showPayType" @close="showPayType = false">
       <van-picker show-toolbar :columns="columns" @confirm="onPickerChange" />
     </van-popup>
     <!-- 底部tab -->
@@ -50,7 +52,7 @@
   </div>
 </template>
 <script>
-import { toConfirmOrder, toWxPay, toPayCode} from "@/api/";
+import { toConfirmOrder, toWxPay, toPayCode } from "@/api/";
 
 export default {
   data() {
@@ -58,14 +60,14 @@ export default {
       goodsLists: [],
       price: 0,
       totalPrice: 0,
-      payType: '微信支付',
-      columns: ['微信支付', '余额支付'],
+      payType: "微信支付",
+      columns: ["微信支付", "余额支付"],
       showPayType: false
-    }
+    };
   },
   computed: {
     address() {
-      return this.$store.state.address
+      return this.$store.state.address;
     }
   },
   mounted() {
@@ -76,17 +78,18 @@ export default {
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
-        addressId: this.address.id,
+        addressId: this.address.id - 0,
         openid: this.$store.state.openId
-      }
-      toWxPay(params)
+      };
+      toWxPay(params);
     },
-    onPickerChange(ev){
+    onPickerChange(ev) {
       this.payType = ev.target.value;
+      this.showPayType = false;
     },
     goAddress() {
-      const url = "/pages/my/address"
-      this.$router.push({ path: url, query: { back: 1 } })
+      const url = "/pages/my/address";
+      this.$router.push({ path: url, query: { back: 1 } });
     },
     getConfirmOrder() {
       if (this.$store.state.token) {
@@ -98,8 +101,8 @@ export default {
         toConfirmOrder(params).then(res => {
           if (res.code === "success") {
             this.goodsLists = res.data;
-            if(res.address) {
-              this.$store.commit('SET_ADDRESS', Object.assign({}, res.address))
+            if (res.address) {
+              this.$store.commit("SET_ADDRESS", Object.assign({}, res.address));
             }
             this.price = this.goodsLists.reduce((total, item) => {
               total += +item.totalPrice;
