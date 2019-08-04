@@ -8,7 +8,7 @@ export default {
   created () {
     // 从localStorage 获取token 存在vuex中
     this.$store.dispatch('getToken')
-    this.$store.dispatch('getWxInfo')
+    this.$store.dispatch('getOpenId')
     // 调用API从本地缓存中获取数据
     // const logs = wx.getStorageSync('logs') || []
     // logs.unshift(Date.now())

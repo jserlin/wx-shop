@@ -13,6 +13,7 @@ const store = new Vuex.Store({
     token: '',
     userInfo: {},
     wxUserInfo: {},
+    openid: '',
     address: {},
     shoppingCartLists: [],
   },
@@ -26,6 +27,9 @@ const store = new Vuex.Store({
     SET_WXUSERINFO: (state, wxUserInfo) => {
       state.wxUserInfo = wxUserInfo
     },
+    SET_OPENID: (state, openId) => {
+      state.openId = openId
+    },
     SET_SHOPPINGCART: (state, shoppingCartLists) => {
       state.shoppingCartLists = shoppingCartLists
     },
@@ -34,18 +38,13 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    // 用code去服务端解密 换微信信息
-    getWxInfo({ commit }) {
+    // 用code去服务端解密 换openId
+    getOpenId({ commit }) {
       return new Promise((resolve, reject) => {
         wxLogin().then((res) => {
-          const { code } = res
+          const { openid } = res
           getSessionKeyOropenid({code}).then((result) => {
-            if (result.data) {
-              commit('SET_WXUSERINFO', result.data)
-              resolve()
-            } else {
-              reject()
-            }
+            commit('SET_OPENID', result.openid || '')
           })
         }).catch(error => {
           reject(error)

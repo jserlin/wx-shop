@@ -76,8 +76,8 @@ export default {
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
-        addressId: '',
-        openid: this.$store.state.wxUserInfo.openId
+        addressId: this.address.id,
+        openid: this.$store.state.openId
       }
       toWxPay(params)
     },
