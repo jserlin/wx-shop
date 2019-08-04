@@ -1,6 +1,6 @@
 <template>
   <div class="address-list">
-    <div class="address-item" v-for="el in addressList" :key="el">
+    <div class="address-item" v-for="el in addressList" :key="el" @click="selectAddress(el)">
       <div class="address-info">
         <p class="flex-box item-space-between">
           <span>{{el.trueName}}</span>
@@ -9,14 +9,14 @@
         <p>{{el.province+el.city+el.area+el.address}}</p>
       </div>
       <div class="address-operate flex-box item-space-between">
-        <div>
+        <div @click.stop="">
           <van-checkbox
             checked-color="#ab2929"
             :value="el.isDefault !== '1'"
             @change="onChange(el, $event)"
           >默认</van-checkbox>
         </div>
-        <div class>
+        <div class @click.stop="">
           <van-icon
             size="42rpx"
             name="delete"
@@ -62,6 +62,13 @@ export default {
           this.addressList = res.data;
         }
       });
+    },
+    selectAddress(el) {
+      if(this.$route.query.back) {
+        this.$store.commit('SET_ADDRESS', Object.assign({}, el))
+        this.$router.back()
+      }
+      console.log("TCL: selectAddress -> el", el)
     },
     onChange(el, $event) {
       const isDefault = $event.mp.detail;

@@ -2,8 +2,8 @@
 // make sure to call Vue.use(Vuex) if using a module system
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getStorage, setStorage, removeStorage } from '@/utils/wx'
-import { userLogin, getUserInfo, getShoppingCartLists } from '@/api/'
+import { wxLogin, getStorage, setStorage, removeStorage } from '@/utils/wx'
+import { userLogin, getUserInfo, getShoppingCartLists, getSessionKeyOropenid } from '@/api/'
 const TokenKey = 'wxAppToken'
 
 Vue.use(Vuex)
@@ -12,7 +12,9 @@ const store = new Vuex.Store({
   state: {
     token: '',
     userInfo: {},
-    shoppingCartLists: []
+    wxUserInfo: {},
+    address: {},
+    shoppingCartLists: [],
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -21,11 +23,35 @@ const store = new Vuex.Store({
     SET_USERINFO: (state, userInfo) => {
       state.userInfo = userInfo
     },
+    SET_WXUSERINFO: (state, wxUserInfo) => {
+      state.wxUserInfo = wxUserInfo
+    },
     SET_SHOPPINGCART: (state, shoppingCartLists) => {
       state.shoppingCartLists = shoppingCartLists
-    }
+    },
+    SET_ADDRESS: (state, address) => {
+      state.address = address
+    },
   },
   actions: {
+    // 用code去服务端解密 换微信信息
+    getWxInfo({ commit }) {
+      return new Promise((resolve, reject) => {
+        wxLogin().then((res) => {
+          const { code } = res
+          getSessionKeyOropenid({code}).then((result) => {
+            if (result.data) {
+              commit('SET_WXUSERINFO', result.data)
+              resolve()
+            } else {
+              reject()
+            }
+          })
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 从localStorage 获取token
     getToken({ commit, dispatch }) {
       return new Promise((resolve, reject) => {

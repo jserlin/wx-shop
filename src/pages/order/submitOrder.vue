@@ -2,17 +2,15 @@
   <div class="container">
     <!-- 收货地址 -->
     <div class="line-bg"></div>
-    <div class="address-wraper mb20" v-if="addressInfo" @click="goAddressAll">
+    <div class="address-wraper mb20" @click="goAddress">
       <div class="address-content">
         <div class="left">
-          <div class="name">{{addressInfo.trueName}}</div>
-          <div class="default">默认</div>
+          <div class="name">{{address.trueName}}</div>
+          <div class="default" v-show="address.isDefault === '0'">默认</div>
         </div>
         <div class="right">
-          <div class="right-item">{{addressInfo.addressTel}}</div>
-          <div
-            class="right-item"
-          >{{addressInfo.province+addressInfo.city+addressInfo.area+addressInfo.address}}</div>
+          <div class="right-item">{{address.addressTel}}</div>
+          <div class="right-item">{{address.province}}{{address.city}}{{address.area}}{{address.address}}</div>
         </div>
         <div class="next">
           <van-icon name="arrow" />
@@ -62,11 +60,15 @@ export default {
       totalPrice: 0,
       payType: '微信支付',
       columns: ['微信支付', '余额支付'],
-      addressInfo: null,
       showPayType: false
-    };
+    }
   },
-  onShow() {
+  computed: {
+    address() {
+      return this.$store.state.address
+    }
+  },
+  mounted() {
     this.getConfirmOrder();
   },
   methods: {
@@ -74,22 +76,14 @@ export default {
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
-        addressId: "",
-        openid: ""
-      };
-      toWxPay(params);
+        addressId: '',
+        openid: this.$store.state.wxUserInfo.openId
+      }
+      toWxPay(params)
     },
-    onPickerChange(){
-
-    },
-    goAddressAll() {
-      const path = "/pages/my/address";
-      this.$router.push({
-        path,
-        query: {
-          back: 1
-        }
-      });
+    goAddress() {
+      const url = "/pages/my/address"
+      this.$router.push({ path: url, query: { back: 1 } })
     },
     getConfirmOrder() {
       if (this.$store.state.token) {
@@ -101,12 +95,14 @@ export default {
         toConfirmOrder(params).then(res => {
           if (res.code === "success") {
             this.goodsLists = res.data;
+            if(res.address) {
+              this.$store.commit('SET_ADDRESS', Object.assign({}, res.address))
+            }
             this.price = this.goodsLists.reduce((total, item) => {
               total += +item.totalPrice;
               return total;
             }, 0);
             this.totalPrice = this.price * 100;
-            this.addressInfo = res.address;
           }
         });
       } else {
