@@ -43,12 +43,6 @@
         <span class="span money">￥{{price}}</span>
       </div>
     </div>
-<<<<<<< HEAD
-    <van-cell title="支付方式" :value="payType" @click="showPayType = true" />
-    <!-- 选择原因 弹出层 -->
-    <van-popup position="bottom" :show="showPayType" @close="showPayType = false">
-      <van-picker show-toolbar :columns="columns" @confirm="onPickerChange" />
-=======
     <van-cell v-if="needPostage" title="邮费" value="10元"/>
     <van-cell title="支付方式" :value="payType" @click="selectPayType"/>
     <!-- 选择原因 弹出层 -->
@@ -73,7 +67,6 @@
           </van-field>
         </van-cell-group>
       </div>
->>>>>>> 1692ae392ff2054708083cc530cea2b8786877b9
     </van-popup>
     <!-- 底部tab -->
     <div class="footer-wrap">
@@ -83,13 +76,9 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
-import { toConfirmOrder, toWxPay, toPayCode } from "@/api/";
-=======
 import { toConfirmOrder, toWxPay, getPayCode, toPayCode} from "@/api/";
 import { wxPay } from '@/utils/wx'
 import Dialog from 'vant-weapp/dist/dialog/dialog'
->>>>>>> 1692ae392ff2054708083cc530cea2b8786877b9
 
 export default {
   data() {
@@ -98,19 +87,12 @@ export default {
       price: 0,
       needPostage: false,
       totalPrice: 0,
-<<<<<<< HEAD
-      payType: "微信支付",
-      columns: ["微信支付", "余额支付"],
-      showPayType: false
-    };
-=======
       payType: '余额支付',
       payCode: '',
       columns: ['微信支付', '余额支付'],
       showPayType: false,
       showPayCode: false
     }
->>>>>>> 1692ae392ff2054708083cc530cea2b8786877b9
   },
   computed: {
     address() {
@@ -213,12 +195,6 @@ export default {
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
-<<<<<<< HEAD
-        addressId: this.address.id - 0,
-        openid: this.$store.state.openId
-      };
-      toWxPay(params);
-=======
         addressId: this.address.id,
         payCode: this.payCode
       }
@@ -235,13 +211,9 @@ export default {
     },
     setPayCode(event) {
       this.payCode = event.mp.detail
->>>>>>> 1692ae392ff2054708083cc530cea2b8786877b9
     },
     onPickerChange(ev) {
       this.payType = ev.target.value;
-<<<<<<< HEAD
-      this.showPayType = false;
-=======
       this.showPayType = false
     },
     selectPayType() {
@@ -254,7 +226,6 @@ export default {
         return
       }
       this.showPayType = true
->>>>>>> 1692ae392ff2054708083cc530cea2b8786877b9
     },
     goAddress() {
       const url = "/pages/my/address";
@@ -270,16 +241,11 @@ export default {
         toConfirmOrder(params).then(res => {
           if (res.code === "success") {
             this.goodsLists = res.data;
-<<<<<<< HEAD
-            if (res.address) {
-              this.$store.commit("SET_ADDRESS", Object.assign({}, res.address));
-=======
             // 1、orderType=0；此订单为网易商品订单，可使用余额支付、微信支付、余额和微信混合支付
             this.orderType = res.orderType
             this.balance = res.balance
             if(res.address) {
               this.$store.commit('SET_ADDRESS', Object.assign({}, res.address))
->>>>>>> 1692ae392ff2054708083cc530cea2b8786877b9
             }
             this.price = this.goodsLists.reduce((total, item) => {
               total += +item.totalPrice;
