@@ -196,3 +196,8 @@ export async function getAddressAll(){
   const url = '/src/style/area.json'
   return Request.get(url)
 }
+
+export async function confirmOrder(data){
+  const url = '/tOrder/wx/confirmOrder'
+  return Request.post(url, data)
+}

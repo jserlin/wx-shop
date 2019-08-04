@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-import { getMyCenterOrder, cancelOrderByOrders } from "@/api";
+import { getMyCenterOrder, cancelOrderByOrders, confirmOrder } from "@/api";
 import Dialog from "vant-weapp/dist/dialog/dialog";
 
 export default {
@@ -109,8 +109,24 @@ export default {
       this.getOrderList();
     },
     toSureOrder(item) {
-      console.log(item);
-      // 接口缺失
+      Dialog.confirm({
+        message: "确认收货吗？",
+        showCancelButton: true,
+        asyncClose: true
+      }).then(() => {
+        confirmOrder({
+          userToken: this.$store.state.token,
+          orderCode: item.orderCode,
+          packageId: ''
+        }).then(res=>{
+          if(res && res.code === "success"){
+            Dialog.close();
+            this.getOrderList()
+          }
+        })
+      }).catch(() => {
+        Dialog.close();
+      });
     },
     toCancelOrder(item) {
       Dialog.confirm({

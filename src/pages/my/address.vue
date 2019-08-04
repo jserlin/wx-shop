@@ -71,6 +71,11 @@ export default {
       }).then(res => {
         // 成功
         if (res && res.code === "success") {
+          const query = this.$route.query
+          if(query.back){
+            this.$router.back()
+            return
+          }
           this.getUserAddress();
         }
       });

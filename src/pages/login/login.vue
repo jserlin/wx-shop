@@ -70,7 +70,12 @@ export default {
           valid_code: this.code
         })
         .then(() => {
+          const query = this.$route.query;
           const url = "/pages/my/my";
+          if (query.back) {
+            this.$router.back();
+            return;
+          }
           this.$router.push({ path: url, isTab: true });
         });
     }

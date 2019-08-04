@@ -2,15 +2,17 @@
   <div class="container">
     <!-- 收货地址 -->
     <div class="line-bg"></div>
-    <div class="address-wraper mb20">
+    <div class="address-wraper mb20" v-if="addressInfo" @click="goAddressAll">
       <div class="address-content">
         <div class="left">
-          <div class="name">范晓萱</div>
+          <div class="name">{{addressInfo.trueName}}</div>
           <div class="default">默认</div>
         </div>
         <div class="right">
-          <div class="right-item">176****2121</div>
-          <div class="right-item">北京市北京市东城区复兴道</div>
+          <div class="right-item">{{addressInfo.addressTel}}</div>
+          <div
+            class="right-item"
+          >{{addressInfo.province+addressInfo.city+addressInfo.area+addressInfo.address}}</div>
         </div>
         <div class="next">
           <van-icon name="arrow" />
@@ -21,23 +23,17 @@
     <div class="product-wrap mb20">
       <div class="head-title">已选商品</div>
       <div class="content" v-for="(goods, index) in goodsLists" :key="index">
-          <div class="img-wrap">
-            <img class="img-item" :src="goods.goodsImage">
+        <div class="img-wrap">
+          <img class="img-item" :src="goods.goodsImage" />
+        </div>
+        <div class="desc">
+          <div class="title">{{goods.goodsName}}</div>
+          <div class="type">{{goods.displayString}}</div>
+          <div class="price">
+            <div class="price-now">￥{{goods.price}}</div>
           </div>
-          <div class="desc">
-              <div class="title">{{goods.goodsName}}</div>
-              <div class="type">{{goods.displayString}}</div>
-              <div class="price">
-              <div class="price-now">￥{{goods.price}}</div>
-                <!-- <div class="price-del">
-                  <div class="del"></div>
-                  ￥111
-                </div> -->
-              </div>
-          </div>
-          <div class="product-num">
-            x{{goods.num}}
-          </div>
+        </div>
+        <div class="product-num">x{{goods.num}}</div>
       </div>
       <div class="foot">
         <span class="span">应付金额</span>
@@ -47,16 +43,12 @@
     <van-cell title="支付方式" value="微信支付" />
     <!-- 底部tab -->
     <div class="footer-wrap">
-      <van-submit-bar
-        :price="totalPrice"
-        button-text="立即购买"
-        @submit="onSubmit"
-      />
+      <van-submit-bar :price="totalPrice" button-text="立即购买" @submit="onSubmit" />
     </div>
   </div>
 </template>
 <script>
-import { toConfirmOrder, toWxPay } from '@/api/'
+import { toConfirmOrder, toWxPay } from "@/api/";
 
 export default {
   data() {
@@ -64,59 +56,69 @@ export default {
       goodsLists: [],
       price: 0,
       totalPrice: 0,
-    }
+      addressInfo: null
+    };
   },
-  mounted() {
-    this.getConfirmOrder()
+  onShow() {
+    this.getConfirmOrder();
   },
   methods: {
     onSubmit(event) {
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
-        addressId: '',
-        openid: ''
-      }
-      toWxPay(params)
+        addressId: "",
+        openid: ""
+      };
+      toWxPay(params);
+    },
+    goAddressAll() {
+      const path = "/pages/my/address";
+      this.$router.push({
+        path,
+        query: {
+          back: 1
+        }
+      });
     },
     getConfirmOrder() {
       if (this.$store.state.token) {
-        // this.$store.commit('SET_AUTH_TYPE', thirdpart)
         const params = {
           ids: this.$route.query.ids,
           userToken: this.$store.state.token,
-          addressId: ''
-        }
-        toConfirmOrder(params).then((res) => {
-          if (res.code === 'success') {
-            this.goodsLists = res.data
+          addressId: ""
+        };
+        toConfirmOrder(params).then(res => {
+          if (res.code === "success") {
+            this.goodsLists = res.data;
             this.price = this.goodsLists.reduce((total, item) => {
-              total += (+item.totalPrice)
-              return total
-            }, 0)
-            this.totalPrice = this.price * 100
+              total += +item.totalPrice;
+              return total;
+            }, 0);
+            this.totalPrice = this.price * 100;
+            this.addressInfo = res.address;
           }
-        })
+        });
       } else {
-        const url = '/pages/login/login'
-        this.$router.push({path: url, query: {back: 1}})
+        const url = "/pages/login/login";
+        this.$router.push({ path: url, query: { back: 1 } });
       }
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .container {
-    position: relative;
-    padding-bottom: 104rpx;
-    font-family: PingFangSC-Light, helvetica, 'Heiti SC';
-    background: #fff;
-    background: #fafafa;
-    color: #333;
-    min-height: 100vh;
-    box-sizing: border-box;
+  position: relative;
+  padding-bottom: 104rpx;
+  font-family: PingFangSC-Light, helvetica, "Heiti SC";
+  background: #fff;
+  background: #fafafa;
+  color: #333;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
-.img{
+.img {
   width: 100%;
   height: 100%;
 }
@@ -131,7 +133,7 @@ export default {
   background: #fff;
   border-top: 1rpx solid #d9d9d9;
 }
-.mb20{
+.mb20 {
   margin-bottom: 20rpx;
 }
 // 地址
@@ -139,7 +141,8 @@ export default {
   display: block;
   width: 100%;
   height: 10rpx;
-  background: url(//yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-1579543565.png) repeat-x;
+  background: url(//yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-1579543565.png)
+    repeat-x;
   background-size: 60rpx 10rpx;
 }
 .address-wraper {
@@ -185,9 +188,9 @@ export default {
     }
   }
 }
-.product-wrap{
+.product-wrap {
   background: #fff;
-  .head-title{
+  .head-title {
     padding-top: 20rpx;
     margin-left: 20rpx;
     font-size: 28rpx;
@@ -195,17 +198,17 @@ export default {
     height: 40rpx;
     color: #333;
   }
-  .foot{
+  .foot {
     padding: 20rpx 0;
     margin-right: 30rpx;
     font-size: 28rpx;
     line-height: 40rpx;
     height: 40rpx;
     text-align: right;
-    .span{
+    .span {
       color: #333;
     }
-    .money{
+    .money {
       color: #b4282d;
     }
   }
@@ -217,7 +220,7 @@ export default {
     align-items: center;
     border-bottom: 1px solid #d9d9d9;
     &:last-child {
-      border: none
+      border: none;
     }
     .img-wrap {
       margin-right: 40rpx;
@@ -266,7 +269,7 @@ export default {
       }
     }
     .red {
-      color: #f60
+      color: #f60;
     }
     .product-num {
       font-size: 28rpx;
