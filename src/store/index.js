@@ -42,7 +42,7 @@ const store = new Vuex.Store({
     getOpenId({ commit }) {
       return new Promise((resolve, reject) => {
         wxLogin().then((res) => {
-          const { openid } = res
+          const { code } = res
           getSessionKeyOropenid({code}).then((result) => {
             commit('SET_OPENID', result.openid || '')
           })
