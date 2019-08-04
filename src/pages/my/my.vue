@@ -9,7 +9,7 @@
         <div class="user-name" v-if="userShow">
           <p class="font-30">{{userInfo.truename}}</p>
           <p class="font-28">
-            福利券金额：
+            账户余额：
             <span class="font-red">¥ {{userInfo.money}}</span>
           </p>
         </div>

@@ -40,7 +40,11 @@
         <span class="span money">￥{{price}}</span>
       </div>
     </div>
-    <van-cell title="支付方式" value="微信支付" />
+    <van-cell title="支付方式" :value="payType" @click="showPayType = true"/>
+    <!-- 选择原因 弹出层 -->
+    <van-popup position="bottom" :show="showPayType" @close="showPayType = false" >
+      <van-picker show-toolbar :columns="columns" @change="onPickerChange" />
+    </van-popup>
     <!-- 底部tab -->
     <div class="footer-wrap">
       <van-submit-bar :price="totalPrice" button-text="立即购买" @submit="onSubmit" />
@@ -48,7 +52,7 @@
   </div>
 </template>
 <script>
-import { toConfirmOrder, toWxPay } from "@/api/";
+import { toConfirmOrder, toWxPay, toPayCode} from "@/api/";
 
 export default {
   data() {
@@ -56,7 +60,10 @@ export default {
       goodsLists: [],
       price: 0,
       totalPrice: 0,
-      addressInfo: null
+      payType: '微信支付',
+      columns: ['微信支付', '余额支付'],
+      addressInfo: null,
+      showPayType: false
     };
   },
   onShow() {
@@ -71,6 +78,9 @@ export default {
         openid: ""
       };
       toWxPay(params);
+    },
+    onPickerChange(){
+
     },
     goAddressAll() {
       const path = "/pages/my/address";
