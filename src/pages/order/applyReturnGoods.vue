@@ -35,7 +35,7 @@
 
     <!-- 选择原因 弹出层 -->
     <van-popup position="bottom" :show="showReason" @close="showReason = false" v-if="goodsInfo">
-      <van-picker show-toolbar :columns="columns" @change="onPickerChange" />
+      <van-picker show-toolbar :columns="columns" @confirm="onPickerChange" />
     </van-popup>
 
     <!-- 底部tab -->

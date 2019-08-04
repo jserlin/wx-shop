@@ -41,7 +41,7 @@
     <van-cell title="支付方式" :value="payType" @click="showPayType = true"/>
     <!-- 选择原因 弹出层 -->
     <van-popup position="bottom" :show="showPayType" @close="showPayType = false" >
-      <van-picker show-toolbar :columns="columns" @change="onPickerChange" />
+      <van-picker show-toolbar :columns="columns" @confirm="onPickerChange" />
     </van-popup>
     <!-- 底部tab -->
     <div class="footer-wrap">
