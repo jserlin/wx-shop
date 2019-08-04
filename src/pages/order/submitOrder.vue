@@ -81,6 +81,9 @@ export default {
       }
       toWxPay(params)
     },
+    onPickerChange(ev){
+      this.payType = ev.target.value;
+    },
     goAddress() {
       const url = "/pages/my/address"
       this.$router.push({ path: url, query: { back: 1 } })
