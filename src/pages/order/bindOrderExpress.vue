@@ -11,7 +11,7 @@
     />
     <div class="footer-btn fixed" @click="onSubmit">保 存</div>
     <van-popup position="bottom" :show="showPopup" @close="showPopup = false">
-      <van-picker show-toolbar :columns="expressList" @change="onPickerChange" />
+      <van-picker show-toolbar :columns="expressList" @confirm="onPickerChange" />
     </van-popup>
   </div>
 </template>
