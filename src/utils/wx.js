@@ -10,6 +10,19 @@ export async function wxLogin(key) {
     })
   })
 }
+export async function wxPay(options) {
+  return new Promise((resolve, reject) => {
+    wx.requestPayment({
+      ...options,
+      success (res) {
+        resolve(res)
+      },
+      fail(res) {
+        reject(res)
+      }
+    })
+  })
+}
 
 export async function getStorage(key) {
   return new Promise((resolve, reject) => {
