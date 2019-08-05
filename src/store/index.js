@@ -15,6 +15,7 @@ const store = new Vuex.Store({
     wxUserInfo: {},
     openid: '',
     address: {},
+    currentCate: {},
     shoppingCartLists: [],
   },
   mutations: {
@@ -36,6 +37,9 @@ const store = new Vuex.Store({
     SET_ADDRESS: (state, address) => {
       state.address = address
     },
+    SET_CATE: (state, cate) => {
+      state.currentCate = cate
+    }
   },
   actions: {
     // 用code去服务端解密 换openId

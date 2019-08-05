@@ -53,12 +53,18 @@
           <span>正在加载...</span>
         </div>
       </div>
+      <div class="loading-wrap" v-if="noMore">
+        <div class="load-con">
+          <span style="color:#999">-- 没有更多了 --</span>
+        </div>
+      </div>
     </scroll-view>
   </div>
 </template>
 
 <script>
 import { getIndexList, getProductDetail, getBannerLists } from "@/api/";
+import { setStorage } from '@/utils/wx'
 
 export default {
   mpType: "page",
@@ -71,6 +77,7 @@ export default {
       indicatorDots: false,
       autoplay: false,
       isLoading: true,
+      noMore: false,
       interval: 5000,
       duration: 1000
     };
@@ -142,6 +149,10 @@ export default {
     },
     clickCate(cate) {
       console.log("TCL: clickCate -> cate", cate)
+      setStorage('currentCate', cate).then(() => {
+        const url = "/pages/category/category";
+        this.$router.push({ path: url, isTab: true })
+      })
     },
     toDetail(id) {
       const path = "/pages/product/detail";

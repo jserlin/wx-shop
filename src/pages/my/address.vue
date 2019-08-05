@@ -111,7 +111,6 @@ export default {
         }
       }) : this.$router.push(path);
     },
-
     delAddressItem(el) {
       Dialog.confirm({
         message: "确认删除收货地址？",

@@ -135,11 +135,11 @@
             <rich-text class="rich" :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
           </div>
         </van-tab>
-        <van-tab title="规格参数">
+        <!-- <van-tab title="规格参数">
           <div class="productDescImg-wrap">
             <img mode="widthFix" class="imgDesc" :src="productInfo.primaryPicUrl" alt />
           </div>
-        </van-tab>
+        </van-tab> -->
       </van-tabs>
     </div>
     <van-toast id="van-toast" />

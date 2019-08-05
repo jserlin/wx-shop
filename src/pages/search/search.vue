@@ -40,7 +40,7 @@
 		</div>
 		<scroll-view scroll-y="true" class="scoll-h" :style="{height: winHeight + 'rpx'}" v-if="step == 2">
 			<div class="content-no" v-if="contentNone">
-				<!-- <img src="/static/images/search.png" alt=""> -->
+				<img src="/static/images/search.png" alt="">
 				<div class="description">您寻找的商品还未上架</div>
 			</div>
 			<div class="product-group"  v-if="!contentNone">
