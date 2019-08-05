@@ -7,8 +7,8 @@
       </div>
     </div>
     <div class="index-top-bg abs" style="z-index: 0; top: 0; left: 0; display: block; width: 100%; ">
-      <image src="http://shop.ahaxkj.com/src/images/slider.png" style="width: 100%;"/>
-      <!-- <image src="/static/images/mystore_bg.png" style="width: 100%;"/> -->
+      <!-- <image src="http://shop.ahaxkj.com/src/images/slider.png" style="width: 100%;"/> -->
+      <image src="/static/images/mystore_bg.png" style="width: 100%;"/>
     </div>
     <scroll-view scroll-y class="goods-wrap" @scrolltolower="getIndexList">
       <swiper
