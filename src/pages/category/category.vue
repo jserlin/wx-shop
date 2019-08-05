@@ -124,19 +124,24 @@ export default {
     async getListData() {
     },
     async clickCart(item) {
-      const params = {
-        goodsId: item.id,
-        userToken: this.$store.state.token,
-        skuId: item.primarySkuId,
-        goodsType: item.goodsType
-      };
-      const result = await addShoppingCart(params);
-      if (result.code === "success") {
-        this.$store.dispatch("getShoppingLists");
-        wx.showToast({
-          icon: "none",
-          title: "加入购物车成功"
-        });
+      if (this.$store.state.token) {
+        const params = {
+          goodsId: item.id,
+          userToken: this.$store.state.token,
+          skuId: item.primarySkuId,
+          goodsType: item.goodsType
+        };
+        const result = await addShoppingCart(params);
+        if (result.code === "success") {
+          this.$store.dispatch("getShoppingLists");
+          wx.showToast({
+            icon: "none",
+            title: "加入购物车成功"
+          });
+        }
+      } else {
+        const url = "/pages/login/login";
+        this.$router.push({ path: url, query: { back: 1 } });
       }
     },
     clickDetail(item) {
