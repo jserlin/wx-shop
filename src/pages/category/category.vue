@@ -7,7 +7,7 @@
         </div>
       </scroll-view>
       <scroll-view class="right" scroll-y="true" @scrolltolower="getIndexList">
-        <div class="title">
+        <div class="title" v-if="detailData.name">
           <span>—</span>
           <span>{{detailData.name}}</span>
           <span>—</span>
@@ -234,9 +234,8 @@ export default {
       .title {
         text-align: center;
         padding: 50rpx 0;
-
         span:nth-child(2) {
-          font-size: 24rpx;
+          font-size: 36rpx;
           color: #333;
           padding: 0 10rpx;
         }

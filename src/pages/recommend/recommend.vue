@@ -1,10 +1,13 @@
 <template>
-  <div class="container">
+  <div class="container rel">
     <div class="search">
       <div class="left" @click="toSearch">
         <input class="input" type="text" placeholder="搜索商品" />
         <span class="icon"></span>
       </div>
+    </div>
+    <div class="index-top-bg abs" style="z-index: 0; top: 0; left: 0; display: block; width: 100%; ">
+      <image src="/static/images/mystore_bg.png" style="width: 100%;"/>
     </div>
     <scroll-view scroll-y class="goods-wrap" @scrolltolower="getIndexList">
       <swiper
@@ -142,7 +145,7 @@ export default {
     height: 80rpx;
     display: flex;
     align-items: center;
-    background: #f7f7f7;
+    background: transparent;
     .left {
       position: relative;
       flex: 1;

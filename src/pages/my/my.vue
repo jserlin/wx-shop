@@ -4,7 +4,7 @@
       <image src="/static/images/my_bg.png" alt />
       <div class="user-info-content row-padding abs flex-box" @click="goLogin">
         <div class="img-avatar">
-          <image src="/static/images/my_bg.png" alt="头像" />
+          <image :src="userShow ? '/static/images/avatar-login.png' : '/static/images/avatar.jpg'" alt="头像" />
         </div>
         <div class="user-name" v-if="userShow">
           <p class="font-30">{{userInfo.truename}}</p>
@@ -183,7 +183,7 @@ export default {
       height: 140rpx;
       margin-right: 20rpx;
       border-radius: 50%;
-      border: 2px solid #e9d9b5;
+      border: 2px solid transparent;
       overflow: hidden;
     }
     .user-name {
