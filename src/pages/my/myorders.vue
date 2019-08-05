@@ -201,6 +201,12 @@ export default {
       return;
     }
     this.getOrderList();
+  },
+  onUnload(){
+    console.log('unload')
+    wx.switchTab({
+      url: '/pages/my/my'
+    })
   }
 };
 </script>

@@ -75,6 +75,9 @@ export default {
       selectText: "全选"
     };
   },
+  onShow(){
+    this.$store.dispatch("getShoppingLists");
+  },
   computed: {
     shoppingCartLists() {
       return this.$store.state.shoppingCartLists;
@@ -151,6 +154,10 @@ export default {
         goods.num++;
       } else {
         if (goods.num <= 1) {
+          wx.showToast({
+            icon: "none",
+            title: "不能再少了~"
+          });
           return;
         }
         goods.num--;
@@ -201,7 +208,8 @@ export default {
       });
       if (result.code === "success") {
         const url = "/pages/order/submitOrder";
-        this.$router.push({ path: url, query: { ids } });
+        // router.push({ path: '/pages/news/list', redirectTo: true })
+        this.$router.push({ path: url, redirectTo: true, query: { ids } });
       }
     }
   }

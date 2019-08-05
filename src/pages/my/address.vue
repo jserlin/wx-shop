@@ -1,5 +1,7 @@
 <template>
   <div class="address-list">
+    <div v-if="addressList.length">
+
     <div class="address-item" v-for="el in addressList" :key="el" @click="selectAddress(el)">
       <div class="address-info">
         <p class="flex-box item-space-between">
@@ -31,6 +33,10 @@
           />
         </div>
       </div>
+    </div>
+    </div>
+    <div v-else>
+      <image src="/static/images/img-empty.png" class="img-center"/>
     </div>
     <div class="full-btn fixed" @click="toCreateAddress">新增收货人信息</div>
     <van-dialog id="van-dialog" />
@@ -72,18 +78,27 @@ export default {
     },
     onChange(el, $event) {
       const isDefault = $event.mp.detail;
-      setUserAddressDefault({
+
+      el.isDefault === '1' && setUserAddressDefault({
         userToken: this.$store.state.token,
         id: el.id
       }).then(res => {
         // 成功
         if (res && res.code === "success") {
           const query = this.$route.query
+
+          wx.showToast({
+            icon: "none",
+            title: "设置成功"
+          });
+
+          this.getUserAddress();
+          const timer = setTimeout(()=>{
           if(query.back){
             this.$router.back()
-            return
+            clearTimeout(timer)
           }
-          this.getUserAddress();
+          }, 1.5e3)
         }
       });
     },
@@ -110,6 +125,10 @@ export default {
           }).then(res => {
             // 成功
             if (res && res.code === "success") {
+              wx.showToast({
+                icon: "none",
+                title: "删除成功"
+              });
               this.getUserAddress();
               Dialog.close();
             }
@@ -136,6 +155,13 @@ export default {
     text-align: center;
     background-color: #ab2929;
   }
+}
+.img-center{
+  width: 320rpx;
+  height: 240rpx;
+  display: block;
+  margin: 240rpx auto;
+  transform: translateX(10%);
 }
 .address-item {
   background: #fff;

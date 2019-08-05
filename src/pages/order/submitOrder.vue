@@ -104,9 +104,12 @@ export default {
       return this.$store.state.address;
     }
   },
-  mounted() {
+
+  onShow() {
+    console.log("onShow");
     this.getConfirmOrder();
   },
+
   methods: {
     onSubmit(event) {
       const commonOption = {
@@ -192,11 +195,12 @@ export default {
         }
       }
     },
+
     _wxPay(params) {
       toWxPay(params).then(res => {
         if (res.code === "success") {
           // 支付api参数链接 https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
-          // 将返回红的  参数赋值的params里面
+          // 将返回红的参数赋值的params里面
           const params = {
             timeStamp: "",
             nonceStr: "",
@@ -204,13 +208,24 @@ export default {
             signType: "MD5",
             paySign: ""
           };
+
           wxPay(params).then(res => {
             // 支付成功跳转订单
-            this.goMyOrder();
+            this.showPayCode = false;
+            wx.showToast({
+              icon: "none",
+              title: "支付成功"
+            });
+
+            const timer = setTimeout(() => {
+              clearTimeout(timer);
+              this.goMyOrder();
+            }, 1.5e3);
           });
         }
       });
     },
+
     toPayCode() {
       if (!this.payCode.trim()) {
         wx.showToast({
@@ -219,30 +234,45 @@ export default {
         });
         return;
       }
+
       const params = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
         addressId: this.address.id,
         payCode: this.payCode
       };
+
       toPayCode(params).then(res => {
         // 支付成功跳转到我的订单
         if (res.code === "success") {
-          this.goMyOrder();
+          this.showPayCode = false;
+          wx.showToast({
+            icon: "none",
+            title: "支付成功"
+          });
+
+          const timer = setTimeout(() => {
+            clearTimeout(timer);
+            this.goMyOrder();
+          }, 1.5e3);
         }
       });
     },
+
     goMyOrder() {
       const url = "/pages/my/myorders";
-      this.$router.push({ path: url });
+      this.$router.push({ path: url, redirectTo: true });
     },
+
     setPayCode(event) {
       this.payCode = event.mp.detail;
     },
+
     onPickerChange(ev) {
       this.payType = ev.target.value;
       this.showPayType = false;
     },
+
     selectPayType() {
       // 堂食订单 只可以余额支付
       if (this.orderType === 1) {
@@ -254,10 +284,12 @@ export default {
       }
       this.showPayType = true;
     },
+
     goAddress() {
       const url = "/pages/my/address";
       this.$router.push({ path: url, query: { back: 1 } });
     },
+
     getConfirmOrder() {
       if (this.$store.state.token) {
         const params = {
@@ -265,6 +297,7 @@ export default {
           userToken: this.$store.state.token,
           addressId: ""
         };
+
         toConfirmOrder(params).then(res => {
           if (res.code === "success") {
             this.goodsLists = res.data;

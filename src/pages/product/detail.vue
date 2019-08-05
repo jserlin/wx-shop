@@ -62,7 +62,7 @@
         <div class="flex-wrap">
           <div class="cart-wrap" @click="toCart">
             <div v-show="cartNum" class="tag-info">{{cartNum}}</div>
-            <img class="img" src="/static/images/shopping_default.png" alt />
+            <img class="img" src="/static/images/icon-shopcar.png" alt />
           </div>
           <div class="flex-col">
             <div class="button buy" @click="toCart">立即购买</div>

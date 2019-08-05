@@ -10,7 +10,13 @@
       placeholder="请输入手机号码"
       use-button-slot
     >
-      <van-button slot="button" size="small" type="primary" @click="getPhoneCode">发送验证码</van-button>
+      <van-button
+        slot="button"
+        size="small"
+        :disabled="!canTestCode"
+        type="primary"
+        @click="getPhoneCode"
+      >{{testCode}}</van-button>
     </van-field>
 
     <van-field
@@ -40,19 +46,42 @@ export default {
   data() {
     return {
       code: "",
-      username: "18117219026"
+      username: "",
+      canTestCode: true,
+      testCode: "发送验证码"
     };
   },
   mounted() {},
   methods: {
     getPhoneCode() {
-      if (this.username) {
+      if (this.username && this.canTestCode) {
         const data = { username: this.username };
         getValidCode(data).then(res => {
-          // 验证码
-          console.log(res);
+          if (res && res.code === "success") {
+            wx.showToast({
+              icon: "none",
+              title: "验证码已发送"
+            });
+            this.testCodeTimer();
+          }
         });
       }
+    },
+
+    testCodeTimer() {
+      let count = 61;
+      this.canTestCode = false;
+      this.testCode = `已发送(${count})`;
+      const timer = setInterval(() => {
+        count--;
+        if (count < 1) {
+          this.testCode = "发送验证码";
+          this.canTestCode = true;
+          clearInterval(timer);
+        } else {
+          this.testCode = `已发送(${count})`;
+        }
+      }, 1e3);
     },
 
     changeUsername(e) {
@@ -69,14 +98,23 @@ export default {
           username: this.username,
           valid_code: this.code
         })
-        .then(() => {
+        .then(res => {
+          wx.showToast({
+            icon: "none",
+            title: "登录成功！"
+          });
+
           const query = this.$route.query;
           const url = "/pages/my/my";
-          if (query.back) {
-            this.$router.back();
-            return;
-          }
-          this.$router.push({ path: url, isTab: true });
+          const timer = setTimeout(() => {
+            if (query.back) {
+              this.$router.back();
+            } else {
+              this.$router.push({ path: url, isTab: true });
+            }
+
+            clearTimeout(timer);
+          }, 1.5e3);
         });
     }
   }

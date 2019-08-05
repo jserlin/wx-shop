@@ -108,7 +108,7 @@ export default {
       this.userShow = true
       this.userInfo = this.$store.state.userInfo
     }else{
-      this.userInfo = false
+      this.goLogin()
     }
   },
 
@@ -134,7 +134,7 @@ export default {
       this.$router.push(url);
     },
     goLogin() {
-      if (!this.userInfo) {
+      if (!this.userInfo.truename) {
         const url = "/pages/login/login";
         this.$router.push(url);
       }

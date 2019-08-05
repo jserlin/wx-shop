@@ -63,6 +63,7 @@ export default {
       showArea: false,
       areaList: {},
       areaArr: [],
+      editData: null,
       id: ""
     };
   },
@@ -94,6 +95,8 @@ export default {
       }).then(result => {
         if (result && result.code === "success") {
           const res = result.data;
+
+          this.editData = res;
           this.chooseArea = res.areaId;
           this.address = res.address;
           this.addressTel = res.addressTel;
@@ -131,31 +134,42 @@ export default {
           trueName,
           address,
           userToken: this.$store.state.token,
-          provinceId: areaArr[0].code,
-          province: areaArr[0].name,
-          cityId: areaArr[1].code,
-          city: areaArr[1].name,
-          areaId: areaArr[2].code,
-          area: areaArr[2].name,
+          provinceId: this.editData ? this.editData.provinceId : areaArr[0].code,
+          province: this.editData ? this.editData.province : areaArr[0].name,
+          cityId: this.editData ? this.editData.cityId : areaArr[1].code,
+          city: this.editData ? this.editData.city : areaArr[1].name,
+          areaId: this.editData ? this.editData.areaId : areaArr[2].code,
+          area: this.editData ? this.editData.area : areaArr[2].name,
           isDefault: 1
         };
         if (this.id) {
-          params.id = this.id
+          params.id = this.id;
           editNewAddress(params).then(res => {
             if (res && res.code === "success") {
-              const url = "/pages/my/my";
-              this.$router.push({ path: url, isTab: true });
+              this.onSaveCallback()
             }
           });
         } else {
           addNewAddress(params).then(res => {
             if (res && res.code === "success") {
-              const url = "/pages/my/my";
-              this.$router.push({ path: url, isTab: true });
+              this.onSaveCallback()
             }
           });
         }
       }
+    },
+    onSaveCallback() {
+      wx.showToast({
+        icon: "none",
+        title: this.id ? "修改成功" : "保存成功"
+      });
+
+      this.editData = null
+      const timer = setTimeout(()=>{
+        const url = "/pages/my/my";
+        this.$router.push({ path: url, isTab: true });
+        clearTimeout(timer)
+      }, 1.5e3)
     }
   }
 };
