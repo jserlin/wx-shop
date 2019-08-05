@@ -2,7 +2,10 @@
 export default {
   globalConfig: {
     usingComponents: {
-      "van-swipe-cell": "/vant-weapp/dist/swipe-cell/index"
+      "van-swipe-cell": "/vant-weapp/dist/swipe-cell/index",
+      "van-row": "/vant-weapp/dist/row/index",
+      "van-col": "/vant-weapp/dist/col/index",
+       "van-loading": "/vant-weapp/dist/loading/index"
     }
   },
   created () {

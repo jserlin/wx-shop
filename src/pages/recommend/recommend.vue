@@ -7,7 +7,8 @@
       </div>
     </div>
     <div class="index-top-bg abs" style="z-index: 0; top: 0; left: 0; display: block; width: 100%; ">
-      <image src="/static/images/mystore_bg.png" style="width: 100%;"/>
+      <image src="http://shop.ahaxkj.com/src/images/slider.png" style="width: 100%;"/>
+      <!-- <image src="/static/images/mystore_bg.png" style="width: 100%;"/> -->
     </div>
     <scroll-view scroll-y class="goods-wrap" @scrolltolower="getIndexList">
       <swiper
@@ -21,19 +22,35 @@
           <image :src="item.imgUrl" class="slide-image" />
         </swiper-item>
       </swiper>
+      <div class="cate-wrap">
+        <van-row gutter="20">
+          <van-col span="6" v-for="(cate, index) in categoryList" :key="index" >
+            <div class="cate-item" @click="clickCate(cate)">
+              <img class="img" mode="scaleToFill" :src="cate.img" alt="">
+              <div class="text">{{cate.categoryName}}</div>
+            </div>
+          </van-col>
+        </van-row>
+      </div>
       <div class="goods-con">
-        <div
-          class="card"
+        <div class="card-wrap"
           v-for="(subitem, subindex) in goodsList"
           @click="toDetail(subitem.id)"
-          :key="subindex"
-        >
-          <div class="img-wrap">
-            <img class="img" :src="subitem.picUrl" alt />
-            <div class="desc">{{subitem.simpleDesc}}</div>
+          :key="subindex">
+          <div class="card">
+            <div class="img-wrap">
+              <img class="img" mode='aspectFill' :src="subitem.picUrl" alt />
+              <div class="desc">{{subitem.simpleDesc}}</div>
+            </div>
+            <p class="p price">￥{{subitem.goodsPrice}}</p>
+            <p class="info">{{subitem.goodsName}}</p>
           </div>
-          <p class="p price">￥{{subitem.goodsPrice}}</p>
-          <p class="info">{{subitem.goodsName}}</p>
+        </div>
+      </div>
+      <div class="loading-wrap" v-show="isLoading">
+        <div class="load-con">
+          <van-loading type="circular" />
+          <span>正在加载...</span>
         </div>
       </div>
     </scroll-view>
@@ -41,22 +58,19 @@
 </template>
 
 <script>
-import card from "@/components/card";
 import { getIndexList, getProductDetail, getBannerLists } from "@/api/";
 
 export default {
   mpType: "page",
-  components: {
-    card
-  },
   data() {
     return {
       motto: "推荐",
-      newCategoryList: 8,
+      categoryList: [],
       goodsList: [],
       imgUrls: [],
       indicatorDots: false,
       autoplay: false,
+      isLoading: true,
       interval: 5000,
       duration: 1000
     };
@@ -70,10 +84,19 @@ export default {
   methods: {
     async _getBannerLists() {
      const result = await getBannerLists()
-     if (result.data) {
+     if (result.code === 'success') {
        this.imgUrls = result.data.map(item => {
          const _obj = {
            imgUrl: `https://pay.tuixiang.com:8881${item.imgUrl}`
+         }
+         return _obj
+       })
+       this.categoryList = result.categoryList.map(item => {
+        const _obj = {
+           img: `https://pay.tuixiang.com:8881${item.img}`,
+           categoryName: item.categoryName,
+           id: item.id,
+           categoryPid: item.categoryPid
          }
          return _obj
        })
@@ -81,10 +104,12 @@ export default {
     },
     // 商品列表接口
     async getIndexList() {
+      console.log(1)
       if(this.noMore) {
         return
       }
       this.pageNum+=1
+      this.isLoading = true
       const params = {
         welfare: 1,
         page: this.pageNum,
@@ -92,6 +117,7 @@ export default {
       };
       const result = await getIndexList(params);
       if (result.data) {
+        this.isLoading = false
         const _arr = result.data.map(item => {
           const _obj = {
             id: item.id,
@@ -113,6 +139,9 @@ export default {
     toCate() {
       const url = "/pages/category/category";
       this.$router.push(url);
+    },
+    clickCate(cate) {
+      console.log("TCL: clickCate -> cate", cate)
     },
     toDetail(id) {
       const path = "/pages/product/detail";
@@ -187,6 +216,32 @@ export default {
       }
     }
   }
+  .loading-wrap{
+    padding: 6rpx;
+    .load-con{
+      text-align: center;
+      margin: 0 auto;
+    }
+  }
+  .cate-wrap{
+    padding: 20rpx;
+    position: relative;
+    background: #fff;
+    .cate-item{
+      padding-bottom: 20rpx;
+      box-sizing: border-box;
+      .img{
+        width: 100%;
+        height: 150rpx;
+        background: #f4f4f4;
+        border-radius: 20%;
+      }
+      .text{
+        text-align: center;
+        font-size: 26rpx;
+      }
+    }
+  }
   .goods-wrap {
     position: relative;
     height: 100%;
@@ -194,20 +249,23 @@ export default {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+      background: #f7f7f7;
+      .card-wrap{
+        padding: 20rpx;
+        box-sizing: border-box;
+        width: 50%;
+      }
       .card {
-        width: 370rpx;
-        border-radius: 8rpx;
+        // width: 50%;
+        padding-bottom: 10rpx;
         box-sizing: border-box;
         background: #fff;
-        margin-bottom: 10rpx;
-        &:nth-child(2n) {
-          margin-left: 10rpx;
-        }
+        border-radius: 10rpx;
+        overflow: hidden;
         .img {
           margin: 0 auto;
           display: block;
-          width: 302rpx;
-          height: 302rpx;
+          width: 100%;
         }
         .p {
           overflow: hidden;
