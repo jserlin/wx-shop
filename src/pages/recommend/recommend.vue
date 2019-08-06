@@ -26,7 +26,7 @@
         <van-row gutter="20">
           <van-col span="6" v-for="(cate, index) in categoryList" :key="index" >
             <div class="cate-item" @click="clickCate(cate)">
-              <img class="img" mode="scaleToFill" :src="cate.img" alt="">
+              <img class="img" mode="widthFix" :src="cate.img" alt="">
               <div class="text">{{cate.categoryName}}</div>
             </div>
           </van-col>
@@ -249,7 +249,7 @@ export default {
       box-sizing: border-box;
       .img{
         width: 100%;
-        height: 150rpx;
+        // height: 150rpx;
         background: #f4f4f4;
         border-radius: 20%;
       }
