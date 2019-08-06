@@ -47,7 +47,7 @@
           </van-col>
         </van-row>
       </div>
-      <div class="select-wrap">
+      <div class="select-wrap pub">
         <van-cell is-link @click="showPopup = true">
           <view slot="title">
             <span>规格选择</span>
@@ -57,6 +57,19 @@
           </view>
         </van-cell>
       </div>
+      <!-- 服务承若 -->
+      <div class="service-wraper pub"  >
+        <div class="service-content">
+          <div class="left">服务：</div>
+          <div class="right">
+            <div class="right-item">48小时快速退款</div>
+            <div class="right-item">满88元免邮费</div>
+            <div class="right-item">网易自营品牌</div>
+            <div class="right-item">部分偏远地区无法配送</div>
+          </div>
+          <div class="next"><i class="qb-icon qb-icon-next"></i></div>
+				</div>
+			</div>
       <!-- 底部tab -->
       <div class="footer-wrap">
         <div class="flex-wrap">
@@ -65,7 +78,7 @@
             <img class="img" src="/static/images/icon-shopcar.png" alt />
           </div>
           <div class="flex-col">
-            <div class="button buy" @click="toCart">立即购买</div>
+            <div class="button buy" @click="addToCart('toCart')">立即购买</div>
           </div>
           <div class="flex-col">
             <div class="button car" @click="addToCart">加入购物车</div>
@@ -129,12 +142,12 @@
         </div>
       </van-popup>
       <!-- 商品详情 规则参数 tabs -->
-      <van-tabs :active="active" v-if="productInfo">
-        <van-tab title="商品详情">
-          <div class="productDescImg-wrap">
-            <rich-text class="rich" :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
-          </div>
-        </van-tab>
+      <!-- <van-tabs :active="active" v-if="productInfo">
+        <van-tab title="商品详情"> -->
+      <div class="productDescImg-wrap">
+        <rich-text class="rich" :nodes="productInfo.detailHtml" bindtap="tap"></rich-text>
+      </div>
+        <!-- </van-tab> -->
         <!-- <van-tab title="规格参数">
           <div class="productDescImg-wrap">
             <img mode="widthFix" class="imgDesc" :src="productInfo.primaryPicUrl" alt />
@@ -223,7 +236,7 @@ export default {
     setCurrentSku(currentSku) {
       this.currentSkuInfo = currentSku;
     },
-    async addToCart() {
+    async addToCart(type) {
       if (this.$store.state.token) {
         // 没有选择规格 弹出选择规格页面
         if (!this.currentSkuInfo.skuId) {
@@ -238,8 +251,12 @@ export default {
         };
         const result = await addShoppingCart(params);
         if (result.code === "success") {
-          this.$store.dispatch("getShoppingLists");
           Toast("加入购物车成功");
+          this.$store.dispatch("getShoppingLists").then(() => {
+            if(type === 'toCart') {
+              this.toCart()
+            }
+          })
         }
       } else {
         const url = "/pages/login/login";
@@ -267,7 +284,7 @@ export default {
   position: relative;
   padding-bottom: 104rpx;
   font-family: PingFangSC-Light, helvetica, "Heiti SC";
-  background: #fff;
+  background: #f7f7f7;
 }
 
 .pub {
@@ -333,8 +350,8 @@ export default {
   margin-left: 30rpx;
 }
 .select-wrap {
-  padding: 20rpx 0;
-  background: #f7f7f7;
+  // padding: 20rpx 0;
+  // background: #f7f7f7;
 }
 // 基本信息
 .product-info {
@@ -345,7 +362,7 @@ export default {
     .desc {
       flex: 1;
       .title {
-        font-size: 36rpx;
+        font-size: 28rpx;
         color: #000;
       }
       .text {
@@ -363,7 +380,7 @@ export default {
       background-repeat: repeat-y;
       .t1 {
         color: #b4282d;
-        font-size: 36rpx;
+        font-size: 28rpx;
         font-weight: bold;
       }
       .t2 {
@@ -384,7 +401,7 @@ export default {
         color: #b4282d;
       }
       .price-now {
-        font-size: 48rpx;
+        font-size: 28rpx;
         font-weight: bold;
         color: #b4282d;
       }
