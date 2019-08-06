@@ -1,18 +1,11 @@
 <template>
 	<div class="container">
-    <van-search :value="keyWord" placeholder="请输入搜索关键词" use-action-slot @search="_getProduct">
-      <div slot="action" @tap="_getProduct">搜索</div>
-    </van-search>
-		<!-- <div class="shop-search">
-			<div class="search-con">
-				<i class="qb-icon qb-icon-search"></i>
-				<input class="input" @confirm="_getProduct()" confirm-type="search" v-model="keyWord" placeholder="请输入关键词"></input>
-			</div>
-			<div class="r" @click="_getProduct()">
-				<span class="span">搜索</span>
-			</div>
-		</div> -->
-		<!-- 历史记录热门搜索 -->
+    <div class="search">
+      <van-search :value="keyWord" @change="changeWord" placeholder="请输入搜索关键词" use-action-slot @search="getProduct">
+        <div slot="action" @tap="getProduct">搜索</div>
+      </van-search>
+    </div>
+    <!-- 历史记录 -->
 		<div class="m-searchSuggestionsViews" v-if="step == 1">
 			<div class="m-searchSuggestions" v-if="localHistory.length">
 				<div class="hd">
@@ -27,160 +20,241 @@
 					 >{{nav.name}}</div>
 				</div>
 			</div>
-			<!-- <div class="m-searchSuggestions">
-				<div class="hd">
-					<div class="tit">热门搜索</div>
-				</div>
-				<div class="list">
-					<div class="item highlight">天地一号</div>
-					<div class="item highlight">天地两号</div>
-					<div class="item ">三号</div>
-				</div>
-			</div> -->
 		</div>
-		<scroll-view scroll-y="true" class="scoll-h" :style="{height: winHeight + 'rpx'}" v-if="step == 2">
+    <!-- 搜索结果 -->
+		<scroll-view scroll-y="true" class="scoll-h" v-if="step == 2"  @scrolltolower="getProduct">
 			<div class="content-no" v-if="contentNone">
 				<img src="/static/images/search.png" alt="">
 				<div class="description">您寻找的商品还未上架</div>
 			</div>
-			<div class="product-group"  v-if="!contentNone">
-				<a :href="'/pages/product/productDetail?id=' + item.id" class="product-item" v-for="(item, index) in productLists" :key="index">
-					<img class="product-img" :src="item.media[0].url" alt="" >
-					<div class="promotion-group">
-						<div class="promotion-item">满折</div>
-					</div>
-					<div class="title">{{item.title}}</div>
-					<div class="price">￥{{item.price}}</div>
-				</a>
-			</div>
-			<div class="btn" v-if="productLists.length>0&&!noMore"  @click="_getProduct(true)">
-				查看更多>
-			</div>
+			<div class="goods-con" v-if="!contentNone">
+        <div class="card-wrap"
+          v-for="(subitem, subindex) in goodsList"
+          @click="toDetail(subitem.id)"
+          :key="subindex">
+          <div class="card">
+            <div class="img-wrap">
+              <img class="img" mode='aspectFill' :src="subitem.picUrl" alt />
+              <div class="desc">{{subitem.simpleDesc}}</div>
+            </div>
+            <p class="p price">￥{{subitem.goodsPrice}}</p>
+            <p class="info">{{subitem.goodsName}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="loading-wrap" v-show="isLoading">
+        <div class="load-con">
+          <van-loading type="circular" />
+          <span>正在加载...</span>
+        </div>
+      </div>
+      <div class="loading-wrap" v-if="noMore && !contentNone">
+        <div class="load-con">
+          <span style="color:#999">-- 没有更多了 --</span>
+        </div>
+      </div>
 		</scroll-view>
 	</div>
 </template>
 <script>
+import { getIndexList } from "@/api/";
+import { setStorage } from '@/utils/wx'
+const SEARCHRESULT = 2
+const SERACHTASK = 1
+const LOCALHISTORY = 'localSearchHistoty'
 
-	const SEARCHRESULT = 2
-	const SERACHTASK = 1
-	const LOCALHISTORY = 'localSearchHistoty'
-
-	export default {
-		data() {
-			return {
-				pageNum: 1,
-				keyWord: '',
-				step: SERACHTASK,
-				productLists: [],
-				noMore: false,
-				contentNone: false,
-				shopId: '',
-				winHeight: 0,
-				localHistory: wx.getStorageSync(LOCALHISTORY) || []
-			}
-		},
-		mounted() {
-			this.setWinHeight()
-		},
-		watch: {
-			keyWord(nv, ov) {
-				if (nv.trim() === '') {
-					this.step = SERACHTASK
-				}
-			}
-		},
-		methods: {
-			_getProduct(more) {
-				if(!this.keyWord.trim()) {
-					wx.showToast({
-						title: '请输入搜索关键词',
-						icon: 'none',
-						duration: 2000
-					})
-					return
-				}
-
-				if (more) {
-					this.pageNum++
-				}
-				this.step = SEARCHRESULT
-				let params = {
-					nameLike: this.keyWord,
-					pageNum: this.pageNum
-				}
-				this.localHistory = this.localHistory.concat([{name:this.keyWord}])
-        wx.setStorageSync(LOCALHISTORY, this.localHistory)
-        // 获取商品相关逻辑
-			},
-			setKeyWord(keyWord) {
-				this.keyWord = keyWord
-				this._getProduct()
-			},
-			setStep() {
-				this.step = SERACHTASK
-			},
-			setWinHeight() {
-				let that = this;
-				//  高度自适应
-				wx.getSystemInfo( {
-					success: function( res ) {
-						let clientHeight = res.windowHeight
-						let	clientWidth = res.windowWidth
-						let	rpxR= 750 / clientWidth
-						let  calc = clientHeight * rpxR - 80
-						that.winHeight = calc
-					}
-				});
-			},
-		}
-	}
+export default {
+  data() {
+    return {
+      pageNum: 0,
+      keyWord: '',
+      step: SERACHTASK,
+      goodsList: [],
+      isLoading: true,
+      noMore: false,
+      contentNone: false,
+      localHistory: wx.getStorageSync(LOCALHISTORY) || []
+    }
+  },
+  watch: {
+    keyWord(nv, ov) {
+      if (!this.$route.query.id &&nv.trim() === '') {
+        this.step = SERACHTASK
+      }
+    }
+  },
+  onShow() {
+    if (this.$route.query.id) {
+      this.getProduct()
+    }
+  },
+  // mounted() {
+  //   if (this.$route.query.id) {
+  //     this.getProduct()
+  //   }
+  // },
+  methods: {
+    getProduct() {
+      // if(!this.keyWord.trim()) {
+      //   wx.showToast({
+      //     title: '请输入搜索关键词',
+      //     icon: 'none',
+      //     duration: 2000
+      //   })
+      //   return
+      // }
+      if (this.$route.query.id && this.cateId !== this.$route.query.id) {
+        this.keyWord = ''
+        this.pageNum = 0
+        this.goodsList = []
+        this.noMore = false
+        this.contentNone = false
+      }
+      if (this.keyWord !== this._keyWord) {
+        this.pageNum = 0
+        this.goodsList = []
+        this.noMore = false
+        this.contentNone = false
+      }
+      if (this.noMore) {
+        return
+      }
+      this.step = SEARCHRESULT
+      // 获取商品相关逻辑
+      this.pageNum+=1
+      this.isLoading = true
+      this._keyWord = this.keyWord
+      this.cateId = this.$route.query.id
+      const params = {
+        welfare: 1,
+        page: this.pageNum,
+        goodsType: 0,
+        goodsName: this.keyWord,
+        categoryId: this.$route.query.id
+      };
+      getIndexList(params).then(result => {
+        if (result.code === 'success') {
+          this.isLoading = false
+          const _arr = result.data.map(item => {
+            const _obj = {
+              id: item.id,
+              picUrl: item.picUrl1,
+              simpleDesc: item.simpleDesc,
+              goodsPrice: item.goodsPrice,
+              goodsName: item.goodsName
+            };
+            return Object.freeze(_obj);
+          });
+          this.goodsList.push(..._arr);
+          this.contentNone = !this.goodsList.length
+          this.noMore = this.goodsList.length >= result.count
+        }
+      })
+      if (!this.$route.query.id) {
+        // 存储搜哦记录
+        this.localHistory = this.localHistory.concat([{name:this.keyWord}])
+        setStorage(LOCALHISTORY, this.localHistory)
+      }
+    },
+    setKeyWord(keyWord) {
+      this.keyWord = keyWord
+      this.getProduct()
+    },
+    changeWord(event) {
+      this.keyWord = event.mp.detail
+    },
+    toDetail(id) {
+      const path = "/pages/product/detail";
+      this.$router.push({
+        path,
+        query: { id }
+      });
+    },
+    setStep() {
+      this.step = SERACHTASK
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .container{
+  position: relative;
+  padding-top: 108rpx;
+  height: 100vh;
   font-family: PingFangSC-Light,helvetica,'Heiti SC';
-  .product-group{
+  .search{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 110;
+  }
+  .goods-con {
     display: flex;
     flex-wrap: wrap;
-    padding-left: 20rpx;
-    .product-item{
-      margin-bottom: 30rpx;
-      padding-right: 20rpx;
-      width: 345rpx;
-      .product-img{
+    justify-content: space-between;
+    background: #f7f7f7;
+    .card-wrap{
+      padding: 20rpx;
+      box-sizing: border-box;
+      width: 50%;
+    }
+    .card {
+      // width: 50%;
+      padding-bottom: 10rpx;
+      box-sizing: border-box;
+      background: #fff;
+      border-radius: 10rpx;
+      overflow: hidden;
+      .img {
+        margin: 0 auto;
         display: block;
-        width: 345rpx;
-        height: 345rpx;
+        width: 100%;
       }
-      .promotion-group{
-        display: inline-flex;
-        padding-top: 8rpx;
-        .promotion-item{
-          width: 60rpx;
-          font-size: 20rpx;
-          text-align: center;
-          color: #fff;
-          background: #f60;
+      .p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 98%;
+      }
+      .price {
+        margin-bottom: 10rpx;
+        font-size: 32rpx;
+        line-height: 48rpx;
+        color: #b4282d;
+        border-bottom: 1rpx solid #d9d9d9;
+      }
+      .img-wrap {
+        position: relative;
+        background-color: #f4f4f4;
+        overflow: hidden;
+        .desc {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          background: #f1ece2;
+          border-radius: 0 0 4rpx 4rpx;
+          font-size: 24rpx;
+          color: #9f8a60;
+          letter-spacing: 0;
+          line-height: 36rpx;
+          padding: 10rpx 10rpx;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
       }
-      .title{
-        padding: 8rpx 0;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-      .price{
-        color: #f60;
-        font-weight: 400
+      .info {
+        font-size: 24rpx;
+        line-height: 1;
+        color: #999;
       }
     }
   }
-  .btn{
-    margin-bottom: 60rpx;
-    height: 80rpx;
-    line-height: 80rpx;
-    text-align: center;
-    border-top: 2rpx solid #d9d9d9
-  }
+}
+.scoll-h{
+  position: relative;
+  height: 100%;
 }
 .shop-search{
   padding: 20rpx 0 20rpx 20rpx;
@@ -214,6 +288,14 @@
     font-size: 48rpx;
   }
 }
+.loading-wrap{
+  padding: 20rpx 0;
+  font-size: 24rpx;
+  .load-con{
+    text-align: center;
+    margin: 0 auto;
+  }
+}
 .content-no{
   padding-top: 200rpx;
   text-align: center;
@@ -228,6 +310,7 @@
   }
 }
 .m-searchSuggestionsViews{
+  margin-top: 20rpx;
   background-color: #f4f4f4;
   position: relative;
   .m-searchSuggestions{

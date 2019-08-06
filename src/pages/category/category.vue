@@ -33,7 +33,9 @@
         <!-- 类目项目 -->
         <div class="bottom" v-if="!isGoods && detailData.subList.length">
           <div @click="clickDetail(item)" v-for="(item,index) in detailData.subList" :key="index" class="item">
-            <img :src="item.img" alt="">
+            <div class="img-con">
+              <img class="img" :src="item.img" alt="">
+            </div>
             <span class="font-28">{{item.name}}</span>
           </div>
         </div>
@@ -146,10 +148,17 @@ export default {
       }
     },
     clickDetail(item) {
+      // 普通商品
       if (item.id && this.categoryPid < 1) {
         this.$router.push({
           path: '/pages/product/detail',
           query: {id: item.id}
+        })
+      } else {
+        // 类目栏目
+        this.$router.push({
+          path: '/pages/search/search',
+          query: {id: item.categoryId}
         })
       }
     },
@@ -311,7 +320,7 @@ export default {
         text-align: center;
         padding: 10rpx 0;
         span:nth-child(2) {
-          font-size: 36rpx;
+          font-size: 28rpx;
           color: #333;
           padding: 0 10rpx;
         }
@@ -329,12 +338,17 @@ export default {
           width: 33.33%;
           text-align: center;
           margin-bottom: 20rpx;
-
-          img {
+          .img-con{
+            overflow: hidden;
             height: 144rpx;
             width: 144rpx;
             display: block;
             margin: 0 auto;
+            border-radius: 50%;
+          }
+          .img {
+            width: 100%;
+            height: 100%;
           }
         }
       }
