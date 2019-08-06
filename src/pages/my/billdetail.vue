@@ -1,7 +1,7 @@
 <template>
   <div class="bill-detail-wrap">
     <div class="bill-detail-status">
-      <p>账单</p>
+      <p class="text-center">正在开发中...</p>
       <div class="bill-detail-info flex-box">
         <div class="flex-item text-center">
           <p>-28.00</p>

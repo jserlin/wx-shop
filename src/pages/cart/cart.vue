@@ -66,7 +66,6 @@ import {
 } from "@/api/";
 
 export default {
-  mpType: "page",
   data() {
     return {
       cartList: [],
@@ -75,8 +74,18 @@ export default {
       selectText: "全选"
     };
   },
-  onShow(){
-    this.$store.dispatch("getShoppingLists");
+  onShow() {
+    wx.setNavigationBarTitle({
+      title: "购物车"
+    });
+
+    if (!this.$store.state.token) {
+      const url = "/pages/login/login";
+      this.$router.push(url);
+    } else {
+      this.checkAll = false
+      this.$store.dispatch("getShoppingLists");
+    }
   },
   computed: {
     shoppingCartLists() {
@@ -134,6 +143,10 @@ export default {
     },
     checkAllGoods() {
       this.checkAll = !this.checkAll;
+      if(!this.cartList.length){
+        return
+      }
+
       if (this.checkAll) {
         this.cartList.forEach(item => {
           item.checked = true;
@@ -252,7 +265,7 @@ export default {
       justify-content: center;
       align-items: center;
       color: #fff;
-      background-color: #f44;
+      background-color: #b4282d;
       .del-btn {
         padding: 6rpx 10rpx;
       }

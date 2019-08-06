@@ -55,7 +55,7 @@
       />
     </van-popup>
     <!-- 余额验证码 弹出层 -->
-    <van-popup :show="showPayCode" @close="showPayCode = false" z-index="110">
+    <van-popup :show="showPayCode" @close="cancelPay" z-index="110">
       <div style="width: 100vw">
         <van-cell-group>
           <van-field
@@ -74,8 +74,16 @@
       </div>
     </van-popup>
     <!-- 底部tab -->
-    <div class="footer-wrap">
-      <van-submit-bar :price="totalPrice" button-text="立即购买" @submit="onSubmit" />
+    <div class="footer-wrap flex-box">
+      <span
+        class="flex-item"
+        style="padding-right: 20rpx; color: #b4282d; text-align: right;"
+      >¥ {{totalPrice || 0.00}}</span>
+      <span
+        style="background: #b4282d;color: #fff; padding: 0 20rpx; width: 160rpx;"
+        class="text-center"
+        @submit="onSubmit"
+      >立即购买</span>
     </div>
     <van-dialog id="van-dialog" />
   </div>
@@ -94,7 +102,7 @@ export default {
       totalPrice: 0,
       payType: "余额支付",
       payCode: "",
-      columns: ["微信支付", "余额支付"],
+      columns: ["余额支付", "微信支付"],
       showPayType: false,
       showPayCode: false
     };
@@ -106,11 +114,24 @@ export default {
   },
 
   onShow() {
-    console.log("onShow");
+    this.payType = this.columns[0];
     this.getConfirmOrder();
   },
 
   methods: {
+    cancelPay() {
+      this.showPayCode = false;
+
+      wx.showToast({
+        icon: "none",
+        title: "支付失败"
+      });
+
+      const timer = setTimeout(() => {
+        clearTimeout(timer);
+        this.$router.back();
+      }, 1.5e3);
+    },
     onSubmit(event) {
       const commonOption = {
         userToken: this.$store.state.token,
@@ -118,17 +139,17 @@ export default {
         addressId: this.address.id
       };
 
-      // test
-      if (true) {
-        getPayCode({
-          userToken: this.$store.state.token
-        }).then(res => {
-          if (res.code === "success") {
-            this.showPayCode = true;
-          }
-        });
-        return;
-      }
+      // test pay
+      // if (true) {
+      //   getPayCode({
+      //     userToken: this.$store.state.token
+      //   }).then(res => {
+      //     if (res.code === "success") {
+      //       this.showPayCode = true;
+      //     }
+      //   });
+      //   return;
+      // }
 
       // 网易商品订单
       if (this.orderType === 0) {
@@ -198,15 +219,15 @@ export default {
 
     _wxPay(params) {
       toWxPay(params).then(res => {
-        if (res.code === "success") {
+        if (res.appId) {
           // 支付api参数链接 https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
           // 将返回红的参数赋值的params里面
           const params = {
-            timeStamp: "",
-            nonceStr: "",
-            package: "",
-            signType: "MD5",
-            paySign: ""
+            timeStamp: res.timeStamp,
+            nonceStr: res.nonceStr,
+            package: res.package,
+            signType: res.signType,
+            paySign: res.sign
           };
 
           wxPay(params).then(res => {
@@ -313,9 +334,10 @@ export default {
             }, 0);
             // 当确定界面需要支付的订单金额 <88元则需要在界面加一个10元邮费的栏目，订单总金额也需加上这10元，
             this.needPostage = this.price < 88;
-            this.totalPrice = this.needPostage
-              ? (this.price + 10) * 100
-              : this.price * 100;
+            this.totalPrice = this.needPostage ? this.price + 10 : this.price;
+            this.totalPrice = this.totalPrice.toFixed
+              ? this.totalPrice.toFixed(2)
+              : this.totalPrice;
           }
         });
       } else {
@@ -348,7 +370,8 @@ export default {
   bottom: 0;
   z-index: 100;
   width: 100vw;
-  height: 104rpx;
+  height: 100rpx;
+  line-height: 100rpx;
   background: #fff;
   border-top: 1rpx solid #d9d9d9;
 }

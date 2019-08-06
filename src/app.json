@@ -3,7 +3,7 @@
     {
       "path": "pages/recommend/recommend",
       "config": {
-        "navigationBarTitleText": "推荐",
+        "navigationBarTitleText": "首页",
         "usingComponents": {
           "van-search": "/vant-weapp/dist/search/index"
         }
@@ -13,6 +13,18 @@
       "path": "pages/category/category",
       "config": {
         "navigationBarTitleText": "分类"
+      }
+    },
+    {
+      "path": "pages/cart/cart",
+      "config": {
+        "navigationBarTitleText": "购物车"
+      }
+    },
+    {
+      "path": "pages/my/my",
+      "config": {
+        "navigationBarTitleText": "个人中心"
       }
     },
     {
@@ -36,13 +48,6 @@
         "navigationBarTitleText": "福利券详情"
       }
     },
-    {
-      "path": "pages/cart/cart",
-      "config": {
-        "navigationBarTitleText": "购物车"
-      }
-    },
-    "pages/my/my",
     {
       "path": "pages/my/myorders",
       "config": {
@@ -196,7 +201,6 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {

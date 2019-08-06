@@ -2,9 +2,13 @@
   <div class="category">
     <div class="content">
       <scroll-view class="left" scroll-y="true">
-        <div class="iconText" @click="selectitem(item,index)" v-for="(item, index) in listData" :class="[index==nowIndex?'active':'']" :key="index">
-          {{item.categoryName}}
-        </div>
+        <div
+          class="iconText"
+          @click="selectitem(item,index)"
+          v-for="(item, index) in listData"
+          :class="[index==nowIndex?'active':'']"
+          :key="index"
+        >{{item.categoryName}}</div>
       </scroll-view>
       <scroll-view class="right" scroll-y="true" @scrolltolower="getIndexList">
         <div class="c-title">
@@ -13,7 +17,13 @@
           <span>—</span>
         </div>
         <!-- 商品项目 -->
-        <div v-if="isGoods && detailData.subList.length" class="goods-content" @click="clickDetail(goods)" v-for="(goods, index) in detailData.subList" :key="index">
+        <div
+          v-if="isGoods && detailData.subList.length"
+          class="goods-content"
+          @click="clickDetail(goods)"
+          v-for="(goods, index) in detailData.subList"
+          :key="index"
+        >
           <div class="img-wrap">
             <img class="img-item" :src="goods.primaryPicUrl" />
           </div>
@@ -22,7 +32,10 @@
             <div class="type">{{goods.displayString}}</div>
             <div class="price">
               <div class="price-now">￥{{goods.goodsPrice}}</div>
-              <div class="price-del">￥{{goods.primaryPrice}} <div class="del"></div> </div>
+              <div class="price-del">
+                ￥{{goods.primaryPrice}}
+                <div class="del"></div>
+              </div>
             </div>
           </div>
           <div class="product-num" @click.stop="clickCart(goods)">
@@ -32,9 +45,14 @@
         </div>
         <!-- 类目项目 -->
         <div class="bottom" v-if="!isGoods && detailData.subList.length">
-          <div @click="clickDetail(item)" v-for="(item,index) in detailData.subList" :key="index" class="item">
+          <div
+            @click="clickDetail(item)"
+            v-for="(item,index) in detailData.subList"
+            :key="index"
+            class="item"
+          >
             <div class="img-con">
-              <img class="img" :src="item.img" alt="">
+              <img class="img" :src="item.img" alt />
             </div>
             <span class="font-28">{{item.name}}</span>
           </div>
@@ -42,7 +60,7 @@
         <div class="loading-wrap" v-show="isLoading">
           <div class="load-con">
             <van-loading type="circular" />
-            <span>正在加载...</span>
+            <span style="padding-top:10rpx;">正在加载...</span>
           </div>
         </div>
         <div class="loading-wrap" v-if="noMore">
@@ -56,76 +74,78 @@
 </template>
 
 <script>
-import { getCategoryLists, getIndexList, addShoppingCart } from '@/api/'
-import { getStorage } from '@/utils/wx'
+import { getCategoryLists, getIndexList, addShoppingCart } from "@/api/";
+import { getStorage } from "@/utils/wx";
 // 入参 分类里面类目 各不同
 const options = {
-  '-1': {
+  "-1": {
     welfare: 1,
     limit: 20,
     goodsType: 0
   },
-  '-2': {
+  "-2": {
     limit: 20,
     goodsType: 1
   },
-  '-3': {
+  "-3": {
     recommend: 1,
     limit: 20,
     goodsType: 0
   }
-}
+};
 
 export default {
-  mpType: 'page',
-  data () {
+  mpType: "page",
+  data() {
     return {
       nowIndex: 0,
       categoryPid: 0,
       listData: [],
-      currentCateName: '推荐专区',
+      currentCateName: "推荐专区",
       detailData: {
-        name: '',
+        name: "",
         subList: []
       },
       isLoading: true,
       noMore: false,
       isGoods: true
-    }
+    };
   },
   watch: {
     categoryPid(nv) {
       // 这三个走获取商品列表接口
-      const arr = [-1, -2, -3]
+      const arr = [-1, -2, -3];
       if (arr.includes(nv)) {
-        this.isGoods = true
-        this.pageNum = 0
-        this.noMore = false
-        this.detailData.subList = []
-        this.getIndexList()
+        this.isGoods = true;
+        this.pageNum = 0;
+        this.noMore = false;
+        this.detailData.subList = [];
+        this.getIndexList();
       } else {
-        this.isGoods = false
-        this._getCategoryLists()
+        this.isGoods = false;
+        this._getCategoryLists();
       }
     }
   },
   onShow() {
-    getStorage('currentCate').then(res => {
-      console.log("TCL: onShow -> res", res)
-    })
+    wx.setNavigationBarTitle({
+      title: "分类"
+    });
+    getStorage("currentCate").then(res => {
+      console.log("TCL: onShow -> res", res);
+    });
   },
   mounted() {
-    this.pageNum = 0
-    this._getCategoryLists()
+    this.pageNum = 0;
+    this._getCategoryLists();
   },
   methods: {
     async selectitem(item, index) {
-      this.currentCateName = item.categoryName
-      this.categoryPid = item.categoryId
-      this.nowIndex = index
+      this.currentCateName = item.categoryName;
+      this.categoryPid = item.categoryId;
+      this.nowIndex = index;
     },
-    async getListData() {
-    },
+    async getListData() {},
     async clickCart(item) {
       if (this.$store.state.token) {
         const params = {
@@ -151,61 +171,64 @@ export default {
       // 普通商品
       if (item.id && this.categoryPid < 1) {
         this.$router.push({
-          path: '/pages/product/detail',
-          query: {id: item.id}
-        })
+          path: "/pages/product/detail",
+          query: { id: item.id }
+        });
       } else {
         // 类目栏目
         this.$router.push({
-          path: '/pages/search/search',
-          query: {id: item.categoryId}
-        })
+          path: "/pages/search/search",
+          query: { id: item.categoryId }
+        });
       }
     },
     getIndexList() {
-      const arr = [-1, -2, -3]
+      const arr = [-1, -2, -3];
       if (!arr.includes(this.categoryPid) || this.noMore) {
-        return
+        return;
       }
-      this.isLoading = true
-      this.pageNum+=1
-      const params = Object.assign({page: this.pageNum}, options[this.categoryPid])
+      this.isLoading = true;
+      this.pageNum += 1;
+      const params = Object.assign(
+        { page: this.pageNum },
+        options[this.categoryPid]
+      );
       getIndexList(params).then(result => {
-        if (result.code === 'success') {
-          this.isLoading = false
+        if (result.code === "success") {
+          this.isLoading = false;
           const subList = result.data.map(item => {
             // const obj = {
             //   name: item.goodsName,
             //   id: item.id,
             //   img: item.primaryPicUrl
             // }
-            return item
-          })
-          this.detailData.name = this.currentCateName
-          this.detailData.subList = [...this.detailData.subList, ...subList]
-          this.noMore = this.detailData.subList.length >= result.count
+            return item;
+          });
+          this.detailData.name = this.currentCateName;
+          this.detailData.subList = [...this.detailData.subList, ...subList];
+          this.noMore = this.detailData.subList.length >= result.count;
         }
-      })
+      });
     },
     _getCategoryLists() {
       const params = {
         categoryPid: this.categoryPid
-      }
-      this.isLoading = true
+      };
+      this.isLoading = true;
       getCategoryLists(params).then(res => {
-        if (res.code === 'success') {
+        if (res.code === "success") {
           if (this.categoryPid === 0) {
-            this.categoryPid = res.data[0].categoryId
-            this.currentCateName = res.data[0].categoryName
+            this.categoryPid = res.data[0].categoryId;
+            this.currentCateName = res.data[0].categoryName;
             this.listData = res.data.map(item => {
               const obj = {
                 categoryName: item.categoryName,
                 categoryId: item.categoryId
-              }
-              return obj
-            })
+              };
+              return obj;
+            });
           } else {
-            this.isLoading = false
+            this.isLoading = false;
             this.detailData = {
               name: this.currentCateName,
               subList: res.data.map(item => {
@@ -214,16 +237,16 @@ export default {
                   categoryId: item.categoryId,
                   img: `https://pay.tuixiang.com:8881${item.img}`
                   // img: `https://pay.tuixiang.com:8881/logo/20190530095815_177.jpg`
-                }
-                return obj
+                };
+                return obj;
               })
-            }
+            };
           }
         }
-      })
+      });
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped lang="less">
@@ -232,10 +255,10 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  .loading-wrap{
+  .loading-wrap {
     padding: 20rpx 0;
     font-size: 24rpx;
-    .load-con{
+    .load-con {
       text-align: center;
       margin: 0 auto;
     }
@@ -263,7 +286,8 @@ export default {
       }
 
       .icon {
-        background: url('http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png') center no-repeat;
+        background: url("http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png")
+          center no-repeat;
         background-size: 100%;
         width: 28rpx;
         height: 28rpx;
@@ -338,7 +362,7 @@ export default {
           width: 33.33%;
           text-align: center;
           margin-bottom: 20rpx;
-          .img-con{
+          .img-con {
             overflow: hidden;
             height: 144rpx;
             width: 144rpx;
@@ -433,5 +457,4 @@ export default {
     }
   }
 }
-
 </style>

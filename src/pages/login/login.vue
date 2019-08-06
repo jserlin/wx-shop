@@ -69,7 +69,7 @@ export default {
     },
 
     testCodeTimer() {
-      let count = 61;
+      let count = 60;
       this.canTestCode = false;
       this.testCode = `已发送(${count})`;
       const timer = setInterval(() => {

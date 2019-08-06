@@ -10,66 +10,68 @@
       >{{el.name}}</span>
     </div>
     <!-- 订单列表 -->
-    <scroll-view scroll-y class="order-list-wrap" @scrolltolower="getMoreOrderList">
-      <div class="order-item mb20rpx" v-for="el in orderList" :key="el.orderCode">
-        <div class="flex-box order-title item-space-between">
-          <span class="order-name">
-            {{el.payType == 0 ? '企业余额支付' :
-            el.payType == 1 ? '饭卡支付' :
-            el.payType == 2 ? '福利劵支付' :
-            el.payType == 3 ? '微信支付' : ''}}
-          </span>
-          <span class="order-status font-red">
-            {{el.orderStatus === '0' ? '已下单未付款' :
-            el.orderStatus === '1' ? '已取消订单' :
-            el.orderStatus === '2' ? '已付款，未发货' :
-            el.orderStatus === '3' ? '发货，未收货' :
-            el.orderStatus === '4' ? '已收货' :
-            el.orderStatus === '5' ? '退货申请中' :
-            el.orderStatus === '6' ? '已退货退款' : '取消审核中'}}
-          </span>
-        </div>
-        <div class="order-id">
-          <p>
-            <span class="font-gray fl">订单号：</span>
-            {{el.orderCode}}
-          </p>
-          <p class="font-gray">下单时间：{{el.createtime}}</p>
-        </div>
-        <div class="goods-list flex-box item-space-between">
-          <div class="order-goods">
-            <div
-              class="order-goods-item flex-box"
-              v-for="(item, j) in el.detailList"
-              :key="j"
-              @click="goGoodsInfo(item)"
-            >
-              <span class="goods-img">
-                <img :src="item.goodsImage" alt />
-              </span>
-              <span class="goods-name">{{item.goodsName}}</span>
-            </div>
+    <div class="order-list-wrap">
+      <scroll-view scroll-y class="scroll-view-wrap" @scrolltolower="getMoreOrderList">
+        <div class="order-item mb20rpx" v-for="el in orderList" :key="el.orderCode">
+          <div class="flex-box order-title item-space-between">
+            <span class="order-name">
+              {{el.payType == 0 ? '企业余额支付' :
+              el.payType == 1 ? '饭卡支付' :
+              el.payType == 2 ? '福利劵支付' :
+              el.payType == 3 ? '微信支付' : ''}}
+            </span>
+            <span class="order-status font-red">
+              {{el.orderStatus === '0' ? '已下单未付款' :
+              el.orderStatus === '1' ? '已取消订单' :
+              el.orderStatus === '2' ? '已付款，未发货' :
+              el.orderStatus === '3' ? '发货，未收货' :
+              el.orderStatus === '4' ? '已收货' :
+              el.orderStatus === '5' ? '退货申请中' :
+              el.orderStatus === '6' ? '已退货退款' : '取消审核中'}}
+            </span>
           </div>
-          <span>共{{el.num}}款</span>
+          <div class="order-id">
+            <p>
+              <span class="font-gray fl">订单号：</span>
+              {{el.orderCode}}
+            </p>
+            <p class="font-gray">下单时间：{{el.createtime}}</p>
+          </div>
+          <div class="goods-list flex-box item-space-between">
+            <div class="order-goods">
+              <div
+                class="order-goods-item flex-box"
+                v-for="(item, j) in el.detailList"
+                :key="j"
+                @click="goGoodsInfo(item)"
+              >
+                <span class="goods-img">
+                  <img :src="item.goodsImage" alt />
+                </span>
+                <span class="goods-name">{{item.goodsName}}</span>
+              </div>
+            </div>
+            <span>共{{el.num}}款</span>
+          </div>
+          <div class="goods-count">
+            <span>共计{{el.num}}款商品</span>&nbsp;
+            <span>合计：</span>
+            <span class="font-red">¥ {{el.orderPrice}}</span>&nbsp;
+            <span>含邮费 ({{el.expFee}})</span>
+          </div>
+          <div class="order-button">
+            <span class="btn btn-outline mr20rpx" @click="toOrderDetail(el)">查看订单</span>
+            <span
+              class="btn btn-outline mr20rpx"
+              @click="toLogistics(el)"
+              v-if="el.orderStatus == 3 || el.orderStatus == 4"
+            >查看物流</span>
+            <span class="btn btn-outline" v-if="el.orderStatus == 3" @click="toSureOrder(el)">确认收货</span>
+            <span class="btn btn-outline" v-if="el.orderStatus == 2" @click="toCancelOrder(el)">取消订单</span>
+          </div>
         </div>
-        <div class="goods-count">
-          <span>共计{{el.num}}款商品</span>&nbsp;
-          <span>合计：</span>
-          <span class="font-red">¥ {{el.orderPrice}}</span>&nbsp;
-          <span>含邮费 ({{el.expFee}})</span>
-        </div>
-        <div class="order-button">
-          <span class="btn btn-outline mr20rpx" @click="toOrderDetail(el)">查看订单</span>
-          <span
-            class="btn btn-outline mr20rpx"
-            @click="toLogistics(el)"
-            v-if="el.orderStatus == 3 || el.orderStatus == 4"
-          >查看物流</span>
-          <span class="btn btn-outline" v-if="el.orderStatus == 3" @click="toSureOrder(el)">确认收货</span>
-          <span class="btn btn-outline" v-if="el.orderStatus == 2" @click="toCancelOrder(el)">取消订单</span>
-        </div>
-      </div>
-    </scroll-view>
+      </scroll-view>
+    </div>
     <van-dialog id="van-dialog" />
   </div>
 </template>
@@ -113,39 +115,43 @@ export default {
         message: "确认收货吗？",
         showCancelButton: true,
         asyncClose: true
-      }).then(() => {
-        confirmOrder({
-          userToken: this.$store.state.token,
-          orderCode: item.orderCode,
-          packageId: ''
-        }).then(res=>{
-          if(res && res.code === "success"){
-            Dialog.close();
-            this.getOrderList()
-          }
+      })
+        .then(() => {
+          confirmOrder({
+            userToken: this.$store.state.token,
+            orderCode: item.orderCode,
+            packageId: ""
+          }).then(res => {
+            if (res && res.code === "success") {
+              Dialog.close();
+              this.getOrderList();
+            }
+          });
         })
-      }).catch(() => {
-        Dialog.close();
-      });
+        .catch(() => {
+          Dialog.close();
+        });
     },
     toCancelOrder(item) {
       Dialog.confirm({
         message: "确认删除订单？",
         showCancelButton: true,
         asyncClose: true
-      }).then(() => {
-        cancelOrderByOrders({
-          userToken: this.$store.state.token,
-          orderCode: item.orderCode
-        }).then(res=>{
-          if(res && res.code === "success"){
-            Dialog.close();
-            this.getOrderList()
-          }
+      })
+        .then(() => {
+          cancelOrderByOrders({
+            userToken: this.$store.state.token,
+            orderCode: item.orderCode
+          }).then(res => {
+            if (res && res.code === "success") {
+              Dialog.close();
+              this.getOrderList();
+            }
+          });
         })
-      }).catch(() => {
-        Dialog.close();
-      });
+        .catch(() => {
+          Dialog.close();
+        });
     },
     toLogistics(item) {
       const path = "/pages/order/logisticsDetail";
@@ -193,7 +199,8 @@ export default {
       });
     }
   },
-  mounted() {
+  onShow() {
+    this.page = 1
     const { query } = this.$route;
     if (query.a) {
       this.active = query.a;
@@ -202,11 +209,10 @@ export default {
     }
     this.getOrderList();
   },
-  onUnload(){
-    console.log('unload')
+  onUnload() {
     wx.switchTab({
-      url: '/pages/my/my'
-    })
+      url: "/pages/my/my"
+    });
   }
 };
 </script>
@@ -224,9 +230,12 @@ export default {
       border-right: 0 none;
     }
   }
-  .order-list-wrap {
+  .scroll-view-wrap {
     position: relative;
     height: 100%;
+  }
+  .order-list-wrap{
+    height: 100vh;
   }
   .order-item {
     background-color: #fff;

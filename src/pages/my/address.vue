@@ -148,7 +148,7 @@ export default {
     bottom: 0;
     width: 100%;
     height: 100rpx;
-    font-size: 40rpx;
+    font-size: 32rpx;
     line-height: 100rpx;
     color: #fff;
     text-align: center;

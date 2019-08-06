@@ -6,8 +6,11 @@
         <span class="icon"></span>
       </div>
     </div>
-    <div class="index-top-bg abs" style="z-index: 0; top: 0; left: 0; display: block; width: 100%; ">
-      <image src="http://shop.ahaxkj.com/src/images/slider.png" style="width: 100%;"/>
+    <div
+      class="index-top-bg abs"
+      style="z-index: 0; top: 0; left: 0; display: block; width: 100%; "
+    >
+      <image src="http://shop.ahaxkj.com/src/images/slider.png" style="width: 100%;" />
       <!-- <image src="/static/images/mystore_bg.png" style="width: 100%;"/> -->
     </div>
     <scroll-view scroll-y class="goods-wrap" @scrolltolower="getIndexList">
@@ -24,9 +27,9 @@
       </swiper>
       <div class="cate-wrap">
         <van-row gutter="20">
-          <van-col span="6" v-for="(cate, index) in categoryList" :key="index" >
+          <van-col span="6" v-for="(cate, index) in categoryList" :key="index">
             <div class="cate-item" @click="clickCate(cate)">
-              <img class="img" mode="widthFix" :src="cate.img" alt="">
+              <img class="img" mode="widthFix" :src="cate.img" alt />
               <div class="text">{{cate.categoryName}}</div>
             </div>
           </van-col>
@@ -34,13 +37,15 @@
       </div>
       <div class="com-title">企业福利</div>
       <div class="goods-con">
-        <div class="card-wrap"
+        <div
+          class="card-wrap"
           v-for="(subitem, subindex) in goodsList"
           @click="toDetail(subitem.id)"
-          :key="subindex">
+          :key="subindex"
+        >
           <div class="card">
             <div class="img-wrap">
-              <img class="img" mode='aspectFill' :src="subitem.picUrl" alt />
+              <img class="img" mode="aspectFill" :src="subitem.picUrl" alt />
               <div class="desc">{{subitem.simpleDesc}}</div>
             </div>
             <p class="p price">￥{{subitem.goodsPrice}}</p>
@@ -51,7 +56,7 @@
       <div class="loading-wrap" v-show="isLoading">
         <div class="load-con">
           <van-loading type="circular" />
-          <span>正在加载...</span>
+          <span style="padding-top:10rpx;">正在加载...</span>
         </div>
       </div>
       <div class="loading-wrap" v-if="noMore">
@@ -64,8 +69,13 @@
 </template>
 
 <script>
-import { getIndexList, getIndexWelfareList, getProductDetail, getBannerLists } from "@/api/";
-import { setStorage } from '@/utils/wx'
+import {
+  getIndexList,
+  getIndexWelfareList,
+  getProductDetail,
+  getBannerLists
+} from "@/api/";
+import { setStorage } from "@/utils/wx";
 
 export default {
   mpType: "page",
@@ -85,39 +95,42 @@ export default {
   },
   mounted() {
     this.pageNum = 0;
-    this._getBannerLists()
-    this.getIndexList()
+    this._getBannerLists();
+    this.getIndexList();
+    wx.setNavigationBarTitle({
+      title: "首页"
+    });
     // getProductDetail({id:1})
   },
   methods: {
     async _getBannerLists() {
-     const result = await getBannerLists()
-     if (result.code === 'success') {
-       this.imgUrls = result.data.map(item => {
-         const _obj = {
-           imgUrl: `https://pay.tuixiang.com:8881${item.imgUrl}`
-         }
-         return _obj
-       })
-       this.categoryList = result.categoryList.map(item => {
-        const _obj = {
-           img: `https://pay.tuixiang.com:8881${item.img}`,
-           categoryName: item.categoryName,
-           id: item.id,
-           categoryPid: item.categoryPid
-         }
-         return _obj
-       })
-     }
+      const result = await getBannerLists();
+      if (result.code === "success") {
+        this.imgUrls = result.data.map(item => {
+          const _obj = {
+            imgUrl: `https://pay.tuixiang.com:8881${item.imgUrl}`
+          };
+          return _obj;
+        });
+        this.categoryList = result.categoryList.map(item => {
+          const _obj = {
+            img: `https://pay.tuixiang.com:8881${item.img}`,
+            categoryName: item.categoryName,
+            id: item.id,
+            categoryPid: item.categoryPid
+          };
+          return _obj;
+        });
+      }
     },
     // 商品列表接口
     async getIndexList() {
-      console.log(1)
-      if(this.noMore) {
-        return
+      console.log(1);
+      if (this.noMore) {
+        return;
       }
-      this.pageNum+=1
-      this.isLoading = true
+      this.pageNum += 1;
+      this.isLoading = true;
       const params = {
         welfare: 1,
         page: this.pageNum,
@@ -125,7 +138,7 @@ export default {
       };
       const result = await getIndexWelfareList(params);
       if (result.data) {
-        this.isLoading = false
+        this.isLoading = false;
         const _arr = result.data.map(item => {
           const _obj = {
             id: item.id,
@@ -137,7 +150,7 @@ export default {
           return Object.freeze(_obj);
         });
         this.goodsList.push(..._arr);
-        this.noMore = this.goodsList.length >= result.count
+        this.noMore = this.goodsList.length >= result.count;
       }
     },
     toSearch() {
@@ -149,11 +162,11 @@ export default {
       this.$router.push(url);
     },
     clickCate(cate) {
-      console.log("TCL: clickCate -> cate", cate)
-      setStorage('currentCate', cate).then(() => {
+      console.log("TCL: clickCate -> cate", cate);
+      setStorage("currentCate", cate).then(() => {
         const url = "/pages/category/category";
-        this.$router.push({ path: url, isTab: true })
-      })
+        this.$router.push({ path: url, isTab: true });
+      });
     },
     toDetail(id) {
       const path = "/pages/product/detail";
@@ -172,11 +185,11 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   background: #f7f7f7;
-  .slide-item{
+  .slide-item {
     overflow: hidden;
-    border-radius: 20rpx
+    border-radius: 20rpx;
   }
-  .slide-image{
+  .slide-image {
     width: 100%;
     // height: 100%;
   }
@@ -232,34 +245,34 @@ export default {
       }
     }
   }
-  .loading-wrap{
+  .loading-wrap {
     padding: 20rpx 0;
     font-size: 24rpx;
-    .load-con{
+    .load-con {
       text-align: center;
       margin: 0 auto;
     }
   }
-  .cate-wrap{
+  .cate-wrap {
     padding: 20rpx;
     position: relative;
     background: #fff;
-    .cate-item{
+    .cate-item {
       padding-bottom: 20rpx;
       box-sizing: border-box;
-      .img{
+      .img {
         width: 100%;
         // height: 150rpx;
         background: #f4f4f4;
         border-radius: 20%;
       }
-      .text{
+      .text {
         text-align: center;
         font-size: 26rpx;
       }
     }
   }
-  .com-title{
+  .com-title {
     padding: 20rpx 0 10rpx;
     text-align: center;
     font-size: 28rpx;
@@ -272,7 +285,7 @@ export default {
       flex-wrap: wrap;
       justify-content: space-between;
       background: #f7f7f7;
-      .card-wrap{
+      .card-wrap {
         padding: 20rpx;
         box-sizing: border-box;
         width: 50%;
@@ -298,6 +311,7 @@ export default {
         .price {
           margin-bottom: 10rpx;
           font-size: 32rpx;
+          text-indent: 16rpx;
           line-height: 48rpx;
           color: #b4282d;
           border-bottom: 1rpx solid #d9d9d9;
@@ -324,6 +338,7 @@ export default {
         }
         .info {
           font-size: 24rpx;
+          text-indent: 16rpx;
           line-height: 1;
           color: #999;
         }

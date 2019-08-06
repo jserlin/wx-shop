@@ -77,7 +77,7 @@
             <image src="/static/images/icon_back.png" />
           </span>
         </div>
-      </div>
+      </div> -->
       <div class="user-center-row rel" @click="toBillDetail">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_bill.png" alt />
@@ -88,7 +88,7 @@
             <image src="/static/images/icon_back.png" />
           </span>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>

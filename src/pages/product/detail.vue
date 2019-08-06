@@ -645,7 +645,7 @@ export default {
             height: 66rpx;
             text-align: center;
             .span {
-              font-size: 40rpx;
+              font-size: 32rpx;
               line-height: 66rpx;
             }
           }

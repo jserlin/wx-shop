@@ -21,7 +21,7 @@
         :steps="steps"
         :active="active"
         direction="vertical"
-        active-color="#f44"
+        active-color="#b4282d"
       />
     </div>
   </div>

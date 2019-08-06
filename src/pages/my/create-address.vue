@@ -177,7 +177,7 @@ export default {
 <style lang="less" scoped>
 .full-btn {
   margin: 20rpx 30rpx;
-  font-size: 40rpx;
+  font-size: 32rpx;
   color: #fff;
   text-align: center;
   line-height: 100rpx;
