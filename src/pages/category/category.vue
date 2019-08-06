@@ -26,7 +26,8 @@
             </div>
           </div>
           <div class="product-num" @click.stop="clickCart(goods)">
-            <van-icon name="cart-o" color="#f60" size="2em" />
+            <img class="img-cart" src="/static/images/icon-shopcar.png" alt />
+            <!-- <van-icon name="cart-o" color="#f60" size="2em" /> -->
           </div>
         </div>
         <!-- 类目项目 -->
@@ -223,7 +224,8 @@ export default {
   display: flex;
   flex-direction: column;
   .loading-wrap{
-    padding: 6rpx;
+    padding: 20rpx 0;
+    font-size: 24rpx;
     .load-con{
       text-align: center;
       margin: 0 auto;
@@ -273,17 +275,16 @@ export default {
 
       .iconText {
         text-align: center;
-        line-height: 90rpx;
+        line-height: 80rpx;
         width: 162rpx;
-        height: 90rpx;
+        height: 80rpx;
         color: #333;
-        font-size: 28rpx;
+        font-size: 26rpx;
         border-left: 6rpx solid #fff;
       }
-
       .active {
         color: #ab2b2b;
-        font-size: 36rpx;
+        font-size: 28rpx;
         border-left: 6rpx solid #ab2b2b;
       }
     }
@@ -291,7 +292,7 @@ export default {
     .right {
       // flex: 1;
       width: 590rpx;
-      border-left: 1rpx solid #fafafa;
+      border-left: 2rpx solid #e2dede;
       box-sizing: border-box;
       height: 100%;
       padding: 0 30rpx 0 30rpx;
@@ -411,6 +412,10 @@ export default {
       bottom: 30rpx;
       font-size: 28rpx;
       z-index: 1000;
+      .img-cart {
+        width: 60rpx;
+        height: 60rpx;
+      }
     }
   }
 }
