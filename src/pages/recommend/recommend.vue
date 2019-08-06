@@ -18,8 +18,8 @@
         :interval="interval"
         :duration="duration"
       >
-        <swiper-item v-for="(item,i) in imgUrls" :key="i">
-          <image :src="item.imgUrl" class="slide-image" />
+        <swiper-item v-for="(item,i) in imgUrls" :key="i" class="slide-item">
+          <image mode="widthFix" :src="item.imgUrl" class="slide-image" />
         </swiper-item>
       </swiper>
       <div class="cate-wrap">
@@ -32,6 +32,7 @@
           </van-col>
         </van-row>
       </div>
+      <div class="com-title">企业福利</div>
       <div class="goods-con">
         <div class="card-wrap"
           v-for="(subitem, subindex) in goodsList"
@@ -63,7 +64,7 @@
 </template>
 
 <script>
-import { getIndexList, getProductDetail, getBannerLists } from "@/api/";
+import { getIndexList, getIndexWelfareList, getProductDetail, getBannerLists } from "@/api/";
 import { setStorage } from '@/utils/wx'
 
 export default {
@@ -122,7 +123,7 @@ export default {
         page: this.pageNum,
         goodsType: 0
       };
-      const result = await getIndexList(params);
+      const result = await getIndexWelfareList(params);
       if (result.data) {
         this.isLoading = false
         const _arr = result.data.map(item => {
@@ -171,9 +172,13 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   background: #f7f7f7;
+  .slide-item{
+    overflow: hidden;
+    border-radius: 20rpx
+  }
   .slide-image{
     width: 100%;
-    height: 100%;
+    // height: 100%;
   }
   .search {
     width: 100%;
@@ -228,7 +233,8 @@ export default {
     }
   }
   .loading-wrap{
-    padding: 6rpx;
+    padding: 20rpx 0;
+    font-size: 24rpx;
     .load-con{
       text-align: center;
       margin: 0 auto;
@@ -252,6 +258,11 @@ export default {
         font-size: 26rpx;
       }
     }
+  }
+  .com-title{
+    padding: 20rpx 0 10rpx;
+    text-align: center;
+    font-size: 28rpx;
   }
   .goods-wrap {
     position: relative;

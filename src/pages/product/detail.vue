@@ -43,7 +43,7 @@
             <span class="grey">{{productInfo.categoryName}}</span>
           </van-col>
           <van-col span="14">
-            <span class="grey">库存: {{productInfo.inventory}}</span>
+            <span class="grey">库存: {{currentSkuInfo.inventory || productInfo.inventory}}</span>
           </van-col>
         </van-row>
       </div>
