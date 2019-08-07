@@ -114,6 +114,7 @@ const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         getUserInfo({ userToken: token }).then(response => {
           const { data } = response
+          console.log("TCL: getInfo -> data", data)
           if (!data) {
             reject('Verification failed, please Login again.')
           }
@@ -129,6 +130,7 @@ const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('SET_TOKEN', '')
         commit('SET_USERINFO', {})
+        commit('SET_SHOPPINGCART', [])
         removeStorage(TokenKey)
         resolve()
       })

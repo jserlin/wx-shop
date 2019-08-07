@@ -5,7 +5,9 @@
       "config": {
         "navigationBarTitleText": "首页",
         "usingComponents": {
-          "van-search": "/vant-weapp/dist/search/index"
+          "van-search": "/vant-weapp/dist/search/index",
+          "van-row": "/vant-weapp/dist/row/index",
+          "van-col": "/vant-weapp/dist/col/index"
         }
       }
     },
@@ -18,7 +20,11 @@
     {
       "path": "pages/cart/cart",
       "config": {
-        "navigationBarTitleText": "购物车"
+        "navigationBarTitleText": "购物车",
+        "usingComponents": {
+          "van-swipe-cell": "/vant-weapp/dist/swipe-cell/index",
+          "van-button": "/vant-weapp/dist/button/index"
+        }
       }
     },
     {

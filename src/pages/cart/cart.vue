@@ -1,11 +1,11 @@
 <template>
   <div class="cart">
-    <div class="top">
+    <div class="top" v-if="isLogin">
       <div class="tip-item">30天无忧退货</div>
       <div class="tip-item">48小时快速退款</div>
       <div class="tip-item">满88元免邮费</div>
     </div>
-    <div class="cartlist">
+    <div class="cartlist" v-if="isLogin">
       <div class="item" v-for="(goods, index) in cartList" :key="index">
         <van-swipe-cell :right-width="65">
           <div class="con">
@@ -47,8 +47,12 @@
         src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png"
         alt
       />
+      <div class="p" v-if="!isLogin">未登录</div>
+      <div class="login" @click="goLogin">
+        <van-button block v-if="!isLogin" type="primary">登录</van-button>
+      </div>
     </div>
-    <div class="foot-fixed">
+    <div class="foot-fixed" v-if="isLogin">
       <div class="left allcheck" :class="{active: checkAll}" @click="checkAllGoods">{{selectText}}</div>
       <div class="right">
         <div>￥{{totalPrice}}</div>
@@ -74,20 +78,10 @@ export default {
       selectText: "全选"
     };
   },
-  onShow() {
-    wx.setNavigationBarTitle({
-      title: "购物车"
-    });
-
-    if (!this.$store.state.token) {
-      const url = "/pages/login/login";
-      this.$router.push(url);
-    } else {
-      this.checkAll = false
-      this.$store.dispatch("getShoppingLists");
-    }
-  },
   computed: {
+    isLogin() {
+      return !!this.$store.state.token
+    },
     shoppingCartLists() {
       return this.$store.state.shoppingCartLists;
     },
@@ -116,9 +110,18 @@ export default {
       this.checkAll = this.checkedList.length === this.cartList.length;
       if (this.checkAll) {
         this.selectText = "全选";
-      } else {
-        this.selectText = nv.length ? `已选${nv.length}` : "全选";
       }
+      // else {
+      //   this.selectText = nv.length ? `已选${nv.length}` : "全选";
+      // }
+    }
+  },
+  mounted() {
+    wx.setNavigationBarTitle({
+      title: "购物车"
+    });
+    if(!this.$store.state.token){
+      this.goLogin()
     }
   },
   methods: {
@@ -224,12 +227,24 @@ export default {
         // router.push({ path: '/pages/news/list', redirectTo: true })
         this.$router.push({ path: url, redirectTo: true, query: { ids } });
       }
+    },
+    goLogin() {
+      if (!this.$store.state.token) {
+        const url = "/pages/login/login";
+        this.$router.push({
+          path: url,
+          query: {back: 1}
+        });
+      }
     }
   }
 };
 </script>
 
 <style scoped lang="less">
+.w100{
+  width: 100%;
+}
 .cart {
   position: relative;
   padding-bottom: 104rpx;
@@ -394,12 +409,20 @@ export default {
     }
   }
   .nogoods {
-    margin-top: 200rpx;
+    padding-top: 200rpx;
     img {
       margin: 0 auto;
       display: block;
       width: 258rpx;
       height: 258rpx;
+    }
+    .p{
+      text-align: center;
+      font-size: 28rpx;
+    }
+    .login{
+      margin: 40rpx;
+      text-align: center;
     }
   }
 }

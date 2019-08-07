@@ -271,7 +271,8 @@ export default {
             icon: "none",
             title: "支付成功"
           });
-
+          // 余额支付成功后 刷新用户信息
+          this.$store.dispatch('getInfo', this.$store.state.token)
           const timer = setTimeout(() => {
             clearTimeout(timer);
             this.goMyOrder();

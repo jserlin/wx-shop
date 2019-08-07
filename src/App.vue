@@ -5,8 +5,9 @@ export default {
       "van-swipe-cell": "/vant-weapp/dist/swipe-cell/index",
       "van-row": "/vant-weapp/dist/row/index",
       "van-col": "/vant-weapp/dist/col/index",
-       "van-loading": "/vant-weapp/dist/loading/index",
-       "van-icon": "/vant-weapp/dist/icon/index"
+      "van-loading": "/vant-weapp/dist/loading/index",
+      "van-icon": "/vant-weapp/dist/icon/index",
+      "van-button": "path/to/vant-weapp/dist/button/index"
     }
   },
   created () {

@@ -4,30 +4,35 @@
       <image src="/static/images/my_bg.png" alt />
       <div class="user-info-content row-padding abs flex-box" @click="goLogin">
         <div class="img-avatar">
-          <image :src="userShow ? '/static/images/avatar-login.png' : '/static/images/avatar.jpg'" alt="头像" />
+          <open-data v-if="userShow" type="userAvatarUrl"></open-data>
+          <image v-if="!userShow"  :src="'/static/images/avatar.jpg'" alt="头像" />
+          <!-- <image :src="userShow ? '/static/images/avatar-login.png' : '/static/images/avatar.jpg'" alt="头像" /> -->
         </div>
-        <div class="user-name" v-if="userShow">
-          <p class="font-30">{{userInfo.truename}}</p>
+        <div class="user-name">
+          <p class="font-30">{{userShow ? userInfo.truename : '未登录'}}</p>
           <p class="font-28">
-            账户余额：
-            <span class="font-red">¥ {{userInfo.money}}</span>
+            {{userShow ? '账户余额：' : '点击登录账号'}}
+            <span class="font-red" v-if="userShow">¥ {{userInfo.money}}</span>
           </p>
         </div>
       </div>
     </div>
 
-    <div class="user-center-row" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders('0')">
+    <div class="user-center-row por" style="padding: 24rpx 20rpx 24rpx 30rpx;" @click="toOrders('0')">
       <div class="flex-box item-space-between">
         <span>订单</span>
         <span class="icon-back">
           <image src="/static/images/icon_back.png" />
         </span>
       </div>
+      <div v-if="!userShow" class="login-modal" @click="goLogin"></div>
     </div>
+
     <div
-      class="flex-box item-space-between text-center mb20rpx"
+      class="flex-box item-space-between text-center mb20rpx por"
       style="background: #fff; padding: 18rpx 0;"
     >
+      <div v-if="!userShow" class="login-modal" @click="goLogin"></div>
       <div class="flex-item" @click="toOrders('1')">
         <div class="img-wrap">
           <image src="/static/images/my_icon_cancel.png" alt />
@@ -54,7 +59,8 @@
       </div>
     </div>
 
-    <div class="row-padding" style="background: #fff;">
+    <div class="row-padding por" style="background: #fff;">
+      <div v-if="!userShow" class="login-modal" @click="goLogin"></div>
       <div class="user-center-row rel" @click="toAddress">
         <div class="img-wrap abs" style="margin: 0;">
           <image src="/static/images/my_icon_position.png" alt />
@@ -90,24 +96,29 @@
         </div>
       </div>
     </div>
+    <div class="login-wrap" v-if="userShow" @click="loginOut">
+      退出账号
+    </div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      userShow: false,
-      userInfo: {}
+      // userShow: false,
+      // userInfo: {}
     };
   },
-
-  computed: {},
-
-  onShow() {
-    if(this.$store.state.token && this.$store.state.userInfo){
-      this.userShow = true
-      this.userInfo = this.$store.state.userInfo
-    }else{
+  computed: {
+     userShow() {
+       return !!this.$store.state.token
+     },
+     userInfo() {
+       return this.$store.state.userInfo
+     }
+  },
+  mounted() {
+    if(!this.$store.state.token){
       this.goLogin()
     }
   },
@@ -138,6 +149,14 @@ export default {
         const url = "/pages/login/login";
         this.$router.push(url);
       }
+    },
+    loginOut() {
+      this.$store.dispatch('logout').then(() => {
+        wx.showToast({
+          icon: "none",
+          title: "退出成功"
+        });
+      })
     }
   }
 };
@@ -150,6 +169,15 @@ export default {
   height: 100%;
   font-size: 28rpx;
   background: #eee;
+  .login-wrap{
+    margin-top: 20rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    text-align: center;
+    background: #fff;
+    color: #333;
+    font-size: 28rpx;
+  }
   .img-wrap {
     width: 40rpx;
     height: 40rpx;
@@ -201,6 +229,17 @@ export default {
   }
   .user-operate {
     margin-left: 50rpx;
+  }
+  .por{
+    position: relative;
+  }
+  .login-modal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    z-index: 110;
   }
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="container rel">
     <div class="search">
+      <!-- <div class="logo">严选</div> -->
       <div class="left" @click="toSearch">
         <input class="input" type="text" placeholder="搜索商品" />
         <span class="icon"></span>
@@ -8,7 +9,6 @@
     </div>
     <div
       class="index-top-bg abs"
-      style="z-index: 0; top: 0; left: 0; display: block; width: 100%; "
     >
       <image src="http://shop.ahaxkj.com/src/images/slider.png" style="width: 100%;" />
       <!-- <image src="/static/images/mystore_bg.png" style="width: 100%;"/> -->
@@ -17,6 +17,9 @@
       <swiper
         style="margin: 20rpx 30rpx;"
         :indicator-dots="indicatorDots"
+        indicator-color="#fff"
+        indicator-active-color="#f60"
+        circular
         :autoplay="autoplay"
         :interval="interval"
         :duration="duration"
@@ -81,12 +84,11 @@ export default {
   mpType: "page",
   data() {
     return {
-      motto: "推荐",
       categoryList: [],
       goodsList: [],
       imgUrls: [],
-      indicatorDots: false,
-      autoplay: false,
+      indicatorDots: true,
+      autoplay: true,
       isLoading: true,
       noMore: false,
       interval: 5000,
@@ -193,6 +195,13 @@ export default {
     width: 100%;
     // height: 100%;
   }
+  .index-top-bg{
+    z-index: 0;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+  }
   .search {
     width: 100%;
     box-sizing: border-box;
@@ -204,6 +213,15 @@ export default {
     display: flex;
     align-items: center;
     background: transparent;
+    .logo{
+      width: 100rpx;
+      height: 80rpx;
+      line-height: 80rpx;
+      color: #fff;
+      font-size: 36rpx;
+      // background:url(//yanxuan-static.nosdn.127.net/hxm/yanxuan-component/p/20170601/style/img/x1/icon-yxtop-sbc152a7ee5-e7ebdc8b2c.png);
+      // background-position: 0 -202px;
+    }
     .left {
       position: relative;
       flex: 1;
@@ -211,7 +229,7 @@ export default {
         padding-left: 50rpx;
         width: 100%;
         height: 56rpx;
-        border-radius: 8rpx;
+        border-radius: 28rpx;
         background: #fff;
         box-sizing: border-box;
         font-size: 24rpx;
@@ -220,7 +238,7 @@ export default {
       .icon {
         position: absolute;
         top: 15rpx;
-        left: 10rpx;
+        left: 14rpx;
         background: url("http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png")
           center no-repeat;
         background-size: 100%;
@@ -262,6 +280,7 @@ export default {
       box-sizing: border-box;
       .img {
         width: 100%;
+        height: auto;
         // height: 150rpx;
         background: #f4f4f4;
         border-radius: 20%;

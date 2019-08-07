@@ -401,7 +401,7 @@ export default {
         color: #b4282d;
       }
       .price-now {
-        font-size: 28rpx;
+        font-size: 48rpx;
         font-weight: bold;
         color: #b4282d;
       }
