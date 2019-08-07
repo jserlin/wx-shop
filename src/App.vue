@@ -7,7 +7,7 @@ export default {
       "van-col": "/vant-weapp/dist/col/index",
       "van-loading": "/vant-weapp/dist/loading/index",
       "van-icon": "/vant-weapp/dist/icon/index",
-      "van-button": "path/to/vant-weapp/dist/button/index"
+      "van-button": "/vant-weapp/dist/button/index"
     }
   },
   created () {
