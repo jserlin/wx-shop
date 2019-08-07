@@ -99,9 +99,11 @@
     <div class="login-wrap" v-if="userShow" @click="loginOut">
       退出账号
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
+import Dialog from "vant-weapp/dist/dialog/dialog";
 export default {
   data() {
     return {
@@ -151,12 +153,21 @@ export default {
       }
     },
     loginOut() {
-      this.$store.dispatch('logout').then(() => {
-        wx.showToast({
-          icon: "none",
-          title: "退出成功"
-        });
-      })
+      Dialog.confirm({
+        message: "确认退出吗？",
+        showCancelButton: true,
+        asyncClose: true
+      }).then(()=>{
+        this.$store.dispatch('logout').then(() => {
+          Dialog.close();
+          wx.showToast({
+            icon: "none",
+            title: "退出成功"
+          });
+        })
+      }).catch(() => {
+        Dialog.close();
+      });
     }
   }
 };

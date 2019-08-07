@@ -30,7 +30,10 @@
     {
       "path": "pages/my/my",
       "config": {
-        "navigationBarTitleText": "个人中心"
+        "navigationBarTitleText": "个人中心",
+        "usingComponents": {
+          "van-dialog": "/vant-weapp/dist/dialog/index"
+        }
       }
     },
     {

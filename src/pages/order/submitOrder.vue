@@ -82,7 +82,7 @@
       <span
         style="background: #b4282d;color: #fff; padding: 0 20rpx; width: 160rpx;"
         class="text-center"
-        @submit="onSubmit"
+        @click="onSubmit"
       >立即购买</span>
     </div>
     <van-dialog id="van-dialog" />

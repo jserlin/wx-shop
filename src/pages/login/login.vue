@@ -48,10 +48,17 @@ export default {
       code: "",
       username: "",
       canTestCode: true,
-      testCode: "发送验证码"
+      testCode: "发送验证码",
+      timer: null
     };
   },
-  mounted() {},
+  onShow() {
+    this.timer && clearInterval(this.timer)
+    this.username = ''
+    this.code = ''
+    this.canTestCode = true
+    this.testCode = '发送验证码'
+  },
   methods: {
     getPhoneCode() {
       if (this.username && this.canTestCode) {
@@ -72,12 +79,12 @@ export default {
       let count = 60;
       this.canTestCode = false;
       this.testCode = `已发送(${count})`;
-      const timer = setInterval(() => {
+      this.timer = setInterval(() => {
         count--;
         if (count < 1) {
           this.testCode = "发送验证码";
           this.canTestCode = true;
-          clearInterval(timer);
+          clearInterval(this.timer);
         } else {
           this.testCode = `已发送(${count})`;
         }
