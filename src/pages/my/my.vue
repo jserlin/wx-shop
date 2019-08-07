@@ -25,7 +25,7 @@
           <image src="/static/images/icon_back.png" />
         </span>
       </div>
-      <div v-if="!userShow" class="login-modal" @click="goLogin"></div>
+      <div v-if="!userShow" class="login-modal" @click.stop="goLogin"></div>
     </div>
 
     <div
