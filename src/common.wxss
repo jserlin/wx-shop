@@ -35,6 +35,18 @@ page{
   flex: 1;
 }
 
+.fl{
+  float: left;
+}
+
+.fr{
+  float: right;
+}
+
+.clearfix{
+  overflow: hidden;
+}
+
 .flex-box.item-space-between {
   align-items: center;
   justify-content: space-between;

@@ -106,7 +106,10 @@
     {
       "path": "pages/my/billdetail",
       "config": {
-        "navigationBarTitleText": "账单详情"
+        "navigationBarTitleText": "账单详情",
+        "usingComponents": {
+          "van-icon": "/vant-weapp/dist/icon/index"
+        }
       }
     },
     {

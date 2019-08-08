@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     isLogin() {
-      return !!this.$store.state.token
+      return !!this.$store.state.token;
     },
     shoppingCartLists() {
       return this.$store.state.shoppingCartLists;
@@ -96,15 +96,18 @@ export default {
   },
   watch: {
     shoppingCartLists(nv) {
-      this.cartList = nv.map(item => {
-        const _obj = Object.assign({}, item);
-        if (this.checkedList.includes(item.id)) {
-          _obj.checked = true;
-        } else {
-          _obj.checked = false;
-        }
-        return _obj;
-      });
+      this.cartList =
+        nv && nv.length
+          ? nv.map(item => {
+              const _obj = Object.assign({}, item);
+              if (this.checkedList.includes(item.id)) {
+                _obj.checked = true;
+              } else {
+                _obj.checked = false;
+              }
+              return _obj;
+            })
+          : [];
     },
     checkedList(nv) {
       this.checkAll = this.checkedList.length === this.cartList.length;
@@ -120,8 +123,8 @@ export default {
     wx.setNavigationBarTitle({
       title: "购物车"
     });
-    if(!this.$store.state.token){
-      this.goLogin()
+    if (!this.$store.state.token) {
+      this.goLogin();
     }
   },
   methods: {
@@ -146,8 +149,8 @@ export default {
     },
     checkAllGoods() {
       this.checkAll = !this.checkAll;
-      if(!this.cartList.length){
-        return
+      if (!this.cartList.length) {
+        return;
       }
 
       if (this.checkAll) {
@@ -233,7 +236,7 @@ export default {
         const url = "/pages/login/login";
         this.$router.push({
           path: url,
-          query: {back: 1}
+          query: { back: 1 }
         });
       }
     }
@@ -242,7 +245,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.w100{
+.w100 {
   width: 100%;
 }
 .cart {
@@ -416,11 +419,11 @@ export default {
       width: 258rpx;
       height: 258rpx;
     }
-    .p{
+    .p {
       text-align: center;
       font-size: 28rpx;
     }
-    .login{
+    .login {
       margin: 40rpx;
       text-align: center;
     }

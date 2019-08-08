@@ -201,3 +201,14 @@ export async function confirmOrder(data){
   const url = '/tOrder/wx/confirmOrder'
   return Request.post(url, data)
 }
+
+
+/**
+ * 账单
+ * @param {String} userToken
+ * @param {Number} page
+ */
+export async function billList(data){
+  const url = '/tUserRecharge/wx/query'
+  return Request.post(url, data)
+}

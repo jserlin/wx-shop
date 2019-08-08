@@ -164,6 +164,7 @@ export default {
             icon: "none",
             title: "退出成功"
           });
+          console.log(this.$store.state)
         })
       }).catch(() => {
         Dialog.close();

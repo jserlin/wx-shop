@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     token: '',
     userInfo: {},
     wxUserInfo: {},
-    openid: '',
+    openId: '',
     address: {},
     currentCate: {},
     shoppingCartLists: [],
@@ -130,7 +130,11 @@ const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('SET_TOKEN', '')
         commit('SET_USERINFO', {})
-        commit('SET_SHOPPINGCART', [])
+        commit('SET_WXUSERINFO', {})
+        commit('SET_OPENID', '')
+        commit('SET_SHOPPINGCART', {})
+        commit('SET_ADDRESS', {})
+        commit('SET_CATE', [])
         removeStorage(TokenKey)
         resolve()
       })
