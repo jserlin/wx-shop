@@ -121,24 +121,36 @@ export default {
         this.noMore = false;
         this.detailData.subList = [];
         this.getIndexList();
-      } else if(nv !== 0){
+      } else if (nv !== 0) {
         this.isGoods = false;
         this._getCategoryLists();
       }
+    },
+    userToken(){
+      console.log("update token");
+      this.pageNum = 0;
+      this.categoryPid = 0;
+      this.detailData.subList = [];
+      this._getCategoryLists();
     }
   },
   onShow() {
     wx.setNavigationBarTitle({
       title: "分类"
     });
+
     getStorage("currentCate").then(res => {
       console.log("TCL: onShow -> res", res);
     });
-    this.categoryPid = 0
-    this._getCategoryLists();
   },
   mounted() {
     this.pageNum = 0;
+      this._getCategoryLists();
+  },
+  computed:{
+    userToken(){
+      return this.$store.state.token
+    }
   },
   methods: {
     async selectitem(item, index) {
@@ -194,7 +206,7 @@ export default {
         { page: this.pageNum },
         options[this.categoryPid]
       );
-      params.userToken = this.$store.state.token
+      params.userToken = this.$store.state.token;
       getIndexList(params).then(result => {
         if (result.code === "success") {
           this.isLoading = false;

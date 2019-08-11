@@ -96,16 +96,24 @@ export default {
     };
   },
   mounted() {
-    this._getBannerLists();
     wx.setNavigationBarTitle({
       title: "首页"
     });
-    // getProductDetail({id:1})
-  },
-  onShow(){
-    this.pageNum = 0;
-    this.goodsList = []
+    this._getBannerLists();
     this.getIndexList();
+  },
+  computed: {
+    userToken() {
+      return this.$store.state.token
+    }
+  },
+  watch:{
+    userToken(){
+      this.pageNum = 0;
+      this.goodsList = []
+      this.getIndexList();
+      console.log('token update')
+    }
   },
   methods: {
     async _getBannerLists() {
