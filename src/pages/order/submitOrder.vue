@@ -4,7 +4,7 @@
     <div class="line-bg"></div>
     <div class="address-wraper mb20" @click="goAddress">
       <div v-if="!address.trueName" class="address-content" style="justify-content: center">
-        <van-button size="small">添加收获地址</van-button>
+        <van-button size="small">添加收货地址</van-button>
       </div>
       <div class="address-content" v-if="address.trueName">
         <div class="left">
@@ -133,6 +133,11 @@ export default {
       }, 1.5e3);
     },
     onSubmit(event) {
+      if(this.address && !this.address.trueName){
+        this.goAddress()
+        return
+      }
+
       const commonOption = {
         userToken: this.$store.state.token,
         cartIds: this.$route.query.ids,
