@@ -121,7 +121,7 @@ export default {
         this.noMore = false;
         this.detailData.subList = [];
         this.getIndexList();
-      } else {
+      } else if(nv !== 0){
         this.isGoods = false;
         this._getCategoryLists();
       }
@@ -134,10 +134,11 @@ export default {
     getStorage("currentCate").then(res => {
       console.log("TCL: onShow -> res", res);
     });
+    this.categoryPid = 0
+    this._getCategoryLists();
   },
   mounted() {
     this.pageNum = 0;
-    this._getCategoryLists();
   },
   methods: {
     async selectitem(item, index) {
@@ -193,6 +194,7 @@ export default {
         { page: this.pageNum },
         options[this.categoryPid]
       );
+      params.userToken = this.$store.state.token
       getIndexList(params).then(result => {
         if (result.code === "success") {
           this.isLoading = false;
@@ -212,8 +214,10 @@ export default {
     },
     _getCategoryLists() {
       const params = {
-        categoryPid: this.categoryPid
+        categoryPid: this.categoryPid,
+        userToken: this.$store.state.token
       };
+
       this.isLoading = true;
       getCategoryLists(params).then(res => {
         if (res.code === "success") {

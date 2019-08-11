@@ -177,9 +177,12 @@ export default {
   },
   computed: {
     cartNum() {
-      return this.$store.state.shoppingCartLists.reduce((pre, item) => {
-        return pre + +item.num;
-      }, 0);
+      if(this.$store.state.shoppingCartLists && this.$store.state.shoppingCartLists.length){
+        return this.$store.state.shoppingCartLists.reduce((pre, item) => {
+          return pre + +item.num;
+        }, 0);
+      }
+      return 0
     }
   },
   onShareAppMessage: function() {
@@ -202,7 +205,10 @@ export default {
     },
     async _getProductDetail(id) {
       this.resetData();
-      const result = await getProductDetail({ id });
+      const result = await getProductDetail({
+        id,
+        userToken: this.$store.state.token
+      });
       if (result.data) {
         const regex = new RegExp('style=""', "gi");
         const _data = result.data;

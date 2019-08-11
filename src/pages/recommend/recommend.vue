@@ -96,13 +96,16 @@ export default {
     };
   },
   mounted() {
-    this.pageNum = 0;
     this._getBannerLists();
-    this.getIndexList();
     wx.setNavigationBarTitle({
       title: "首页"
     });
     // getProductDetail({id:1})
+  },
+  onShow(){
+    this.pageNum = 0;
+    this.goodsList = []
+    this.getIndexList();
   },
   methods: {
     async _getBannerLists() {
@@ -127,7 +130,6 @@ export default {
     },
     // 商品列表接口
     async getIndexList() {
-      console.log(1);
       if (this.noMore) {
         return;
       }
@@ -136,7 +138,8 @@ export default {
       const params = {
         welfare: 1,
         page: this.pageNum,
-        goodsType: 0
+        goodsType: 0,
+        userToken: this.$store.state.token
       };
       const result = await getIndexWelfareList(params);
       if (result.data) {
