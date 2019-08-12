@@ -153,7 +153,7 @@
             <img mode="widthFix" class="imgDesc" :src="productInfo.primaryPicUrl" alt />
           </div>
         </van-tab> -->
-      </van-tabs>
+      <!-- </van-tabs> -->
     </div>
     <van-toast id="van-toast" />
   </div>
@@ -210,13 +210,13 @@ export default {
         userToken: this.$store.state.token
       });
       if (result.data) {
-        const regex = new RegExp('style=""', "gi");
+        // const regex = new RegExp('style=""', "gi");
         const _data = result.data;
         // 通过正则给返回的 html 图片 加上样式
-        _data.detailHtml = _data.detailHtml.replace(
-          regex,
-          `style="display:block; width:100%; height: 100%;"`
-        );
+        // _data.detailHtml = _data.detailHtml.replace(
+        //   regex,
+        //   `style="display:block; width:100%; height: 100%;"`
+        // );
         this.productInfo = _data;
       }
       [1, 2, 3, 4, 5].map(item => {
@@ -355,10 +355,7 @@ export default {
 .select-cell-text {
   margin-left: 30rpx;
 }
-.select-wrap {
-  // padding: 20rpx 0;
-  // background: #f7f7f7;
-}
+
 // 基本信息
 .product-info {
   padding: 20rpx;

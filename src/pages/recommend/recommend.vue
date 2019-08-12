@@ -141,7 +141,8 @@ export default {
       if (this.noMore) {
         return;
       }
-      this.pageNum += 1;
+      this.pageNum = isNaN(this.pageNum) ? 0 : this.pageNum;
+      this.pageNum+= 1
       this.isLoading = true;
       const params = {
         welfare: 1,
@@ -175,7 +176,6 @@ export default {
       this.$router.push(url);
     },
     clickCate(cate) {
-      console.log("TCL: clickCate -> cate", cate);
       setStorage("currentCate", cate).then(() => {
         const url = "/pages/category/category";
         this.$router.push({ path: url, isTab: true });
